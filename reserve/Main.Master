@@ -1,0 +1,108 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main.master.cs" Inherits="reserve.Main" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- CSS -->        
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400|Roboto:300,400,500">
+        <link rel="stylesheet" href="assets/css/animate.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+        
+        <script src="assets/js/jquery-1.11.1.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
+        <style id="jsbin-css">
+            .alt-grid [class*="col-"] {padding-left:2px;padding-right:2px;margin-top:55px}
+            .alt-grid .row {margin-left:2px;margin-right:2px;margin-top:55px}
+
+            /* container adjusted */
+            .alt-grid .container {width:98%;max-width:none;padding:2px;margin-top:55px}
+        </style>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+    <title>Reserve Study+ <% if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0) Response.Write(":: TEST VERSION ::"); else if (Session["appver"].ToString() != "") Response.Write("(v" + Session["appver"].ToString() + ")"); %> </title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <script>
+        function sendLink(sURL) {
+            if (window.location.toString().indexOf('main.aspx') > 0)
+            {
+                if (checkChanges()==false) window.event.preventDefault();
+            }
+            else {
+                window.location = sURL;
+            }
+        }
+    </script>
+</head>
+<body>
+	<nav class="navbar navbar-fixed-top">
+		<div class="container_fluid" style="margin-right: 15px">
+			<div class="navbar-header">
+				<img src="favicon-32x32.png" class="mt-5" style="margin-top: 10px" />
+            </div>
+            <div class="col" style="position: absolute; bottom: 5px; margin-left: 40px">
+                <h6>
+                <% if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0) { %>
+                <font color="red">::TEST VERSION::</font>
+                <% } %>
+                <%=Session["realname"].ToString() + " - " + Session["firmname"].ToString() %></h6>
+            </div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="topheader2">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="main.aspx" onclick="sendLink('main.aspx')" class="btn btn-link-2 no-transition">Projects</a></li>
+					<li><a href="components.aspx" onclick="sendLink('components.aspx')" class="btn btn-link-2 no-transition">Components</a></li>
+					<li><a href="rvw_summ.aspx" onclick="sendLink('rvw_summ.aspx')" class="btn btn-link-2 no-transition">Review</a></li>
+					<li><a href="finalize.aspx" onclick="sendLink('finalize.aspx')" class="btn btn-link-2 no-transition">Finalize</a></li>
+                    <li class="dropdown" id="liAdmin" runat="server">
+                        <a class="dropdown-toggle btn btn-link-2 no-transition" data-toggle="dropdown" href="#">Admin
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="admin_users.aspx" onclick="sendLink('admin_users.aspx')" class="nav-dd-subitem">User Accounts</a></li>
+                            <li><a href="tm.aspx" onclick="sendLink('tm.aspx')" class="nav-dd-subitem">Table Maintenance</a></li>
+                        </ul>
+                    </li>
+					<li><a href="default.aspx?lo=1" onclick="sendLink('default.aspx?lo=1')" class="btn btn-link-4 no-transition">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+    <div class="alt-grid">
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var url = window.location.toString();
+            $('.navbar .nav').find('.active').removeClass('active');
+            $('.navbar .nav li a').each(function () {
+                if ((this.href == url) && (this.href != '#')) {
+                    $(this).addClass('overwrite');
+                }
+                else if ((this.href.indexOf('rvw_') > 0) && (this.href.indexOf('#') < 0) && (url.indexOf('rvw_') > 0)) {
+                    $(this).addClass('overwrite');
+                }
+            });
+        });
+    </script>
+</body></html>
