@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace reserve {
-    
-    
-    public partial class notes {
-        
+namespace reserve
+{
+
+
+    public partial class notes
+    {
+
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// flUp control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.FileUpload flUp;
-        
+
         /// <summary>
         /// txtComments control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTextArea txtComments;
-        
+
         /// <summary>
         /// btnUpload control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnUpload;
-        
+
         /// <summary>
         /// lblStatus control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblStatus;
-        
+
         /// <summary>
         /// txtHdnCat control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnCat;
-        
+
         /// <summary>
         /// txtHdnComp control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnComp;
-        
+
         /// <summary>
         /// txtHdnDel control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnDel;
-        
+
         /// <summary>
         /// txtHdnType control.
         /// </summary>
@@ -92,5 +94,14 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnType;
+
+        /// <summary>
+        /// txtHdnID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnID;
     }
 }

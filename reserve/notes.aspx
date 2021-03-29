@@ -44,6 +44,22 @@
                 document.forms[0].submit();
             }
         }
+
+        function toggleEdit(sID) {
+            if (document.getElementById('cmdEdit' + sID).value == 'Update Comment') {
+                document.getElementById('lblUpdate').innerHTML = 'Updating comment, please wait...';
+                document.getElementById('cmdEdit' + sID).disabled = true;
+                document.getElementById('txtHdnType').value = 'update';
+                document.getElementById('txtHdnID').value = sID;
+                document.forms[0].submit();
+            }
+            else {
+                document.getElementById('cmdEdit' + sID).className = 'btn btn-success';
+                document.getElementById('cmdEdit' + sID).value = 'Update Comment';
+                document.getElementById('divCommentsRO' + sID).style.display = 'none';
+                document.getElementById('divCommentsE' + sID).style.display = 'block';
+            }
+        }
     </script>
 </head>
 <body>
@@ -107,14 +123,21 @@
                             {
                             %>
                             <tr style="background-color: #eeeeee">
-                                <% if (blPhoto) { %><td style="width: 1%"><img id="img1" height="200" width="200" src="ShowImage.ashx?cat=<%=txtHdnCat.Value %>&comp=<%=txtHdnComp.Value %>&img=<%=dr["image_id"].ToString() %>" /></td> <% } %>
+                                <% if (blPhoto) { %><td style="width: 1%; vertical-align: top"><img id="img1" height="200" width="200" src="ShowImage.ashx?cat=<%=txtHdnCat.Value %>&comp=<%=txtHdnComp.Value %>&img=<%=dr["image_id"].ToString() %>" /></td> <% } %>
                                 <td style="width: 99%; vertical-align: top">
                                     <table style="width: 100%; padding: 5px">
                                         <tr>
-                                            <td style="border-bottom: 1px solid #cccccc; padding: 5px; background-color: #dddddd"><b>Comments:</b> <%=dr["image_comments"].ToString() %></td>
+                                            <td style="border-bottom: 1px solid #cccccc; padding: 5px; background-color: #dddddd"><b>Comments:</b>
+                                                <div id="divCommentsRO<%=dr["image_id"].ToString() %>"><%=dr["image_comments"].ToString() %></div>
+                                                <div id="divCommentsE<%=dr["image_id"].ToString() %>" style="display: none"><textarea id="txtComments<%=dr["image_id"].ToString() %>" name="txtComments<%=dr["image_id"].ToString() %>" style="width: 100%; font-size: 8pt" rows="10"><%=dr["image_comments"].ToString() %></textarea></div>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td style="padding: 5px"><input type="button" class="btn btn-danger" value="Delete Entry" onclick="checkDel('<%= dr["image_id"].ToString() %>'); " /></td>
+                                            <td style="padding: 5px">
+                                                <input type="button" id="cmdEdit<%=dr["image_id"].ToString() %>" class="btn btn-primary" value="Edit Entry" onclick="toggleEdit('<%= dr["image_id"].ToString() %>'); " />
+                                                <input type="button" class="btn btn-danger" value="Delete Entry" onclick="checkDel('<%= dr["image_id"].ToString() %>'); " />
+                                                <label id="lblUpdate"></label>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
@@ -135,6 +158,7 @@
         <input type="hidden" id="txtHdnComp" runat="server" />
         <input type="hidden" id="txtHdnDel" runat="server" />
         <input type="hidden" id="txtHdnType" runat="server" />
+        <input type="hidden" id="txtHdnID" runat="server" />
         <input type="hidden" id="txtHdnCount" value="<%= iTot %>" />
         <script language="javascript">
             $(document).on('change', ':file', function() {

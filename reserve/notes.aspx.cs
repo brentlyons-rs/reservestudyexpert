@@ -19,6 +19,7 @@ namespace reserve
             if (Request.QueryString["comp"] != null) txtHdnComp.Value = Request.QueryString["comp"].ToString();
 
             if (txtHdnType.Value == "del") delImg();
+            if (txtHdnType.Value == "update") updateComment();
         }
 
         protected void btnUpload_Click(object sender, EventArgs e)
@@ -92,6 +93,14 @@ namespace reserve
         {
             Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3 and component_id=@Param4 and image_id=@Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), txtHdnCat.Value, txtHdnComp.Value, txtHdnDel.Value });
             lblStatus.InnerHtml = "Successfully removed image.";
+            txtHdnDel.Value = "";
+            txtHdnType.Value = "";
+        }
+
+        protected void updateComment()
+        {
+            Fn_enc.ExecuteNonQuery("update info_components_images set image_comments=@Param1 where firm_id=@Param2 and project_id=@Param3 and category_id=@Param4 and component_id=@Param5 and image_id=@Param6", new string[] { Request.Form["txtComments" + txtHdnID.Value].ToString(), Session["firmid"].ToString(), Session["projectid"].ToString(), txtHdnCat.Value, txtHdnComp.Value, txtHdnID.Value });
+            lblStatus.InnerHtml = "Successfully updated comment.";
             txtHdnDel.Value = "";
             txtHdnType.Value = "";
         }
