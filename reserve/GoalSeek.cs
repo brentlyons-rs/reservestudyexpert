@@ -34,7 +34,7 @@ namespace reserve
             Fn_enc.ExecuteNonQuery("sp_app_rvw_proj1 @Param1, @Param2", new string[] { firmID, projectID });
             //Step 2a: create a dataset that we can update locally
             double beginBal = 0;
-            double thresholdValue = 0;
+            //double thresholdValue = 0;
             double interest = 0;
             double curContrib = 0;
             Boolean blThreshold = false;
@@ -52,7 +52,7 @@ namespace reserve
                 if (dr["interest"].ToString() != "") interest = Convert.ToDouble(dr["interest"].ToString());
                 if (dr["threshold_used"].ToString() == "True")
                 {
-                    thresholdValue = Convert.ToDouble(dr["threshold_value"].ToString());
+                    //thresholdValue = Convert.ToDouble(dr["threshold_value"].ToString());
                     blThreshold = true;
                     curContrib = Convert.ToDouble(dr["current_contrib"].ToString());
                 }

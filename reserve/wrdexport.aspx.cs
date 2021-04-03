@@ -211,6 +211,8 @@ namespace reserve
                         chgText("@@beginning_balance", Convert.ToDouble(dr["begin_balance"]).ToString("C0"));
                         chgText("@@pct_funded", (Convert.ToDouble(dr["begin_balance"].ToString())/Convert.ToDouble(dr["full_fund_bal"].ToString())).ToString("P2"));
                         chgText("@@prev_rec_annual_contr", dr["prev_recomm_cont"].ToString());
+                        chgText("@@interest", dr["interest"].ToString());
+                        chgText("@@inflation", dr["inflation"].ToString());
 
                         if (Convert.ToDouble(dr["cfa_annual_contrib"].ToString()) == Convert.ToDouble(dr["ffa_avg_req_annual_contr"].ToString()))
                         {

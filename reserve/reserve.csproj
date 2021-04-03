@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="admin_import_project.aspx" />
     <Content Include="admin_users.aspx" />
     <Content Include="ajax.aspx" />
     <Content Include="assets\bootstrap\css\bootstrap-theme.css" />
@@ -292,6 +293,13 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admin_import_project.aspx.cs">
+      <DependentUpon>admin_import_project.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="admin_import_project.aspx.designer.cs">
+      <DependentUpon>admin_import_project.aspx</DependentUpon>
+    </Compile>
     <Compile Include="admin_users.aspx.cs">
       <DependentUpon>admin_users.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

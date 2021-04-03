@@ -178,11 +178,11 @@
                                 <table>
                                     <tr>
                                         <td>Interest:&nbsp;</td>
-                                        <td class="frm-text form-inline">%<input type="text" runat="server" id="txtInterest" class="form-control" style="width: 100px" placeholder="0.00" onkeypress="return isNumber(event)" /></td>
+                                        <td class="frm-text form-inline" nowrap>%<input type="text" runat="server" id="txtInterest" class="form-control" style="width: 100px" placeholder="0.00" onkeypress="return isNumber(event)" /></td>
                                     </tr>
                                     <tr>
                                         <td>Inflation:&nbsp;</td>
-                                        <td class="frm-text form-inline">%<input type="text" runat="server" id="txtInflation" class="form-control" style="width: 100px" placeholder="0.00" onkeypress="return isNumber(event)" /></td>
+                                        <td class="frm-text form-inline" nowrap>%<input type="text" runat="server" id="txtInflation" class="form-control" style="width: 100px" placeholder="0.00" onkeypress="return isNumber(event)" /></td>
                                     </tr>
                                 </table>
                                 
