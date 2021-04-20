@@ -64,7 +64,7 @@
 		            </ul>
 
 			        <div class="tab-content ">
-			            <div class="media-left text-left rounded-lg shadow loginPanel tab-pane" id="1">
+			            <div class="media-left text-left rounded-lg shadow loginPanel tab-pane <% if (Request.Form["txtHdnType"] == "Client") Response.Write("active"); %>" id="1">
                             <h3>CLIENT LOGIN</h3>
                             <div class="form-group">
                                 <label for="txtEMClient">Email address</label>
@@ -80,7 +80,7 @@
                             </div>
                             <small runat="server" id="lblStatusClient" class="form-text text-muted" style="color: red"></small>
 				        </div>
-				        <div class="media-left text-left rounded-lg shadow loginPanel tab-pane active" id="2">
+				        <div class="media-left text-left rounded-lg shadow loginPanel tab-pane <% if (Request.Form["txtHdnType"] == null || Request.Form["txtHdnType"] == "Staff") Response.Write("active"); %>" id="2">
                             <h3>STAFF LOGIN</h3>
                             <div class="form-group">
                                 <label for="txtEM">Email address</label>
@@ -103,6 +103,7 @@
                   </div>
                 </div>
             </div>
+        <input type="hidden" id="txtHdnType" name="txtHdnType" />
         <!-- Javascript -->
         <script src="assets/js/jquery-1.11.1.min.js"></script>
         <script src="assets/bootstrap/js/bootstrap.min.js"></script>
@@ -131,6 +132,26 @@
                         return;
                     }
 
+                    $('#txtHdnType').val('Staff');
+                    var $this = $(this); $this.button('loading');
+                    $('#frmLogin').submit();
+                    //setTimeout(function() { $this.button('reset');}, 8000);
+                }
+            );
+            $('#cmdLoginClient').on('click',
+                function () {
+                    if ($('#MainContent_txtEMClient').val() == null || $('#MainContent_txtEMClient').val() == '') {
+                        alert('Please enter your email address.');
+                        $('#MainContent_txtEMClient').focus();
+                        return;
+                    }
+                    if ($('#MainContent_txtPWClient').val() == null || $('#MainContent_txtPWClient').val() == '') {
+                        alert('Please enter your password.');
+                        $('#MainContent_txtPWClient').focus();
+                        return;
+                    }
+
+                    $('#txtHdnType').val('Client');
                     var $this = $(this); $this.button('loading');
                     $('#frmLogin').submit();
                     //setTimeout(function() { $this.button('reset');}, 8000);

@@ -126,23 +126,19 @@ namespace reserve
                 string docLoc;
 
                 if (HttpContext.Current.Request.IsLocal)
-                    //docLoc = @"c:\data\template_" + Session["firmid"].ToString();
                     docLoc = @"c:\data\";
                 else if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0)
                 {
-                    //docLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\test.reservestudyplus.com\clienttemplates\template_" + Session["firmid"].ToString();
                     docLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\test.reservestudyplus.com\clienttemplates\";
                 }
                 else
                 {
-                    //docLoc = @"D:\Inetpub\vhosts\crossovertechnology.org\httpdocs\reservestudy\template_" + Session["firmid"].ToString();// + ".docx";
                     docLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\clienttemplates\";
                 }
 
                 dr = Fn_enc.ExecuteReader("sp_app_create_word @Param1, @Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                 if (dr.Read())
                 {
-                    //docLoc += "_" + dr["project_type_id"].ToString() + ".docx";
                     docLoc += dr["template_name"];
                 }
 
