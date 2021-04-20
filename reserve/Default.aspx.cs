@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI;
 
 namespace reserve
@@ -9,18 +11,40 @@ namespace reserve
         {
             if (IsPostBack)
             {
-                var p = Fn_enc.ExecuteReader("sp_app_auth_user @Param1, @Param2", new string[] { txtEM.Value, txtPW.Value });
+                SqlDataReader p;
+                if (Request.Form["txtHdnType"]=="Client")
+                {
+                    p = Fn_enc.ExecuteReader("sp_app_auth_user @Param1, @Param2, @Param3", new string[] { Request.Form["txtHdnType"], txtEMClient.Value, txtPWClient.Value });
+                }
+                else
+                {
+                    p = Fn_enc.ExecuteReader("sp_app_auth_user @Param1, @Param2, @Param3", new string[] { Request.Form["txtHdnType"], txtEM.Value, txtPW.Value });
+                }
                 if (p.Read())
                     switch(p["rslt"].ToString())
                     {
                         case "NoUser":
                             {
-                                lblStatus.InnerHtml = "Could not locate your email address in our system. Please try again.";
+                                if (Request.Form["txtHdnType"]=="Client")
+                                {
+                                    lblStatusClient.InnerHtml = "Could not locate your email address in our system. Please try again.";
+                                }
+                                else
+                                {
+                                    lblStatus.InnerHtml = "Could not locate your email address in our system. Please try again.";
+                                }
                                 break;
                             }
                         case "BadPW":
                             {
-                                lblStatus.InnerHtml = "The email/password combination did not match our accounts. Please try again.";
+                                if (Request.Form["txtHdnType"]=="Client")
+                                {
+                                    lblStatusClient.InnerHtml = "The email/password combination did not match our accounts. Please try again.";
+                                }
+                                else
+                                {
+                                    lblStatus.InnerHtml = "The email/password combination did not match our accounts. Please try again.";
+                                }
                                 break;
                             }
                         case "Success":
@@ -49,6 +73,9 @@ namespace reserve
                                 Session["client"] = "1";
                                 Session["projectid"] = "C" + txtPW.Value;
                                 Session["oldprojectid"] = txtPW.Value;
+                                p.Close();
+                                p = Fn_enc.ExecuteReader("sp_appver", new string[] { });
+                                if (p.Read()) { Session["appver"] = p["appver"]; }
                                 p.Close();
                                 Fn_enc.ExecuteNonQuery("update info_projects_client_invites set last_login=getdate(), num_logins=isnull(num_logins,0)+1 where firm_id=@Param1 and project_id=@Param2 and client_email=@Param3", new string[] { Session["firmid"].ToString(), txtPW.Value, txtEM.Value });
                                 Response.Redirect("main.aspx");
