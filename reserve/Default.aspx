@@ -64,7 +64,7 @@
 		            </ul>
 
 			        <div class="tab-content ">
-			            <div class="media-left text-left rounded-lg shadow loginPanel tab-pane <% if (Request.Form["txtHdnType"] == "Client") Response.Write("active"); %>" id="1">
+			            <div class="media-left text-left rounded-lg shadow loginPanel tab-pane <% if (Request.Form["txtHdnType"] == "Client" || Request.QueryString["c"]=="1") Response.Write("active"); %>" id="1">
                             <h3>CLIENT LOGIN</h3>
                             <div class="form-group">
                                 <label for="txtEMClient">Email address</label>
@@ -80,7 +80,7 @@
                             </div>
                             <small runat="server" id="lblStatusClient" class="form-text text-muted" style="color: red"></small>
 				        </div>
-				        <div class="media-left text-left rounded-lg shadow loginPanel tab-pane <% if (Request.Form["txtHdnType"] == null || Request.Form["txtHdnType"] == "Staff") Response.Write("active"); %>" id="2">
+				        <div class="media-left text-left rounded-lg shadow loginPanel tab-pane <% if (Request.QueryString["c"]!="1" && (Request.Form["txtHdnType"] == null || Request.Form["txtHdnType"] == "Staff")) Response.Write("active"); %>" id="2">
                             <h3>STAFF LOGIN</h3>
                             <div class="form-group">
                                 <label for="txtEM">Email address</label>
