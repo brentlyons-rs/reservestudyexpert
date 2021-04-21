@@ -11,15 +11,15 @@ namespace reserve
     {
         public static string sendMail(string sTo, string sBody, string sSubject)
         {
-            SmtpClient smtpClient = new SmtpClient("mail.crossovertechnology.org", 25);
+            SmtpClient smtpClient = new SmtpClient("mail.reservestudyplus.com", 25);
 
-            smtpClient.Credentials = new System.Net.NetworkCredential("kipcon@crossovertechnology.org", "Ma8sz5%5");
+            smtpClient.Credentials = new System.Net.NetworkCredential("admin@reservestudyplus.com", "AWekAtBm869NAuz");
             // smtpClient.UseDefaultCredentials = true; // uncomment if you don't want to use the network credentials
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             MailMessage mail = new MailMessage();
 
             //Setting From , To and CC
-            mail.From = new MailAddress("kipcon@crossovertechnology.org", "Kipcon Reserve Study");
+            mail.From = new MailAddress("admin@reservestudyplus.org", "Reserve Study");
             mail.To.Add(new MailAddress(sTo));
             mail.Subject = sSubject;
             mail.Body = sBody;
