@@ -125,8 +125,8 @@
             if ((document.getElementById('MainContent_cboPT').value == 2) || (document.getElementById('MainContent_cboPT').value == 3) || (document.getElementById('MainContent_cboPT').value == 4)) {
                 document.getElementById('MainContent_txtPP').required = true;
                 document.getElementById('MainContent_txtPRC').required = true;
-                document.getElementById('MainContent_txtPP').value = '';
-                document.getElementById('MainContent_txtPRC').value = '';
+                //document.getElementById('MainContent_txtPP').value = '';
+                //document.getElementById('MainContent_txtPRC').value = '';
                 document.getElementById('trUpdate').style.display = '';
             }
             else {

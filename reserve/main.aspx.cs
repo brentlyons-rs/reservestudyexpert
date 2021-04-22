@@ -218,38 +218,50 @@ namespace reserve
         public void SendToClient()
         {
             //SendToClient
-            SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_send_project_to_client @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, txtS2CEMail.Value, Session["userid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_send_project_to_client @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), "C" + txtHdnProject.Value, txtS2CEMail.Value, Session["userid"].ToString() });
             if (dr.Read())
             {
                 if (dr["status_desc"].ToString() == "Success")
                 {
-                    StringBuilder sBody = new StringBuilder();
-                    sBody.AppendLine("Hello,<br><br>");
-                    sBody.AppendLine("You have been invited by " + Session["firmname"].ToString() + " to view your interactive Reserve Study online.<br><br>");
-                    sBody.AppendLine("To view, modify, and generate your personalized study, please login at:<br><br>");
-                    sBody.AppendLine("Website: <a href=\"http://crossovertechnology.org/reservestudy/default.aspx\" target=\"none\">http://crossovertechnology.org/reservestudy/default.aspx</a><br>");
-                    sBody.AppendLine("Username: " + txtS2CEMail.Value + "<br>");
-                    sBody.AppendLine("Password: " + txtHdnProject.Value + "<br><br>");
-                    sBody.AppendLine("Enjoy your interactive project!<br><br>");
-                    sBody.AppendLine("Regards,<br><br>");
-                    sBody.AppendLine("Kipcon, LLC.");
-
-                    string mailResult = Fn_enc.sendMail(txtS2CEMail.Value, sBody.ToString(),"Online, interactive Reserve Study");
-                    if (mailResult=="Success")
-                    {
-                        divCloneStatus.InnerHtml = "Successfully sent project invite to <b>" + txtS2CEMail.Value + "</b>.";
-                    }
-                    else
+                    dr.Close();
+                    //Clone project
+                    dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, "C" + txtHdnProject.Value, txtPN.Value, Session["userid"].ToString() });
+                    if (dr.Read() && dr["status_info"].ToString() != "Success")
                     {
                         Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
-                        divCloneStatus.InnerHtml = "Error sending email to <b>" + txtS2CEMail.Value + "</b>: " + mailResult;
+                        divCloneStatus.InnerHtml = "Error cloning project. Please send the following to an administrator:" + dr["error_desc"].ToString();
+                        dr.Close();
+                        return;
                     }
                 }
-                else if (dr["status_desc"].ToString()=="AlreadySent")
+
+                StringBuilder sBody = new StringBuilder();
+                sBody.AppendLine("Hello,<br><br>");
+                sBody.AppendLine("You have been invited by " + Session["firmname"].ToString() + " to view your interactive Reserve Study online.<br><br>");
+                sBody.AppendLine("To view, modify, and generate your personalized study, please login at:<br><br>");
+                sBody.AppendLine("Website: <a href=\"https://reservestudyplus.com/default.aspx?c=1\" target=\"none\">https://reservestudyplus.com/default.aspx?c=1</a><br>");
+                sBody.AppendLine("Username: " + txtS2CEMail.Value + "<br>");
+                sBody.AppendLine("Password: " + txtHdnProject.Value + "<br><br>");
+                sBody.AppendLine("Enjoy your interactive project!<br><br>");
+                sBody.AppendLine("Regards,<br><br>");
+                sBody.AppendLine("Kipcon, LLC.");
+
+                string mailResult = Fn_enc.sendMail(txtS2CEMail.Value, sBody.ToString(),"Online, interactive Reserve Study");
+                if (mailResult=="Success")
                 {
-                    divCloneStatus.InnerHtml = "This project has already been sent before. If you need to send it again, please clone the project and send that.";
+                    divCloneStatus.InnerHtml = "Successfully sent project invite to <b>" + txtS2CEMail.Value + "</b>.";
+                }
+                else
+                {
+                    Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
+                    divCloneStatus.InnerHtml = "Error sending email to <b>" + txtS2CEMail.Value + "</b>: " + mailResult;
                 }
             }
+            //    else if (dr["status_desc"].ToString()=="AlreadySent")
+            //    {
+            //        divCloneStatus.InnerHtml = "This project has already been sent before. If you need to send it again, please clone the project and send that.";
+            //    }
+            //}
             dr.Close();
         }
 
