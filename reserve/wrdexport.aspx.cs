@@ -1421,7 +1421,7 @@ namespace reserve
                 var p = new Paragraph();
                 //Paragraph properties
                 ParagraphProperties paragraphProperties = new ParagraphProperties();
-                SpacingBetweenLines spacing = new SpacingBetweenLines() { Before = "0", After = "0" };
+                SpacingBetweenLines spacing = new SpacingBetweenLines() { Before = "0", After = "240" };
                 paragraphProperties.Append(spacing);
                 DocumentFormat.OpenXml.Wordprocessing.RunProperties rp = new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
                 p.Append(paragraphProperties);
