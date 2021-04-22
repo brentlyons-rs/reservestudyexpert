@@ -160,6 +160,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="css\jquery-ui.css" />
     <Content Include="css\style.css" />
+    <Content Include="css\tbldrag.css" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="finalize.aspx" />
@@ -237,6 +238,7 @@
     <Content Include="Scripts\accounting.js" />
     <Content Include="Scripts\rvw_graph_thresh.js" />
     <Content Include="Scripts\rvw_proj.js" />
+    <Content Include="Scripts\tbldrag.js" />
     <Content Include="siteadmin.asp" />
     <Content Include="test2.aspx" />
     <Content Include="wrd.aspx" />

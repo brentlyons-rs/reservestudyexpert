@@ -9,11 +9,8 @@
 <script src="assets/js/jquery.mask.min.js"></script>
 <link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/themes/redmond/jquery-ui.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" />
+<link href="css/tbldrag.css" rel="stylesheet" />
 <style>
-    body
-    {
-        line-height: 20px !important;
-    }
     iframe { display:block; }
 
     .clientDisabled
@@ -561,22 +558,22 @@ catch (trymicrosoft) {
     </div>
     <table style="border-collapse: collapse; margin-left: 5px; margin-right: 5px" id="components">
 	    <tr class="frm-text-bold grid_tbl_hdr">
-		    <td style="width: 2%" class="clientHide">Del</td>
-		    <td style="width: 2%">Save</td>
-            <td style="width: 20%; text-wrap: none; text-align: left">Component</td>
-            <td style="width: 4%; text-align: left">Qty</td>
-            <td style="width: 1%; text-align: left; display: <%=sPP%>" nowrap class="clientHide">+%</td>
-            <td style="width: 3%; text-align: left; display: <%=sPP%>" nowrap class="clientHide"></td>
-            <td style="width: 4%; text-align: left">Unit</td>
-            <td style="width: 7%; text-align: left; text-wrap: none">Base Unit Cost</td>
-            <td style="width: 5%; text-align: left; text-wrap: none; word-wrap: hyphenate" class="clientHide">Geo Factor</td>
-            <td style="width: 5%; text-align: left; text-wrap: none">Unit Cost</td>
-            <td style="width: 7%; text-align: left; text-wrap: none">Est. Useful Life</td>
-            <td style="width: 11%; text-align: left; text-wrap: none">Est. Remain Useful Life</td>
-            <td style="width: 5%; text-align: left">Note</td>
-            <td style="width: 2%; text-align: left" class="clientHide">Value</td>
-            <td style="width: 20%; text-align: left" class="clientHide">Comments</td>
-            <td style="width: 2%; text-align: left" class="clientHide">Images</td>
+		    <th style="width: 2%" class="clientHide">Del</th>
+		    <th style="width: 2%">Save</th>
+            <th style="width: 20%; text-wrap: none; text-align: left">Component</th>
+            <th style="width: 4%; text-align: left">Qty</th>
+            <th style="width: 1%; text-align: left; display: <%=sPP%>" nowrap class="clientHide">+%</th>
+            <th style="width: 3%; text-align: left; display: <%=sPP%>" nowrap class="clientHide"></th>
+            <th style="width: 4%; text-align: left">Unit</th>
+            <th style="width: 7%; text-align: left; text-wrap: none">Base Unit Cost</th>
+            <th style="width: 5%; text-align: left; text-wrap: none; word-wrap: hyphenate" class="clientHide">Geo Factor</th>
+            <th style="width: 5%; text-align: left; text-wrap: none">Unit Cost</th>
+            <th style="width: 7%; text-align: left; text-wrap: none">Est. Useful Life</th>
+            <th style="width: 11%; text-align: left; text-wrap: none">Est. Remain Useful Life</th>
+            <th style="width: 5%; text-align: left">Note</th>
+            <th style="width: 2%; text-align: left" class="clientHide">Value</th>
+            <th style="width: 20%; text-align: left" class="clientHide">Comments</th>
+            <th style="width: 2%; text-align: left" class="clientHide">Images</th>
 
 	    </tr>
         <%
@@ -654,7 +651,7 @@ catch (trymicrosoft) {
                 <% if (cboYear.Value == "1") { %><a href="#"><img src="images/plus_white.jpg" class="showModal" data-toggle="modal" data-target="#mdlNotes"  data-cat="<%=cboCC.Value %>" data-comp="<%=dr["component_id"].ToString() %>" /><label class="frm-text" id="lblImg<%=dr["component_id"].ToString() %>"><sup><%=dr["ttl_images"].ToString() %></sup></label></a> <% } %>
             </td>
 
-        <tr>
+        </tr>
         <%
             iRow++;
         }
@@ -710,7 +707,7 @@ catch (trymicrosoft) {
           });
         });
     </script>
-    
+    <script src="Scripts/tbldrag.js"></script>
 </form>
 
 
