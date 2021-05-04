@@ -35,6 +35,23 @@ namespace reserve
             }
         }
 
+        public static string DocLoc()
+        {
+            string retDocLoc = "";
+            if (HttpContext.Current.Request.IsLocal)
+                retDocLoc = @"c:\data\";
+            else if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0)
+            {
+                retDocLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\test.reservestudyplus.com\clienttemplates\";
+            }
+            else
+            {
+                retDocLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\clienttemplates\";
+            }
+
+            return retDocLoc;
+        }
+
         public static SqlConnection getconn()
         {
             var conn = new SqlConnection();

@@ -71,13 +71,13 @@ namespace reserve
                                 Session["realname"] = p["real_name"];
                                 Session["firmname"] = p["firm_name"];
                                 Session["client"] = "1";
-                                Session["projectid"] = "C" + txtPW.Value;
-                                Session["oldprojectid"] = txtPW.Value;
+                                Session["projectid"] = "C" + txtPWClient.Value;
+                                Session["oldprojectid"] = txtPWClient.Value;
                                 p.Close();
                                 p = Fn_enc.ExecuteReader("sp_appver", new string[] { });
                                 if (p.Read()) { Session["appver"] = p["appver"]; }
                                 p.Close();
-                                Fn_enc.ExecuteNonQuery("update info_projects_client_invites set last_login=getdate(), num_logins=isnull(num_logins,0)+1 where firm_id=@Param1 and project_id=@Param2 and client_email=@Param3", new string[] { Session["firmid"].ToString(), txtPW.Value, txtEM.Value });
+                                Fn_enc.ExecuteNonQuery("update info_projects_client_invites set last_login=getdate(), num_logins=isnull(num_logins,0)+1 where firm_id=@Param1 and project_id=@Param2 and client_email=@Param3", new string[] { Session["firmid"].ToString(), txtPWClient.Value, txtEMClient.Value });
                                 Response.Redirect("main.aspx");
                                 break;
                             }

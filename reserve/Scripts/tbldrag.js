@@ -187,7 +187,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
 
-        alert(table.rows[endRowIndex].cells[0].id);
+        sSql = " category_id = " + document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value + " and component_id = " + table.rows[endRowIndex].cells[0].id;
+        sendComponent(sSql, 'order_id', endRowIndex, table.rows[endRowIndex].cells[0].id, -1);
+        //alert("Component: " + table.rows[endRowIndex].cells[0].id + ", Order: " + endRowIndex);
     };
 
     table.querySelectorAll('tr').forEach(function (row, index) {

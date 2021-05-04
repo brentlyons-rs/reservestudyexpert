@@ -36,20 +36,16 @@ namespace reserve
             if (dr.Read())
             {
                 bool blIssue = false;
-                string docLoc;
+                string docLoc = Fn_enc.DocLoc();
 
-                if (HttpContext.Current.Request.IsLocal)
-                    docLoc = @"c:\data\";
-                else if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0)
+                if (Session["Client"].ToString() == "1")
                 {
-                    docLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\test.reservestudyplus.com\clienttemplates\";
+                    docLoc += $"template_{Session["firmid"]}_interactive.docx";
                 }
                 else
                 {
-                    docLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\clienttemplates\";
+                    docLoc += dr["template_name"];
                 }
-
-                docLoc += dr["template_name"].ToString();
 
                 if (!File.Exists(docLoc.ToString()))
                 {

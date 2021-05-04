@@ -123,23 +123,19 @@ namespace reserve
             SqlConnection conn;
             try
             {
-                string docLoc;
-
-                if (HttpContext.Current.Request.IsLocal)
-                    docLoc = @"c:\data\";
-                else if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0)
-                {
-                    docLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\test.reservestudyplus.com\clienttemplates\";
-                }
-                else
-                {
-                    docLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\clienttemplates\";
-                }
+                string docLoc = Fn_enc.DocLoc();
 
                 dr = Fn_enc.ExecuteReader("sp_app_create_word @Param1, @Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                 if (dr.Read())
                 {
-                    docLoc += dr["template_name"];
+                    if (Session["Client"].ToString() == "1")
+                    {
+                        docLoc += $"template_{Session["firmid"]}_interactive.docx";
+                    }
+                    else
+                    {
+                        docLoc += dr["template_name"];
+                    }
                 }
 
                 byte[] byteArray = File.ReadAllBytes(docLoc);
@@ -165,6 +161,7 @@ namespace reserve
                         chgHeader("@@project_number", dr["project_id"].ToString());
                         chgHeader("@@created_date_short", longdt(DateTime.Now).ToString());
 
+                        chgText("@@current_user", Session["realname"].ToString());
                         chgText("@@created_date_short", longdt(DateTime.Now).ToString());
                         chgText("@@created_date", longdt(DateTime.Now).ToString());
                         chgText("@@project_manager", dr["project_mgr"].ToString());
