@@ -1,0 +1,33 @@
+﻿.draggable {
+    cursor: move;
+    user-select: none;
+}
+
+.placeholder {
+    background-color: #edf2f7;
+    border: 2px dashed #cbd5e0;
+}
+
+.clone-table {
+    border-collapse: collapse;
+    border: none;
+}
+
+    .clone-table th {
+        border-collapse: collapse;
+        margin-left: 5px;
+        margin-right: 5px;
+        font-weight: bold;
+        font-size: 13px;
+        line-height: 1.42857143;
+        color: #555;
+        BACKGROUND-IMAGE: url('../images/grid_chrome.jpg');
+        HEIGHT: 23px !important;
+        border: 1px solid #dddddd;
+    } 
+    
+.dragging {
+    background: #fff;
+    border-top: 1px solid #ccc;
+    z-index: 999;
+}
