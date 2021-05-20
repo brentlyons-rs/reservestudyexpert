@@ -48,10 +48,10 @@ namespace reserve
 
                 try
                 {
-                    sqlUpdate.Append("insert into info_components (firm_id, project_id, year_id, category_id, component_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date)");
-                    sqlUpdate.Append("select @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, getdate()");
+                    sqlUpdate.Append("insert into info_components (firm_id, project_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date)");
+                    sqlUpdate.Append("select @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, @Param19, getdate()");
 
-                    Fn_enc.ExecuteNonQuery(sqlUpdate.ToString(), new string[18] { Session["firmid"].ToString(), Session["projectid"].ToString(), cYr, cCat, cID, cDesc, cQty, cPP, cUnit, cBuc, cGeo, cUc, cEul, cErul, cNote, cVal, cComm, Session["userid"].ToString() });
+                    Fn_enc.ExecuteNonQuery(sqlUpdate.ToString(), new string[19] { Session["firmid"].ToString(), Session["projectid"].ToString(), cYr, cCat, cID, cID, cDesc, cQty, cPP, cUnit, cBuc, cGeo, cUc, cEul, cErul, cNote, cVal, cComm, Session["userid"].ToString() });
                 }
                 catch (Exception ex)
                 {
@@ -371,11 +371,11 @@ namespace reserve
                     {
                         var baseUnitCost = sVal.Replace("'", "").Replace(",", "").Replace("$", "");
                         var unitCost = baseUnitCost;
-                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select geo_factor from info_components where firm_id=@Param1 and " + sCrit + "),0) as geo_factor_used from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select geo_factor from info_components where firm_id=@Param1 and project_id=@Param2 and  " + sCrit + "),0) as geo_factor_used from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                         if ((dr.Read()) && (!dr.IsDBNull(0)) && (dr["geo_factor_used"].ToString()=="True")) unitCost = (Convert.ToDouble(baseUnitCost) * Convert.ToDouble(dr["geo_factor"].ToString())).ToString();
                         dr.Close();
 
-                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), base_unit_cost=" + baseUnitCost + ", unit_cost='" + unitCost + "' where firm_id=" + Session["firmid"] + " and " + sCrit);
+                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), base_unit_cost=" + baseUnitCost + ", unit_cost='" + unitCost + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                         command = new SqlCommand(sqlUpdate.ToString(), conn);
                         command.ExecuteNonQuery();
 
@@ -389,7 +389,7 @@ namespace reserve
                     }
                     else if (sField == "geo_factor") //If geo factor changes, update unit cost
                     {
-                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select base_unit_cost from info_components where firm_id=@Param1 and " + sCrit + "),0) as base_unit_cost from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select base_unit_cost from info_components where firm_id=@Param1 and project_id=@Param2 and " + sCrit + "),0) as base_unit_cost from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                         var dataPresent = dr.Read();
                         var unitCost ="";
                         if (sVal=="0")
@@ -400,7 +400,7 @@ namespace reserve
                         {
                             if (dataPresent) unitCost = (Convert.ToDouble(dr["base_unit_cost"].ToString()) * Convert.ToDouble(dr["geo_factor"].ToString())).ToString();
                         }
-                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), geo_factor='" + sVal + "', unit_cost=" + unitCost + " where firm_id=" + Session["firmid"] + " and " + sCrit);
+                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), geo_factor='" + sVal + "', unit_cost=" + unitCost + " where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                         command = new SqlCommand(sqlUpdate.ToString(), conn);
                         command.ExecuteNonQuery();
 
@@ -412,9 +412,16 @@ namespace reserve
                         row["r_desc"] = string.Format("{0:n}", Convert.ToDouble(unitCost));
                         ds.Tables["Results"].Rows.Add(row);
                     }
+                    else if (sField=="order_id") //User dragged-dropped a component
+                    {
+                        command = new SqlCommand("update info_components set order_id = order_id+1 where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and order_id>=" + sVal.ToString() + " and " + sCrit.Substring(1, sCrit.IndexOf("and component_id")-1), conn);
+                        command.ExecuteNonQuery();
+                        command = new SqlCommand("update info_components set last_updated_by = " + Session["userid"].ToString() + ", last_updated_date = GetDate(), order_id = " + sVal.ToString() + " where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit, conn);
+                        command.ExecuteNonQuery();
+                    }
                     else
                     {
-                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), " + sField + "='" + sVal.ToString().Replace("'", "''").Replace(",","") + "' where firm_id=" + Session["firmid"] + " and " + sCrit);
+                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), " + sField + "='" + sVal.ToString().Replace("'", "''").Replace(",","") + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                         command = new SqlCommand(sqlUpdate.ToString(), conn);
                         command.ExecuteNonQuery();
                     }
@@ -465,7 +472,7 @@ namespace reserve
 
             conn.Open();
             DataSet ds = new DataSet();
-            SqlDataAdapter adapter = new SqlDataAdapter("select component_id, component_desc from info_components where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3", conn);
+            SqlDataAdapter adapter = new SqlDataAdapter("select component_id, component_desc from info_components where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3 order by order_id", conn);
             adapter.SelectCommand.Parameters.AddWithValue("@Param1", fid);
             adapter.SelectCommand.Parameters.AddWithValue("@Param2", project.ToString());
             adapter.SelectCommand.Parameters.AddWithValue("@Param3", cid);
