@@ -326,7 +326,7 @@ namespace reserve
                 }
                 //Account for inflation
                 //if (gs[i].inflation>0) gs[i].balance = gs[i].balance + (gs[i].balance * (gs[i].inflation/100));
-                //if (interest > 0) gs[i].balance = gs[i].balance * (1 + (interest / 100));
+                if (interest > 0) gs[i].balance = gs[i].balance * (1 + (interest / 100));
             }
 
             return gs;

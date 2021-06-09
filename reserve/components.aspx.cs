@@ -130,8 +130,20 @@ namespace reserve
 
         public void DelComponent()
         {
-            Fn_enc.ExecuteNonQuery("delete from info_components where firm_id=@Param1 and year_id>=@Param2 and " + txtHdnDel.Value, new string[] { Session["firmid"].ToString(), cboYear.Value });
-            Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and " + txtHdnDel.Value, new string[] { Session["firmid"].ToString(), cboYear.Value });
+            try
+            {
+                var sql = $@"insert into hist_info_components_deletes (firm_id, project_id,category_id,component_id,del_id,component_desc,comp_quantity,comp_unit,base_unit_cost,geo_factor,unit_cost,est_useful_life,est_remain_useful_life,comp_note,comp_value,comp_comments,deleted_by,deleted_date,plus_pct)
+                            select firm_id, project_id, category_id, component_id, isnull((select max(del_id) from hist_info_components_deletes where firm_id = @Param1 and project_id = @Param2 and year_id = @Param3 and {txtHdnDel.Value}),0)+1,component_desc,comp_quantity,comp_unit,base_unit_cost,geo_factor,unit_cost,est_useful_life,est_remain_useful_life,comp_note,comp_value,comp_comments,{Session["userid"].ToString()},getdate(),plus_pct
+                            from info_components where firm_id = @Param1 and project_id = @Param2 and year_id = @Param3 and {txtHdnDel.Value}";
+                Fn_enc.ExecuteNonQuery(sql, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value });
+
+                Fn_enc.ExecuteNonQuery("delete from info_components where firm_id=@Param1 and project_id=@Param2 and year_id>=@Param3 and " + txtHdnDel.Value, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value });
+                Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and " + txtHdnDel.Value, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value });
+            }
+            catch (Exception ex)
+            {
+                lblStatus.InnerHtml = $"Unable to log deletion history. Please notify an administrator. Error: {ex}";
+            }
             txtHdnDel.Value = "";
             ClearLabels();
             lblStatus.InnerHtml = "Successfully deleted component.";
