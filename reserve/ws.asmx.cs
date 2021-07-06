@@ -292,11 +292,11 @@ namespace reserve
                     if (sField=="pct_increase_all")
                         sqlUpdate.Append("update info_projections set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), pct_increase='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "'");
                     else if (sField== "tfa2_annual_contr")
-                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "', pct_increase=null where firm_id=" + Session["firmid"] + " and " + sCrit);
+                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "', pct_increase=null where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                     else if (sField == "pct_increase")
-                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and " + sCrit.Replace("year_id=","year_id>="));
+                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit.Replace("year_id=","year_id>="));
                     else
-                        sqlUpdate.Append("update " + sSQLTable + " set generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and " + sCrit);
+                        sqlUpdate.Append("update " + sSQLTable + " set generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                     command = new SqlCommand(sqlUpdate.ToString(), conn);
                     command.ExecuteNonQuery();
                     //If an adjusted threshold field is being updated, we need to update all the numbers for those columns, then return updated data.

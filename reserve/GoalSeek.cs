@@ -94,6 +94,7 @@ namespace reserve
                         {
                             ds.Tables[0].Rows[j]["ffa_res_fund_bal"] = Convert.ToDouble(ds.Tables[0].Rows[j - 1]["ffa_res_fund_bal"].ToString()) + (iSum / iRows) - Convert.ToDouble(ds.Tables[0].Rows[j]["annual_exp"].ToString());
                         }
+                        ds.Tables[0].Rows[j]["ffa_res_fund_bal"] = (double)ds.Tables[0].Rows[j]["ffa_res_fund_bal"] * (1 + (interest / 100));
                     }
                     //Make sure we get from the last interval -> year 30
                     iPrev = Convert.ToInt16(ds.Tables[1].Rows[iInt]["interval_value"].ToString());
@@ -130,11 +131,11 @@ namespace reserve
                 Fn_enc.ExecuteNonQuery("update info_projections set tfa2_annual_contr=cfa_annual_contrib, tfa2_annual_contr_user_entered=1 where firm_id=@Param1 and project_id=@Param2 and year_id=(select min(year_id) from info_projections where firm_id=@Param1 and project_id=@Param2)", new string[] { firmID, projectID });
                 Fn_enc.ExecuteNonQuery("sp_app_proj_adj_threshold @Param1, @Param2", new string[] { firmID, projectID });
             }
-                //for (var i = 0; i < ds.Tables[0].Rows.Count; i++)
-                //{
-                //    Fn_enc.ExecuteNonQuery("update info_projections set ffa_res_fund_bal=@Param1, ffa_avg_req_annual_contr=@Param2, bfa_annual_contr=@Param3, bfa_res_fund_bal=@Param4, generated_by=@Param5, tfa_annual_contr=@Param6, tfa2_annual_contr=@Param6, tfa_res_fund_bal=@Param7, tfa2_res_fund_bal=@Param7, generated_date=getdate() where firm_id=@Param8 and project_id=@Param9 and year_id=@Param10", new string[] { ds.Tables[0].Rows[i]["ffa_res_fund_bal"].ToString(), ds.Tables[0].Rows[i]["ffa_avg_req_annual_contr"].ToString(), ds.Tables[0].Rows[i]["bfa_annual_contr"].ToString(), ds.Tables[0].Rows[i]["bfa_res_fund_bal"].ToString(), userID, ds.Tables[0].Rows[i]["tfa_annual_contr"].ToString(), ds.Tables[0].Rows[i]["tfa_res_fund_bal"].ToString(), firmID, projectID, ds.Tables[0].Rows[i]["year_id"].ToString() });
-                //}
-            }
+            //for (var i = 0; i < ds.Tables[0].Rows.Count; i++)
+            //{
+            //    Fn_enc.ExecuteNonQuery("update info_projections set ffa_res_fund_bal=@Param1, ffa_avg_req_annual_contr=@Param2, bfa_annual_contr=@Param3, bfa_res_fund_bal=@Param4, generated_by=@Param5, tfa_annual_contr=@Param6, tfa2_annual_contr=@Param6, tfa_res_fund_bal=@Param7, tfa2_res_fund_bal=@Param7, generated_date=getdate() where firm_id=@Param8 and project_id=@Param9 and year_id=@Param10", new string[] { ds.Tables[0].Rows[i]["ffa_res_fund_bal"].ToString(), ds.Tables[0].Rows[i]["ffa_avg_req_annual_contr"].ToString(), ds.Tables[0].Rows[i]["bfa_annual_contr"].ToString(), ds.Tables[0].Rows[i]["bfa_res_fund_bal"].ToString(), userID, ds.Tables[0].Rows[i]["tfa_annual_contr"].ToString(), ds.Tables[0].Rows[i]["tfa_res_fund_bal"].ToString(), firmID, projectID, ds.Tables[0].Rows[i]["year_id"].ToString() });
+            //}
+        }
 
 
 

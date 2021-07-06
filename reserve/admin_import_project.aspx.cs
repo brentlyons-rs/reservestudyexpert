@@ -20,7 +20,7 @@ namespace reserve
         protected void cmdSave_Click(object sender, EventArgs e)
         {
             var conn = new SqlConnection();
-            conn.ConnectionString = System.Configuration.ConfigurationManager.AppSettings["connstr_dev3"]; //production
+            conn.ConnectionString = System.Configuration.ConfigurationManager.AppSettings["connstr"]; //production
 
             SqlCommand cmd = new SqlCommand("select project_id, project_name from info_projects where project_id = @Param1", conn);
             cmd.Parameters.Add(new SqlParameter("Param1", txtProjectNum.Value));
