@@ -77,7 +77,7 @@ namespace reserve
             SqlDataReader dr = Fn_enc.ExecuteReader("select year(report_effective) as yr from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
             if (dr.Read())
             {
-                for (var i=0; i<31; i++)
+                for (var i=0; i<30; i++)
                 {
                     cboYear.Items.Add(new ListItem((Convert.ToInt16(dr["yr"].ToString()) + i).ToString() + " (Year " + (i+1).ToString() + ")", (i+1).ToString()));
                 }
