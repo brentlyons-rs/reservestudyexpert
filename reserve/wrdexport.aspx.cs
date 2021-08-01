@@ -26,6 +26,7 @@ namespace reserve
     {
         public WordprocessingDocument wordDoc;
         public bool blDetailedStudy = false;
+        public bool blPhotos = false;
 
         public void chgHeaderOLD(string strFind, string strNew)
         {
@@ -153,6 +154,8 @@ namespace reserve
                             RemoveText("Dated @@previous_date");
                             RemoveText("Previous Preparer");
                         }
+                        //Show photos for all project types except preliminary study
+                        if (dr["project_type_id"].ToString() != "9") blPhotos = true;
 
                         if (dr["project_type_desc"].ToString().ToLower().IndexOf("detailed") > -1) blDetailedStudy = true;
                         chgFooter("@@copyright", "1992-" + DateTime.Today.Year.ToString());
@@ -847,7 +850,7 @@ namespace reserve
                 DocumentFormat.OpenXml.Wordprocessing.TableRow tr;
                 while (img.Read())
                 {
-                    if ((blDetailedStudy) && (img[2].ToString() != "0"))
+                    if ((blPhotos) && (img[2].ToString() != "0"))
                     {
                         ip = wordDoc.MainDocumentPart.AddImagePart(ImagePartType.Jpeg, "img" + imgId.ToString());
                         MemoryStream ms = new MemoryStream((byte[])img[0]);
