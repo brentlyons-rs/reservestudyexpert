@@ -230,6 +230,7 @@ namespace reserve
                             //chgText("@@threshold_text", "The fourth funding scenario, entitled Threshold Funding, is based on keeping the Reserve Fund Balance above a specified threshold value at all times over the 30 year time frame. In this scenario, 7.5% of the Reserve Requirement Present Dollars (" + Convert.ToDouble(dr["threshold_value"]).ToString("C0") + ") was used as the minimum threshold balance.");
                             chgText("@@threshold_text", "The fourth funding scenario, entitled Threshold Funding, is based on keeping the Reserve Fund Balance above a specified threshold value at all times over the 30 year time frame.");
                             //chgText("@@threshold_value1", Convert.ToDouble(dr["tfa2_annual_contr"]).ToString("C0") + " (Threshold Funding - " + (Convert.ToDouble(dr["threshold_value"].ToString()) / Convert.ToDouble(dr["current_contrib"].ToString())).ToString("P1") + " of Reserve Requirement Present Dollars)");
+                            chgText("@@tfa_min", Convert.ToDouble(dr["min_tfa_bal"]).ToString("C0"));
                             chgText("@@tfa", Convert.ToDouble(dr["tfa2_annual_contr"]).ToString("C0"));
                         }
                         else
@@ -242,24 +243,24 @@ namespace reserve
                         if (Convert.ToBoolean(dr["full_funding_hidden"].ToString()))
                         {
                             chgText("@@full_funding_text", "");
-                            chgText("@@ffa", "N/A");
                             chgText("@@ffa_min", "N/A");
+                            chgText("@@ffa", "N/A");
                         }
                         else
                         {
-                            chgText("@@ffa", Convert.ToDouble(dr["ffa_avg_req_annual_contr"]).ToString("C0"));
                             chgText("@@ffa_min", Convert.ToDouble(dr["min_ffa_bal"]).ToString("C0"));
+                            chgText("@@ffa", Convert.ToDouble(dr["ffa_avg_req_annual_contr"]).ToString("C0"));
                         }
                         if (Convert.ToBoolean(dr["current_funding_hidden"].ToString()))
                         {
                             chgText("@@current_funding_text", "");
-                            chgText("@@cfa", "N/A");
                             chgText("@@cfa_min", "N/A");
+                            chgText("@@cfa", "N/A");
                         }
                         else
                         {
-                            chgText("@@cfa", Convert.ToDouble(dr["cfa_annual_contrib"]).ToString("C0"));
                             chgText("@@cfa_min", Convert.ToDouble(dr["min_cfa_bal"]).ToString("C0"));
+                            chgText("@@cfa", Convert.ToDouble(dr["cfa_annual_contrib"]).ToString("C0"));
                         }
                         if (Convert.ToBoolean(dr["baseline_funding_hidden"].ToString()))
                         {
@@ -702,7 +703,7 @@ namespace reserve
 
             var p = new Paragraph();
             p.ParagraphProperties = new ParagraphProperties(new ParagraphStyleId() { Val = "Heading1" });
-            p.Append(new DocumentFormat.OpenXml.Wordprocessing.Run(new Text("Expenditures List by Year")));
+            p.Append(new DocumentFormat.OpenXml.Wordprocessing.Run(new Text("EXPENDITURES BY YEAR")));
             pMarker.InsertBeforeSelf(p);
 
             DocumentFormat.OpenXml.Wordprocessing.Table table = new DocumentFormat.OpenXml.Wordprocessing.Table();
@@ -821,17 +822,17 @@ namespace reserve
 
             int imgId = 1;
 
-            DocumentFormat.OpenXml.Wordprocessing.RunProperties rp2 = new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
-            RunFonts rf = new RunFonts() { Ascii = "Verdana" };
-            DocumentFormat.OpenXml.Wordprocessing.FontSize fs2 = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "36" };
-            DocumentFormat.OpenXml.Wordprocessing.Color c2 = new DocumentFormat.OpenXml.Wordprocessing.Color() { ThemeColor = ThemeColorValues.Accent6 };
-            rp2.Append(rf);
-            rp2.Append(fs2);
-            rp2.Append(new DocumentFormat.OpenXml.Wordprocessing.Bold());
-            rp2.Append(c2);
-            var run2 = new DocumentFormat.OpenXml.Wordprocessing.Run(rp2, new Text("Notes"));
-            var p3 = new Paragraph(run2);
-            pMarker.InsertBeforeSelf(p3);
+            //DocumentFormat.OpenXml.Wordprocessing.RunProperties rp2 = new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
+            //RunFonts rf = new RunFonts() { Ascii = "Verdana" };
+            //DocumentFormat.OpenXml.Wordprocessing.FontSize fs2 = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "36" };
+            //DocumentFormat.OpenXml.Wordprocessing.Color c2 = new DocumentFormat.OpenXml.Wordprocessing.Color() { ThemeColor = ThemeColorValues.Accent6 };
+            //rp2.Append(rf);
+            //rp2.Append(fs2);
+            //rp2.Append(new DocumentFormat.OpenXml.Wordprocessing.Bold());
+            //rp2.Append(c2);
+            //var run2 = new DocumentFormat.OpenXml.Wordprocessing.Run(rp2, new Text("Notes"));
+            //var p3 = new Paragraph(run2);
+            //pMarker.InsertBeforeSelf(p3);
             
             var dr2 = Fn_enc.ExecuteReader("select top 1 firm_id from info_components_images where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
             if (dr2.Read())
@@ -916,19 +917,21 @@ namespace reserve
                 p.Append(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Break() { Type = BreakValues.Page }));
                 pMarker.InsertBeforeSelf(p);
 
-                DocumentFormat.OpenXml.Wordprocessing.RunProperties rp = new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
+                //DocumentFormat.OpenXml.Wordprocessing.RunProperties rp = new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
 
-                RunFonts runFont = new RunFonts() { Ascii = "Verdana" };
-                DocumentFormat.OpenXml.Wordprocessing.FontSize fs = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "36" };
-                DocumentFormat.OpenXml.Wordprocessing.Color c = new DocumentFormat.OpenXml.Wordprocessing.Color() { ThemeColor = ThemeColorValues.Accent6 };
-                rp.Append(runFont);
-                rp.Append(fs);
-                rp.Append(new DocumentFormat.OpenXml.Wordprocessing.Bold());
-                rp.Append(c);
+                //RunFonts runFont = new RunFonts() { Ascii = "Verdana" };
+                //DocumentFormat.OpenXml.Wordprocessing.FontSize fs = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "36" };
+                //DocumentFormat.OpenXml.Wordprocessing.Color c = new DocumentFormat.OpenXml.Wordprocessing.Color() { ThemeColor = ThemeColorValues.Accent6 };
+                //rp.Append(runFont);
+                //rp.Append(fs);
+                //rp.Append(new DocumentFormat.OpenXml.Wordprocessing.Bold());
+                //rp.Append(c);
 
-                var run = new DocumentFormat.OpenXml.Wordprocessing.Run(rp, new Text(dr["category_desc"].ToString()));
+                //var run = new DocumentFormat.OpenXml.Wordprocessing.Run(rp, new Text(dr["category_desc"].ToString()));
+                var run = new DocumentFormat.OpenXml.Wordprocessing.Run(new Text(dr["category_desc"].ToString()));
 
                 p = new Paragraph();
+                p.ParagraphProperties = new ParagraphProperties(new ParagraphStyleId() { Val = "Heading2" });
                 p.Append(run);
                 pMarker.InsertBeforeSelf(p);
 
@@ -1318,14 +1321,14 @@ namespace reserve
             if (blHdr)
             {
                 DocumentFormat.OpenXml.Wordprocessing.RunFonts runFont = new DocumentFormat.OpenXml.Wordprocessing.RunFonts() { Ascii = "Arial Black" };
-                DocumentFormat.OpenXml.Wordprocessing.FontSize fs = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "14" };
+                DocumentFormat.OpenXml.Wordprocessing.FontSize fs = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "16" };
                 rp.Append(runFont);
                 rp.Append(fs);
             }
             else
             {
                 DocumentFormat.OpenXml.Wordprocessing.RunFonts runFont = new DocumentFormat.OpenXml.Wordprocessing.RunFonts() { Ascii = "Arial" };
-                DocumentFormat.OpenXml.Wordprocessing.FontSize fs = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "14" };
+                DocumentFormat.OpenXml.Wordprocessing.FontSize fs = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "16" };
                 rp.Append(runFont);
                 rp.Append(fs);
             }
