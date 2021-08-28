@@ -74,7 +74,8 @@
                 {
                     bool blPhoto=false;
                     SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select project_type_id from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
-                    if (dr.Read() && (dr["project_type_id"].ToString() == "3" || dr["project_type_id"].ToString() == "8")) blPhoto = true;
+                    //if (dr.Read() && (dr["project_type_id"].ToString() == "3" || dr["project_type_id"].ToString() == "8")) blPhoto = true;
+                    if (dr.Read() && dr["project_type_id"].ToString() != "9") blPhoto = true;
                     dr.Close();
                     %>
 
