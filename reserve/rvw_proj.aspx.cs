@@ -147,7 +147,7 @@ namespace reserve
                 if ((dr["full_funding_hidden"] != null) && (dr["full_funding_hidden"].ToString().ToLower() == "true")) chkDisp2.Checked = false;
                 if ((dr["baseline_funding_hidden"] != null) && (dr["baseline_funding_hidden"].ToString().ToLower() == "true")) chkDisp3.Checked = false;
             }
-
+            dr.Close();
         }
 
         public void LoadIntervals()

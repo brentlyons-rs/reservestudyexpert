@@ -17,11 +17,6 @@ namespace reserve
                 {
                     liAdmin.Visible = false;
                 }
-                //if (Session["appver"].ToString() == "")
-                //{
-                //    var p = Fn_enc.ExecuteReader("sp_appver", new string[] { });
-                //    if (p.Read()) Session["appver"] = p["appver"];
-                //}
             }
             catch (Exception ex)
             {

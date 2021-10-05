@@ -642,6 +642,7 @@ catch (trymicrosoft) {
         <%
             iRow++;
         }
+            dr.Close();
         %>
     </table>
 

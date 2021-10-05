@@ -124,8 +124,6 @@ namespace reserve
         public void LoadCategory()
         {
             txtCatName.Value = cboCC.Items[cboCC.SelectedIndex].Text;
-            //SqlDataReader dr = Fn_enc.ExecuteReader("select ic.*, icc.category_name from info_components ic inner join info_component_categories icc on ic.firm_id=icc.firm_id and ic.project_id=icc.project_id and ic.category_id=icc.category_id where ic.firm_id=@Param1 and ic.project_id=@Param2 and ic.category_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboCC.Value });
-
         }
 
         public void DelComponent()

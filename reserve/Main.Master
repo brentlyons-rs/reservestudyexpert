@@ -33,7 +33,7 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-    <title>Reserve Study+ <% if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0) Response.Write(":: TEST VERSION ::"); else if (Session["appver"].ToString() != "") Response.Write("(v" + Session["appver"].ToString() + ")"); %> </title>
+    <title>Reserve Study+ <% if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0) Response.Write(":: TEST VERSION ::"); else if (Session["appver"].ToString() != "") Response.Write("(v" + Session["appver"].ToString() + ")"); %> (VPS) </title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">

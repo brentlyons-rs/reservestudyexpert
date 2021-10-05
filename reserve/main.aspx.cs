@@ -213,6 +213,7 @@ namespace reserve
                     divCloneStatus.InnerHtml = "Error cloning project: " + dr["error_desc"].ToString();
                 }
             }
+            dr.Close();
         }
 
         public void SendToClient()
@@ -362,8 +363,8 @@ namespace reserve
                 txtID.Value = dr["inspection_date"].ToString();
                 txtPSD.Value = dr["prev_date"].ToString();
                 txtSBB.Value = dr["source_begin_balance"].ToString();
-                dr.Close();
             }
+            dr.Close();
         }
 
         public void ClearFields()

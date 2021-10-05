@@ -248,7 +248,9 @@
     <Content Include="ws.asmx" />
     <Content Include="Main.Master" />
     <None Include="Properties\PublishProfiles\crossovertechnology.org - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Production %28VPS%29.pubxml" />
     <None Include="Properties\PublishProfiles\Production.pubxml" />
+    <None Include="Properties\PublishProfiles\test %28VPS%29.pubxml" />
     <None Include="Properties\PublishProfiles\test.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="images\backimg.jpg" />

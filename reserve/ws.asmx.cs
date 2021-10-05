@@ -55,6 +55,7 @@ namespace reserve
                 }
                 catch (Exception ex)
                 {
+                    conn.Close();
                     row = ds.Tables["Results"].NewRow();
                     row["i_row"] = iRow;
                     row["i_col"] = iCol;
@@ -74,6 +75,11 @@ namespace reserve
             }
             catch (Exception ex)
             {
+                try
+                {
+                    conn.Close();
+                }
+                catch { }
                 row = ds.Tables["Results"].NewRow();
                 row["i_row"] = iRow;
                 row["i_col"] = iCol;
@@ -391,6 +397,7 @@ namespace reserve
                     {
                         dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select base_unit_cost from info_components where firm_id=@Param1 and project_id=@Param2 and " + sCrit + "),0) as base_unit_cost from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                         var dataPresent = dr.Read();
+
                         var unitCost ="";
                         if (sVal=="0")
                         {
@@ -400,6 +407,7 @@ namespace reserve
                         {
                             if (dataPresent) unitCost = (Convert.ToDouble(dr["base_unit_cost"].ToString()) * Convert.ToDouble(dr["geo_factor"].ToString())).ToString();
                         }
+                        dr.Close();
                         sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), geo_factor='" + sVal + "', unit_cost=" + unitCost + " where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                         command = new SqlCommand(sqlUpdate.ToString(), conn);
                         command.ExecuteNonQuery();

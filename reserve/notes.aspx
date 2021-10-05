@@ -143,6 +143,7 @@
                             <%
                                     iTot++;
                                 }
+                                dr.Close();
                             %>
                         </table>
                         </div>
