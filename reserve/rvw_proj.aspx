@@ -416,6 +416,7 @@
                         <% 
                             iRow++;
                         }
+                            dr.Close();
                         %>
                         <tr>
                             <td></td>

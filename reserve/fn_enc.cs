@@ -42,11 +42,11 @@ namespace reserve
                 retDocLoc = @"c:\data\";
             else if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0)
             {
-                retDocLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\test.reservestudyplus.com\clienttemplates\";
+                retDocLoc = @"c:\Inetpub\vhosts\reservestudyplus.com\test.reservestudyplus.com\clienttemplates\";
             }
             else
             {
-                retDocLoc = @"D:\Inetpub\vhosts\reservestudyplus.com\clienttemplates\";
+                retDocLoc = @"c:\Inetpub\vhosts\reservestudyplus.com\clienttemplates\";
             }
 
             return retDocLoc;
@@ -85,40 +85,42 @@ namespace reserve
                 // When using CommandBehavior.CloseConnection, the connection will be closed when the 
                 // IDataReader is closed.
                 SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
                 return reader;
             }
         }
 
         public static void ExecuteNonQuery(string commandText, string[] paramColl)
         {
-            var conn = getconn();
-
-            using (SqlCommand cmd = new SqlCommand(commandText, conn))
+            using (var conn = getconn())
             {
-                if (paramColl != null)
+                using (SqlCommand cmd = new SqlCommand(commandText, conn))
                 {
-                    int i = 1;
-                    foreach (var p in paramColl)
+                    if (paramColl != null)
                     {
-                        if (p.ToString() == "")
-                            cmd.Parameters.Add(new SqlParameter("Param" + i.ToString(), DBNull.Value));
-                        else
-                            cmd.Parameters.Add(new SqlParameter("Param" + i.ToString(), p.ToString()));
-                        i++;
+                        int i = 1;
+                        foreach (var p in paramColl)
+                        {
+                            if (p.ToString() == "")
+                                cmd.Parameters.Add(new SqlParameter("Param" + i.ToString(), DBNull.Value));
+                            else
+                                cmd.Parameters.Add(new SqlParameter("Param" + i.ToString(), p.ToString()));
+                            i++;
+                        }
+                    }
+
+                    conn.Open();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    finally
+                    {
+                        conn.Close();
                     }
                 }
-
-                conn.Open();
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    conn.Close();
-                }
             }
+
+
 
         }
     }

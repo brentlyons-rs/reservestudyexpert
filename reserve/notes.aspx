@@ -28,11 +28,12 @@
     </style>
 
     <script language="javascript">
-        function checkFile() {
-
-            if (document.getElementById('lblFName').innerHTML == '[No file selected]') {
-                alert("Please select a file to upoad first.");
-                return false
+        function checkFile(blPhotoReqd) {
+            if (blPhotoReqd) {
+                if (document.getElementById('lblFName').innerHTML == '[No file selected]') {
+                    alert("Please select a file to upoad first.");
+                    return false
+                }
             }
             return true;
         }
@@ -72,10 +73,9 @@
             <% }
                 else
                 {
-                    bool blPhoto=false;
-                    SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select project_type_id from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
-                    //if (dr.Read() && (dr["project_type_id"].ToString() == "3" || dr["project_type_id"].ToString() == "8")) blPhoto = true;
-                    if (dr.Read() && dr["project_type_id"].ToString() != "9") blPhoto = true;
+                    bool blPhotoReqd=false;
+                    SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select ipi.project_type_id, isnull(lpt.photo_required,0) as photo_required from info_project_info ipi left join lkup_project_types lpt on ipi.firm_id=lpt.firm_id and ipi.project_type_id=lpt.project_type_id where ipi.firm_id=@Param1 and ipi.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                    if (dr.Read() && dr["photo_required"].ToString() == "1") blPhotoReqd = true;
                     dr.Close();
                     %>
 
@@ -85,8 +85,6 @@
                         <div style="border-bottom: 1px solid #88d8fe; width: 100%; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; background-color: #c7ecf5">Save a new note:</div>
                         <div style="padding: 5px 5px 5px 5px">
                             <table style="width: 100%">
-                                <% if (blPhoto)
-                                    { %>
                                 <tr>
                                     <td nowrap style="width: 25%; text-wrap: none; padding: 5px">
                                         <label id="lblFName" style="text-wrap: none">[No file selected]</label>
@@ -96,7 +94,6 @@
                                         <b>Note: </b>maximum file size is 10 MB.
                                     </td>
                                 </tr>
-                                <% } %>
                                 <tr>
                                     <td style="padding: 5px">Comments:</td>
                                     <td style="padding-left: 5px"><textarea style="width: 100%" rows="3" width="100%" id="txtComments" runat="server" maxlength="4000"></textarea></td>
@@ -119,12 +116,12 @@
                         <div style="padding: 5px 5px 5px 5px">
                         <table style="border-top: 1px solid #cccccc; border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-bottom: 1px solid #cccccc; padding: 3px 3px 3px 3px !important; width: 100%" cellpadding="3px">
                         <%
-                            dr = reserve.Fn_enc.ExecuteReader("select image_id, image_comments from info_components_images where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3 and component_id=@Param4", new string[4] { Session["firmid"].ToString(), Session["projectid"].ToString(), txtHdnCat.Value, txtHdnComp.Value });
+                            dr = reserve.Fn_enc.ExecuteReader("select image_id, image_comments, isnull(len(image_bytes),0) as img_size from info_components_images where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3 and component_id=@Param4", new string[4] { Session["firmid"].ToString(), Session["projectid"].ToString(), txtHdnCat.Value, txtHdnComp.Value });
                             while (dr.Read())
                             {
                             %>
                             <tr style="background-color: #eeeeee">
-                                <% if (blPhoto) { %><td style="width: 1%; vertical-align: top"><img id="img1" height="200" width="200" src="ShowImage.ashx?cat=<%=txtHdnCat.Value %>&comp=<%=txtHdnComp.Value %>&img=<%=dr["image_id"].ToString() %>" /></td> <% } %>
+                                <td style="width: 1%; vertical-align: top"><% if (Convert.ToInt32(dr["img_size"].ToString()) > 0) { %><img id="img1" height="200" width="200" src="ShowImage.ashx?cat=<%=txtHdnCat.Value %>&comp=<%=txtHdnComp.Value %>&img=<%=dr["image_id"].ToString() %>" /><% } %></td>
                                 <td style="width: 99%; vertical-align: top">
                                     <table style="width: 100%; padding: 5px">
                                         <tr>
@@ -146,6 +143,7 @@
                             <%
                                     iTot++;
                                 }
+                                dr.Close();
                             %>
                         </table>
                         </div>

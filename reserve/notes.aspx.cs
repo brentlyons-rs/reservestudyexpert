@@ -24,9 +24,6 @@ namespace reserve
 
         protected void btnUpload_Click(object sender, EventArgs e)
         {
-            //byte[] buffer = new byte[flUp.FileContent.Length];
-            //Stream s = flUp.FileContent;
-            //s.Read(buffer, 0, buffer.Length);
             byte[] data;
 
             if (flUp.FileContent.Length>0)
@@ -86,7 +83,13 @@ namespace reserve
             cmd.ExecuteNonQuery();
             conn.Close();
 
-            lblStatus.InnerHtml = "Successfully added image to component.";
+            if (flUp.FileContent.Length > 0) {
+                lblStatus.InnerHtml = "Successfully added note.";
+            }
+            else
+            {
+                lblStatus.InnerHtml = "Successfully added image and note to component.";
+            }
         }
 
         protected void delImg()

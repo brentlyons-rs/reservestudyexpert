@@ -227,9 +227,7 @@ namespace reserve
                         if (Convert.ToBoolean(dr["threshold_used"].ToString())==true)
                         {
                             chgText("@@funding_scenarios", "four (4)");
-                            //chgText("@@threshold_text", "The fourth funding scenario, entitled Threshold Funding, is based on keeping the Reserve Fund Balance above a specified threshold value at all times over the 30 year time frame. In this scenario, 7.5% of the Reserve Requirement Present Dollars (" + Convert.ToDouble(dr["threshold_value"]).ToString("C0") + ") was used as the minimum threshold balance.");
                             chgText("@@threshold_text", "The fourth funding scenario, entitled Threshold Funding, is based on keeping the Reserve Fund Balance above a specified threshold value at all times over the 30 year time frame.");
-                            //chgText("@@threshold_value1", Convert.ToDouble(dr["tfa2_annual_contr"]).ToString("C0") + " (Threshold Funding - " + (Convert.ToDouble(dr["threshold_value"].ToString()) / Convert.ToDouble(dr["current_contrib"].ToString())).ToString("P1") + " of Reserve Requirement Present Dollars)");
                             chgText("@@tfa_min", Convert.ToDouble(dr["min_tfa_bal"]).ToString("C0"));
                             chgText("@@tfa", Convert.ToDouble(dr["tfa2_annual_contr"]).ToString("C0"));
                         }
@@ -295,36 +293,6 @@ namespace reserve
 
                         ChartReference cr = wordDoc.MainDocumentPart.Document.Body.Descendants<ChartReference>().FirstOrDefault();
                         ChartPart cp = (ChartPart)wordDoc.MainDocumentPart.Parts.Where(pt => pt.RelationshipId == cr.Id).FirstOrDefault().OpenXmlPart;
-                        //***Below commented section is supposed to work for the excel data behind the chart, but doesn't seem to be committing.
-                        //***Commented section changes the "cached" values, which is what the user will see. If the user clicks the "edit data" option though, 
-                        //***data will revert to the blanked-out data in excel.
-                        ////ChartPart cp = wordDoc.MainDocumentPart.ChartParts.ElementAt(0);
-                        ////Chart chart = cp.ChartSpace.Descendants<Chart>().FirstOrDefault();
-                        //ExternalData ed = cp.ChartSpace.Elements<ExternalData>().FirstOrDefault();
-                        //EmbeddedPackagePart epp = (EmbeddedPackagePart)cp.Parts.Where(pt => pt.RelationshipId == ed.Id).FirstOrDefault().OpenXmlPart;
-
-                        //using (Stream str = epp.GetStream())
-                        //using (MemoryStream ms = new MemoryStream())
-                        //{
-                        //    CopyStream(str, ms);
-                        //    using (SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Open(ms,true))
-                        //    {
-                        //        Sheet ws = (Sheet)spreadsheetDoc.WorkbookPart.Workbook.Sheets.FirstOrDefault();
-
-                        //        WorksheetPart wsp = (WorksheetPart)spreadsheetDoc.WorkbookPart.Parts.Where(pt => pt.RelationshipId == ws.Id).FirstOrDefault().OpenXmlPart;
-                        //        SheetData sd = wsp.Worksheet.Elements<SheetData>().FirstOrDefault();
-
-                        //        Row secondRow = sd.Elements<Row>().Skip(1).FirstOrDefault();
-                        //        if (secondRow != null)
-                        //        {
-                        //            secondRow.Elements<Cell>().ElementAt(1).Elements<CellValue>().FirstOrDefault().Text = "123456";
-                        //        }
-                        //        using (Stream s = epp.GetStream())
-                        //            ms.WriteTo(s);
-
-                        //        spreadsheetDoc.WorkbookPart.Workbook.Save();
-                        //    }
-                        //}
 
                         conn = Fn_enc.getconn();
                         conn.Open();
@@ -339,11 +307,8 @@ namespace reserve
                         Chart chart = cp.ChartSpace.Elements<Chart>().First();
                         LineChart lc = chart.Descendants<LineChart>().FirstOrDefault();
                         
-                        
-
                         if (lc != null)
                         {
-                            //LineChartSeries lcs = lc.Elements<LineChartSeries>().FirstOrDefault();
                             LineChartSeries lcs = lc.Elements<LineChartSeries>().Skip(1).FirstOrDefault();
                             //Begin with the beginning balance
                             lcs.Elements<CategoryAxisData>().FirstOrDefault().FirstChild.ElementAt(1).ElementAt(2).Elements<NumericValue>().FirstOrDefault().Text = (Convert.ToDateTime(dr["report_effective"].ToString()).Year - 1).ToString();
@@ -485,7 +450,6 @@ namespace reserve
                                 }
                                 tbl.Append(tr);
 
-                                //EditTblCell(tbl, 3, 3,"here");
                                 if (!Convert.ToBoolean(dr["current_funding_hidden"].ToString())) tbl.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(3).Descendants<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAt(FindTblCol(tbl,"current", Convert.ToBoolean(dr["full_funding_hidden"].ToString()))).Elements<Paragraph>().First().Elements<DocumentFormat.OpenXml.Wordprocessing.Run>().First().Elements<Text>().First().Text = Convert.ToDouble(dr["begin_balance"]).ToString("C0");
                                 if (!Convert.ToBoolean(dr["full_funding_hidden"].ToString())) tbl.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(3).Descendants<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAt(FindTblCol(tbl, "full", Convert.ToBoolean(dr["full_funding_hidden"].ToString()))).Elements<Paragraph>().First().Elements<DocumentFormat.OpenXml.Wordprocessing.Run>().First().Elements<Text>().First().Text = Convert.ToDouble(dr["begin_balance"]).ToString("C0");
                                 if (!Convert.ToBoolean(dr["baseline_funding_hidden"].ToString())) tbl.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(3).Descendants<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAt(FindTblCol(tbl, "baseline", Convert.ToBoolean(dr["full_funding_hidden"].ToString()))).Elements<Paragraph>().First().Elements<DocumentFormat.OpenXml.Wordprocessing.Run>().First().Elements<Text>().First().Text = Convert.ToDouble(dr["begin_balance"]).ToString("C0");
@@ -493,10 +457,6 @@ namespace reserve
 
                                 if (!Convert.ToBoolean(dr["baseline_funding_hidden"].ToString())) tbl.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(2).Descendants<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAt(FindTblCol(tbl, "baseline", Convert.ToBoolean(dr["full_funding_hidden"].ToString()))).Elements<Paragraph>().First().Elements<DocumentFormat.OpenXml.Wordprocessing.Run>().First().Elements<Text>().First().Text = (ttl[3] / ttl[1]).ToString("P2");
                                 if (Convert.ToBoolean(dr["threshold_used"].ToString()) == true) tbl.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(2).Descendants<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAt(FindTblCol(tbl, "threshold", Convert.ToBoolean(dr["full_funding_hidden"].ToString()))).Elements<Paragraph>().First().Elements<DocumentFormat.OpenXml.Wordprocessing.Run>().First().Elements<Text>().First().Text = (ttl[4] / ttl[1]).ToString("P2");
-
-                                //tbl.Descendants<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(4).Remove();
-                                //tbl.Descendants<DocumentFormat.OpenXml.Wordprocessing.Column>().ElementAt(9).Remove();
-                                
                             }
                             else if (tProp.TableCaption.Val == "Summary")
                             {
@@ -559,23 +519,12 @@ namespace reserve
                         dr.Close();
                         conn.Close();
                         
-                        //MakeComponents();
-                        //var text = wordDoc.MainDocumentPart.RootElement.Descendants<Text>().FirstOrDefault(e => e.Text == "***components***");
-                        //Paragraph p = (DocumentFormat.OpenXml.Wordprocessing.Paragraph)text.Parent.Parent;
-                        //if (text != null)
-                        //{
-                        //    text.Text = "";
-                        //    MakeComponents(p);
-                        //    MakeExpenditures(p);
-                        //}
-
                         MakeComponents();
                         MakeNotes();
                         MakeExpenditures();
 
 
                         wordDoc.MainDocumentPart.DocumentSettingsPart.Settings.Append(new UpdateFieldsOnOpen() { Val = true });
-                        //wordDoc.MainDocumentPart.Document.Append(MakeRun("asdf", false));
                         wordDoc.MainDocumentPart.Document.Save(); // won't update the original file 
                     }
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -676,8 +625,6 @@ namespace reserve
                 tbl.Elements<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(1).Elements<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAt(2).Remove();
                 tbl.Elements<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAt(0).Elements<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAt(1).Remove();
             }
-
-
             return tbl;
         }
 
@@ -821,18 +768,6 @@ namespace reserve
             if (text != null) text.Text = "";
 
             int imgId = 1;
-
-            //DocumentFormat.OpenXml.Wordprocessing.RunProperties rp2 = new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
-            //RunFonts rf = new RunFonts() { Ascii = "Verdana" };
-            //DocumentFormat.OpenXml.Wordprocessing.FontSize fs2 = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "36" };
-            //DocumentFormat.OpenXml.Wordprocessing.Color c2 = new DocumentFormat.OpenXml.Wordprocessing.Color() { ThemeColor = ThemeColorValues.Accent6 };
-            //rp2.Append(rf);
-            //rp2.Append(fs2);
-            //rp2.Append(new DocumentFormat.OpenXml.Wordprocessing.Bold());
-            //rp2.Append(c2);
-            //var run2 = new DocumentFormat.OpenXml.Wordprocessing.Run(rp2, new Text("Notes"));
-            //var p3 = new Paragraph(run2);
-            //pMarker.InsertBeforeSelf(p3);
             
             var dr2 = Fn_enc.ExecuteReader("select top 1 firm_id from info_components_images where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
             if (dr2.Read())
