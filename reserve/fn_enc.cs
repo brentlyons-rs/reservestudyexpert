@@ -13,9 +13,10 @@ namespace reserve
         {
             SmtpClient smtpClient = new SmtpClient("mail.reservestudyplus.com", 25);
 
-            smtpClient.Credentials = new System.Net.NetworkCredential("admin@reservestudyplus.com", "AWekAtBm869NAuz");
+            smtpClient.Credentials = new System.Net.NetworkCredential("admin@reservestudyplus.com", "old");
             // smtpClient.UseDefaultCredentials = true; // uncomment if you don't want to use the network credentials
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
             MailMessage mail = new MailMessage();
 
             //Setting From , To and CC

@@ -62,7 +62,18 @@
                 <% if (HttpContext.Current.Request.Url.Host.IndexOf("test.reservestudyplus.com") >= 0) { %>
                 <font color="red">::TEST VERSION::</font>
                 <% } %>
-                <%=Session["realname"].ToString() + " - " + Session["firmname"].ToString() %></h6>
+                    </h6>
+                <table border="0">
+                    <tr>
+                        <td>
+                            <label id="lblName" name="lblName" runat="server"></label>
+                        </td>
+                        <td>
+                            <select id="cboMulti" name="cboMulti" style="font-size: 8pt" runat="server">
+                            </select>
+                        </td>
+                    </tr>
+                </table>
             </div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="topheader2">
