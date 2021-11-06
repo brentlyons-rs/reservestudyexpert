@@ -55,10 +55,10 @@
             <div class="collapse navbar-collapse" id="top-navbar-1">
 		        <div class="container nav navbar-nav navbar-right" style="width: 450px">
                     <ul class="nav nav-tabs" style="margin-left: 30px; margin-right: 20px;">
-			            <li style="background-color: #efefef; border-top-left-radius: 5px; border-top-right-radius: 5px; margin-right: 5px">
+			            <li style="background-color: #efefef; border-top-left-radius: 5px; border-top-right-radius: 5px; margin-right: 5px" class="<% if (Request.QueryString["c"] == "1") Response.Write("active"); %>">
                             <a  href="#1" data-toggle="tab">Client Login</a>
 			            </li>
-			            <li style="background-color: #efefef; border-top-left-radius: 5px; border-top-right-radius: 5px" class="active">
+			            <li style="background-color: #efefef; border-top-left-radius: 5px; border-top-right-radius: 5px" class="<% if (Request.QueryString["c"] == "" || Request.QueryString["c"] != "1") Response.Write("active"); %>">
                             <a href="#2" data-toggle="tab">Staff Login</a>
 			            </li>
 		            </ul>
