@@ -242,7 +242,7 @@ namespace reserve
                 sBody.AppendLine("To view, modify, and generate your personalized study, please login at:<br><br>");
                 sBody.AppendLine("Website: <a href=\"https://reservestudyplus.com/default.aspx?c=1\" target=\"none\">https://reservestudyplus.com/default.aspx?c=1</a><br>");
                 sBody.AppendLine("Username: " + txtS2CEMail.Value + "<br>");
-                sBody.AppendLine("Password: " + txtHdnProject.Value + "<br><br>");
+                sBody.AppendLine("Password: C" + txtHdnProject.Value + "<br><br>");
                 sBody.AppendLine("Enjoy your interactive project!<br><br>");
                 sBody.AppendLine("Regards,<br><br>");
                 sBody.AppendLine("Kipcon, LLC.");
