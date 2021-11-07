@@ -54,7 +54,16 @@ namespace reserve
                                 Session["userid"] = p["user_id"];
                                 Session["realname"] = p["real_name"];
                                 Session["firmname"] = p["firm_name"];
+                                Session["email"] = txtEM.Value;
                                 Session["client"] = "0";
+                                if (Convert.ToInt32(p["multi"].ToString()) > 1)
+                                {
+                                    Session["multi"] = "1";
+                                }
+                                else
+                                {
+                                    Session["multi"] = "0";
+                                }
                                 p.Close();
                                 p = Fn_enc.ExecuteReader("sp_appver", new string[] { });
                                 if (p.Read()) { Session["appver"] = p["appver"]; }
@@ -73,6 +82,7 @@ namespace reserve
                                 Session["client"] = "1";
                                 Session["projectid"] = "C" + txtPWClient.Value;
                                 Session["oldprojectid"] = txtPWClient.Value;
+                                Session["multi"] = 0;
                                 p.Close();
                                 p = Fn_enc.ExecuteReader("sp_appver", new string[] { });
                                 if (p.Read()) { Session["appver"] = p["appver"]; }
