@@ -297,6 +297,8 @@ namespace reserve
                     sNewVal.Replace(",", "");
                     if (sField=="pct_increase_all")
                         sqlUpdate.Append("update info_projections set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), pct_increase='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "'");
+                    else if (sField == "cfa_annual_contrib")
+                        sqlUpdate.Append("update " + sSQLTable + " set cfa_annual_contrib_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                     else if (sField== "tfa2_annual_contr")
                         sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "', pct_increase=null where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                     else if (sField == "pct_increase")
@@ -306,7 +308,7 @@ namespace reserve
                     command = new SqlCommand(sqlUpdate.ToString(), conn);
                     command.ExecuteNonQuery();
                     //If an adjusted threshold field is being updated, we need to update all the numbers for those columns, then return updated data.
-                    if ((sField=="tfa2_annual_contr") || (sField=="pct_increase") || (sField=="pct_increase_all") || (sField=="tfa2_reserve_fund_bal"))
+                    if ((sField=="cfa_annual_contrib") || (sField=="tfa2_annual_contr") || (sField=="pct_increase") || (sField=="pct_increase_all") || (sField=="tfa2_reserve_fund_bal"))
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_adj_threshold " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "'", conn);
                         adapter.Fill(ds, "adjthresh");

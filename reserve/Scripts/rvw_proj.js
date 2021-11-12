@@ -191,7 +191,13 @@ function examineTM(XMLObj) {
                 document.getElementById('txt' + (j + 1) + '_10').value = '0.00';
                 document.getElementById('hdnAnswer' + (j + 1) + '_10').value = '0.00';
             }
-            if (XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('contrib').length>0) {
+            //CFA
+            if (XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('cfa_bal').length > 0) {
+                document.getElementById('txt' + (j + 1) + '_2').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('cfa_bal')[0].firstChild.nodeValue;
+                document.getElementById('hdnAnswer' + (j + 1) + '_2').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('cfa_bal')[0].firstChild.nodeValue;
+            }            
+            //TFA
+            if (XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('contrib').length > 0) {
                 document.getElementById('txt' + (j + 1) + '_11').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('contrib')[0].firstChild.nodeValue;
                 document.getElementById('hdnAnswer' + (j + 1) + '_11').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('contrib')[0].firstChild.nodeValue;
             }
