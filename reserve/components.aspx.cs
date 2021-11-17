@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Services;
+using System.Net.Http;
+using System.Web.Http;
 
 namespace reserve
 {
@@ -190,5 +192,18 @@ namespace reserve
             }
             return emp;
         }
+
+        [WebMethod(enableSession: true)]
+        public static string Reorder([FromBody] List<Component> components)
+        {
+            Fn_enc.ExecuteNonQuery("sp_app_component_reorder @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { });
+            return "success";
+        }
+    }
+
+    public class Component
+    {
+        public int Id { get; set; }
+        public int Order { get; set; }
     }
 }

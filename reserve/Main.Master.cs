@@ -22,11 +22,11 @@ namespace reserve
                         Session["userid"] = dr["user_id"];
                         Session["firmname"] = dr["firm_name"];
                         Session["client"] = "0";
-                        lblToggle.InnerText = "Successfully switched firms.";
+                        //lblToggle.InnerText = "Successfully switched firms.";
                     }
                     else
                     {
-                        lblToggle.InnerText = "Unable to switch: could not find your email address.";
+                        //lblToggle.InnerText = "Unable to switch: could not find your email address.";
                     }
                     dr.Close();
                 }
@@ -36,23 +36,23 @@ namespace reserve
                 }
                 if (Session["multi"].ToString()=="1")
                 {
-                    cboMulti.Visible = true;
-                    cboMulti.Items.Clear();
+                    //cboMulti.Visible = true;
+                    //cboMulti.Items.Clear();
                     lblName.InnerText = Session["realname"].ToString();
                     var dr = Fn_enc.ExecuteReader("select lf.firm_id, lf.firm_name from lkup_firms lf inner join app_users au on lf.firm_id=au.firm_id where au.email_addr=@Param1", new string[] { Session["email"].ToString() });
                     while (dr.Read())
                     {
-                        cboMulti.Items.Add(new ListItem(dr["firm_name"].ToString(), dr["firm_id"].ToString()));
+                        //cboMulti.Items.Add(new ListItem(dr["firm_name"].ToString(), dr["firm_id"].ToString()));
                         if (dr["firm_id"].ToString() == Session["firmid"].ToString())
                         {
-                            cboMulti.SelectedIndex = cboMulti.Items.Count - 1;
+                            //cboMulti.SelectedIndex = cboMulti.Items.Count - 1;
                         }
                     }
                     dr.Close();
                 }
                 else
                 {
-                    cboMulti.Visible = false;
+                    //cboMulti.Visible = false;
                     lblName.InnerText = $"{Session["realname"]} - {Session["firmname"]}";
                 }
             }

@@ -187,8 +187,47 @@ document.addEventListener('DOMContentLoaded', function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
 
-        sSql = " category_id = " + document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value + " and component_id = " + table.rows[endRowIndex].cells[0].id;
-        sendComponent(sSql, 'order_id', endRowIndex, table.rows[endRowIndex].cells[0].id, -1);
+        //alert(endRowIndex);
+        //Do not change the order of the fields in the sql
+        //sSql = " category_id = " + document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value + " and year_id=" + document.getElementById('MainContent_cboYear').options[document.getElementById('MainContent_cboYear').selectedIndex].value + " and component_id = " + table.rows[endRowIndex].cells[0].id;
+        //sendComponent(sSql, 'order_id', endRowIndex + 1, table.rows[endRowIndex].cells[0].id, -1);
+
+        //Build the json
+        //table.rows[endRowIndex].cells[0].id
+        var arrComponents = [];
+
+        let tmp;
+        for (var i = 1; i < table.rows.length; i++) {
+            tmp = { Id: table.rows[i].cells[0].id, Order: i };
+            arrComponents.push(tmp);
+        }
+
+        var myData = { components: arrComponents };
+
+        var mydata = {
+            components: [{ Id: 12, Order: 5 }, { Id: 2, Order: 3 }]
+        };
+
+        let myjson = JSON.stringify(myData);
+        alert(myjson);
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "components.aspx/Reorder",
+            data: myjson,
+            dataType: "json",
+            success: function (data) {
+                //response($.map(data.d, function (item) {
+                //    return {
+                //        label: item.split('|')[0],
+                //       val: item.split('|')[1]
+                //    }
+                //}))
+            },
+            error: function (result) {
+                alert(result.responseText);
+            }
+        });  
         //alert("Component: " + table.rows[endRowIndex].cells[0].id + ", Order: " + endRowIndex);
     };
 
