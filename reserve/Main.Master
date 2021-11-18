@@ -66,14 +66,8 @@
                 <table border="0">
                     <tr>
                         <td>
-                            <form method="post" id="frmToggle" name="frmToggle">
                             <h6><label id="lblName" name="lblName" runat="server"></label>
-                            <select id="cboMulti" name="cboMulti" style="font-size: 8pt" runat="server" onchange="document.getElementById('txtHdnToggle').value=this.value; document.frmToggle.submit();">
-                            </select>
-                            <input type="hidden" id="txtHdnToggle" name="txtHdnToggle" />
-                            <label id="lblToggle" name="lblToggle" runat="server"></label>
                             </h6>
-                            </form>
                         </td>
                     </tr>
                 </table>
