@@ -307,8 +307,14 @@ namespace reserve
                         sqlUpdate.Append("update " + sSQLTable + " set generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
                     command = new SqlCommand(sqlUpdate.ToString(), conn);
                     command.ExecuteNonQuery();
+                    //If CFA is being updated, we need to update all the reserve fund balances, then return updated data
+                    if (sField=="cfa_annual_contrib")
+                    {
+                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_cfa " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "'", conn);
+                        adapter.Fill(ds, "cfa");
+                    }
                     //If an adjusted threshold field is being updated, we need to update all the numbers for those columns, then return updated data.
-                    if ((sField=="cfa_annual_contrib") || (sField=="tfa2_annual_contr") || (sField=="pct_increase") || (sField=="pct_increase_all") || (sField=="tfa2_reserve_fund_bal"))
+                    else if ((sField=="tfa2_annual_contr") || (sField=="pct_increase") || (sField=="pct_increase_all") || (sField=="tfa2_reserve_fund_bal"))
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_adj_threshold " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "'", conn);
                         adapter.Fill(ds, "adjthresh");

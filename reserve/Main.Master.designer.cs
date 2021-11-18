@@ -24,24 +24,6 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblName;
 
         /// <summary>
-        /// cboMulti control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect cboMulti;
-
-        /// <summary>
-        /// lblToggle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblToggle;
-
-        /// <summary>
         /// liAdmin control.
         /// </summary>
         /// <remarks>
