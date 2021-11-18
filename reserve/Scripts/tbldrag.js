@@ -187,29 +187,22 @@ document.addEventListener('DOMContentLoaded', function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
 
-        //alert(endRowIndex);
-        //Do not change the order of the fields in the sql
-        //sSql = " category_id = " + document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value + " and year_id=" + document.getElementById('MainContent_cboYear').options[document.getElementById('MainContent_cboYear').selectedIndex].value + " and component_id = " + table.rows[endRowIndex].cells[0].id;
-        //sendComponent(sSql, 'order_id', endRowIndex + 1, table.rows[endRowIndex].cells[0].id, -1);
-
-        //Build the json
-        //table.rows[endRowIndex].cells[0].id
         var arrComponents = [];
 
-        let tmp;
+        var tmp;
         for (var i = 1; i < table.rows.length; i++) {
-            tmp = { Id: table.rows[i].cells[0].id, Order: i };
+            tmp = { Id: table.rows[i].cells[0].id, newOrder: i };
             arrComponents.push(tmp);
         }
 
-        var myData = { components: arrComponents };
+        var cat = document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value;
+        var yr = document.getElementById('MainContent_cboYear').options[document.getElementById('MainContent_cboYear').selectedIndex].value;
+        var myData = { components: arrComponents, category: cat, year: yr };
 
-        var mydata = {
-            components: [{ Id: 12, Order: 5 }, { Id: 2, Order: 3 }]
-        };
+        var myjson = JSON.stringify(myData);
 
-        let myjson = JSON.stringify(myData);
-        alert(myjson);
+        toggleComponentsTable('disable');
+
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
@@ -223,12 +216,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 //       val: item.split('|')[1]
                 //    }
                 //}))
+                //alert(data.responseText);
+                toggleComponentsTable('enable');
             },
             error: function (result) {
+                toggleComponentsTable('enable');
                 alert(result.responseText);
             }
-        });  
-        //alert("Component: " + table.rows[endRowIndex].cells[0].id + ", Order: " + endRowIndex);
+        });
     };
 
     table.querySelectorAll('tr').forEach(function (row, index) {

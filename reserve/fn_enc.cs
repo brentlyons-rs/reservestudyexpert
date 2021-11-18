@@ -112,7 +112,7 @@ namespace reserve
                     conn.Open();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        var i = cmd.ExecuteNonQuery();
                     }
                     finally
                     {

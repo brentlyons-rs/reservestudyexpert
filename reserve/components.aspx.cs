@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Web.Services;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace reserve
 {
@@ -194,9 +195,11 @@ namespace reserve
         }
 
         [WebMethod(enableSession: true)]
-        public static string Reorder([FromBody] List<Component> components)
+        public static string Reorder([FromBody] List<Component> components, [FromBody] string category, [FromBody] string year)
         {
-            Fn_enc.ExecuteNonQuery("sp_app_component_reorder @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { });
+            var s = JsonConvert.SerializeObject(components);
+            //var t = "[{\"Id\":1,\"Order\":1},{\"Id\":3,\"Order\":2},{\"Id\":11,\"Order\":3},{\"Id\":2,\"Order\":4},{\"Id\":4,\"Order\":5},{\"Id\":5,\"Order\":6},{\"Id\":7,\"Order\":7},{\"Id\":10,\"Order\":8},{\"Id\":6,\"Order\":9},{\"Id\":8,\"Order\":10},{\"Id\":9,\"Order\":11},{\"Id\":12,\"Order\":12}]"
+            Fn_enc.ExecuteNonQuery("sp_app_component_reorder @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { HttpContext.Current.Session["firmid"].ToString(), HttpContext.Current.Session["projectid"].ToString(), category, year, s });
             return "success";
         }
     }
@@ -204,6 +207,6 @@ namespace reserve
     public class Component
     {
         public int Id { get; set; }
-        public int Order { get; set; }
+        public int newOrder { get; set; }
     }
 }
