@@ -30,6 +30,7 @@ namespace reserve
                     }
                     dr.Close();
                 }
+
                 if (Session["client"].ToString() == "1")
                 {
                     liAdmin.Visible = false;
@@ -53,6 +54,7 @@ namespace reserve
                 else
                 {
                     //cboMulti.Visible = false;
+
                     lblName.InnerText = $"{Session["realname"]} - {Session["firmname"]}";
                 }
             }

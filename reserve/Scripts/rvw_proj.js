@@ -191,19 +191,23 @@ function examineTM(XMLObj) {
                 document.getElementById('txt' + (j + 1) + '_10').value = '0.00';
                 document.getElementById('hdnAnswer' + (j + 1) + '_10').value = '0.00';
             }
-            //CFA
-            if (XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('cfa_bal').length > 0) {
-                document.getElementById('txt' + (j + 1) + '_2').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('cfa_bal')[0].firstChild.nodeValue;
-                document.getElementById('hdnAnswer' + (j + 1) + '_2').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('cfa_bal')[0].firstChild.nodeValue;
-            }            
             //TFA
             if (XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('contrib').length > 0) {
                 document.getElementById('txt' + (j + 1) + '_11').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('contrib')[0].firstChild.nodeValue;
                 document.getElementById('hdnAnswer' + (j + 1) + '_11').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('contrib')[0].firstChild.nodeValue;
             }
-            if (XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('bal').length>0) {
+            if (XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('bal').length > 0) {
                 document.getElementById('txt' + (j + 1) + '_12').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('bal')[0].firstChild.nodeValue;
                 document.getElementById('hdnAnswer' + (j + 1) + '_12').value = XMLobj.getElementsByTagName('adjthresh')[j].getElementsByTagName('bal')[0].firstChild.nodeValue;
+            }
+        }
+    }
+    else if (XMLobj.getElementsByTagName('cfa').length > 0) {
+        //CFA
+        for (j = 0; j < XMLobj.getElementsByTagName('cfa').length; j++) {
+            if (XMLobj.getElementsByTagName('cfa')[j].getElementsByTagName('cfa_bal').length > 0) {
+                document.getElementById('txt' + (j + 1) + '_2').value = XMLobj.getElementsByTagName('cfa')[j].getElementsByTagName('cfa_bal')[0].firstChild.nodeValue;
+                document.getElementById('hdnAnswer' + (j + 1) + '_2').value = XMLobj.getElementsByTagName('cfa')[j].getElementsByTagName('cfa_bal')[0].firstChild.nodeValue;
             }            
         }
     }
