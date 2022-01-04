@@ -87,13 +87,31 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkDisp3;
 
         /// <summary>
-        /// chkThreshold control.
+        /// chkThreshold1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkThreshold;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkThreshold1;
+
+        /// <summary>
+        /// txtThreshold1Val control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtThreshold1Val;
+
+        /// <summary>
+        /// chkThreshold2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkThreshold2;
 
         /// <summary>
         /// chkIntervals control.

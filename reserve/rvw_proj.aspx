@@ -21,7 +21,7 @@
         border-bottom: 1px solid #000000;
         padding: 1px;
     } 
-    .threshold {
+    .threshold1 {
         display: none;
     }
 </style>
@@ -164,10 +164,14 @@
                                     }
                                     dr.Close();
 
-                                    dr = reserve.Fn_enc.ExecuteReader("select isnull(threshold_used,0) as threshold_used, threshold_value, interest, inflation from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                                    dr = reserve.Fn_enc.ExecuteReader("select isnull(threshold1_used,0) as threshold1_used, threshold1_value, isnull(threshold2_used,0) as threshold2_used, interest, inflation from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                                     if (dr.Read()) {
-                                        if (dr["threshold_used"].ToString()=="True") {
-                                            chkThreshold.Checked = true;
+                                        if (dr["threshold1_used"].ToString()=="True") {
+                                            chkThreshold1.Checked = true;
+                                            txtThreshold1Val.Value = dr["threshold1_value"].ToString();
+                                        }
+                                        if (dr["threshold2_used"].ToString()=="True") {
+                                            chkThreshold2.Checked = true;
                                         }
                                         txtInterest.Value = dr["interest"].ToString();
                                         txtInflation.Value = dr["inflation"].ToString();
@@ -218,8 +222,16 @@
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkDisp3" style="display: none"></td>
                                     </tr>
                                     <tr>
-                                        <td width="1%" style="text-wrap: none" nowrap><input type="checkbox" id="chkThreshold" name="chkThreshold" runat="server"><label id="lblThreshold" for="MainContent_chkThreshold" class="frm-text">&nbsp;Threshold Funding</label></td>
-                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold" style="display: none"></td>
+                                        <td width="1%" style="text-wrap: none" nowrap>
+                                            <input type="checkbox" id="chkThreshold1" name="chkThreshold1" runat="server"><label id="lblThreshold1" for="MainContent_chkThreshold1" class="frm-text">&nbsp;Threshold Scenario 1</label>:
+                                            $<input type="text" id="txtThreshold1Val" class="frm-text" style="border: 1px solid #dddddd; border-radius: 5px; height: 25px" size="10" runat="server" onkeypress="return isNumber(event)" />
+                                            <button type="button" class="btn btn-primary" style="height: 25px !important; padding-top: 2px" onclick="sendThreshold1(1,document.getElementById('MainContent_txtThreshold1Val').value)">Save</button>
+                                        </td>
+                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold1" style="display: none"></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="1%" style="text-wrap: none" nowrap><input type="checkbox" id="chkThreshold2" name="chkThreshold2" runat="server"><label id="lblThreshold2" for="MainContent_chkThreshold2" class="frm-text">&nbsp;Threshold Scenario 2</label></td>
+                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold2" style="display: none"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -266,10 +278,10 @@
                             <td class="frm-text baseline" style="color: #ffffff; padding: 10px" colspan="2">BASELINE FUNDING ANALYSIS</td>
                             <td class="baseline" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
-                            <td class="frm-text threshold" style="color: #ffffff; padding: 10px" colspan="2">THRESHOLD FUNDING ANALYSIS</td>
-                            <td class="threshold" style="background-color: #ffffff; width: 10px">&nbsp;</td>
-                            <td class="frm-text adjthreshold" style="color: #ffffff; padding: 10px" colspan="3">PROJECTED THRESHOLD FUNDING ANALYSIS</td>
+                            <td class="frm-text threshold1" style="color: #ffffff; padding: 10px" colspan="2">THRESHOLD FUNDING ANALYSIS (SCENARIO 1)</td>
+                            <td class="threshold1" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 10px" colspan="3">THRESHOLD FUNDING ANALYSIS (SCENARIO 2)</td>
                         </tr>
                         <tr style="background-color: #E98300; padding: 5px">
                             <td class="frm-text" style="background-color: #ffffff !important">&nbsp;</td>
@@ -290,13 +302,13 @@
                             <td class="frm-text baseline" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
                             <td class="baseline" style="background-color: #ffffff"></td>
 
-                            <td class="frm-text threshold" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTRIBUTION</td>
-                            <td class="frm-text threshold" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="threshold" style="background-color: #ffffff"></td>
+                            <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTRIBUTION</td>
+                            <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="threshold1" style="background-color: #ffffff"></td>
 
-                            <td class="frm-text adjthreshold" style="color: #ffffff; padding: 5px;">%<br />inc.</td>
-                            <td class="frm-text adjthreshold" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTRIBUTION</td>
-                            <td class="frm-text adjthreshold" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">%<br />inc.</td>
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTRIBUTION</td>
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
                         </tr>
                         <tr style="background-color: #eeeeee">
                             <%
@@ -321,17 +333,17 @@
                             <td class="baseline"></td>
                             <td class="frm-text baseline" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
                             <td class="baseline" style="background-color: #ffffff"></td>
-                            <!--Threshold-->
-                            <td class="frm-text threshold" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="threshold" style="background-color: #ffffff"></td>
-                            <td class="threshold" style="background-color: #ffffff"></td>
-                            <!--Adjusted Threshold-->
-                            <td class="adjthreshold">
+                            <!--threshold1-->
+                            <td class="frm-text threshold1"></td>
+                            <td class="threshold1" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
+                            <td class="threshold1" style="background-color: #ffffff"></td>
+                            <!--Adjusted threshold1-->
+                            <td class="threshold2">
                                 <input type="text" ID="txt1_10" name="txt1_10" value="0.00" class="gridrow_txtbox2 Component" onblur="CheckPctIncAllChanged()"  onkeydown="chkKeybd(this, event,1,10)"  style="width: 50px !important" />
                                 <input type="hidden" ID="hdnAnswer1_10" name="hdnAnswer1_10" value="0.00" class="gridrow_txtbox2 Component" />
                             </td>
-                            <td class="adjthreshold"></td>
-                            <td class="frm-text adjthreshold" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
+                            <td class="threshold2"></td>
+                            <td class="frm-text threshold2" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
                         </tr>
                         <%
                             dr.Close();
@@ -386,29 +398,29 @@
                                 <input type="hidden" id="txtHdnCrit<%=iRow %>" name="txtHdnCrit<%=iRow %>" value="<%=sql %>">
                             </td>
                             <td class="baseline" style="background-color: #ffffff; border-bottom: none !important;"></td>
-                            <!--Threshold Funding-->
-                            <td class="frm-text bb threshold">
+                            <!--threshold1 Funding-->
+                            <td class="frm-text bb threshold1">
                                 <input type="text" ID="txt<%=iRow %>_8" name="txt<%=iRow %>_8" value="<%=Convert.ToDouble(dr["tfa_annual_contr"]).ToString(fmt1) %>" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,<%=iRow %>,8)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('tfa_annual_contr','textbox',<%=iRow %>, 8)" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_8" name="hdnAnswer<%=iRow %>_8" value="<%=Convert.ToDouble(dr["tfa_annual_contr"]).ToString(fmt1) %>" />
                             </td>
-                            <td class="frm-text bb threshold">
+                            <td class="frm-text bb threshold1">
                                 <input type="text" ID="txt<%=iRow %>_9" name="txt<%=iRow %>_9" value="<%=Convert.ToDouble(dr["tfa_res_fund_bal"]).ToString(fmt1) %>" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,<%=iRow %>,9)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('tfa_res_fund_bal','textbox',<%=iRow %>, 9)" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_9" name="hdnAnswer<%=iRow %>_9" value="<%=Convert.ToDouble(dr["tfa_res_fund_bal"]).ToString(fmt1) %>" />
                             </td>
-                            <td class="threshold" style="background-color: #ffffff; border-bottom: none !important;"></td>
-                            <!--Adjusted Threshold-->
-                            <td class="frm-text bb adjthreshold" style="text-wrap: none">
+                            <td class="threshold1" style="background-color: #ffffff; border-bottom: none !important;"></td>
+                            <!--Adjusted threshold1-->
+                            <td class="frm-text bb threshold2" style="text-wrap: none">
                                 <% if (iRow != 1)
                                     { %>
                                 <input type="text" ID="txt<%=iRow %>_10" name="txt<%=iRow %>_10" value="<%=Convert.ToDouble(dr["pct_increase"]).ToString("0.00") %>" class="gridrow_txtbox2 Component pctinc" onkeydown="chkKeybd(this, event,<%=iRow %>,10)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('pct_increase','textbox',<%=iRow %>, 10)" style="width: 50px !important" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_10" name="hdnAnswer<%=iRow %>_10" value="<%=Convert.ToDouble(dr["pct_increase"]).ToString("0.00") %>" />
                                 <% } %>
                             </td>
-                            <td class="frm-text bb adjthreshold">
+                            <td class="frm-text bb threshold2">
                                 <input type="text" ID="txt<%=iRow %>_11" name="txt<%=iRow %>_11" value="<%=Convert.ToDouble(dr["tfa2_annual_contr"]).ToString(fmt1) %>" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,<%=iRow %>,11)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('tfa2_annual_contr','textbox',<%=iRow %>, 11)" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_11" name="hdnAnswer<%=iRow %>_11" value="<%=Convert.ToDouble(dr["tfa2_annual_contr"]).ToString(fmt1) %>" />
                             </td>
-                            <td class="frm-text bb adjthreshold">
+                            <td class="frm-text bb threshold2">
                                 <input type="text" ID="txt<%=iRow %>_12" name="txt<%=iRow %>_12" value="<%=Convert.ToDouble(dr["tfa2_res_fund_bal"]).ToString(fmt1) %>" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,<%=iRow %>,12)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('tfa2_res_fund_bal','textbox',<%=iRow %>, 12)" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_12" name="hdnAnswer<%=iRow %>_12" value="<%=Convert.ToDouble(dr["tfa2_res_fund_bal"]).ToString(fmt1) %>" />
                             </td>
@@ -433,13 +445,13 @@
                             <td class="baseline"><div id="divTtl4" class="frm-text-bold text-left"></div></td>
                             <td class="baseline"></td>
                             <td class="baseline"></td>
-                            <!--Threshold Funding-->
-                            <td class="threshold"><div id="divTtl5" class="frm-text-bold text-left"></div></td>
-                            <td class="threshold"></td>
-                            <td class="threshold"></td>
-                            <td class="adjthreshold"></td>
-                            <td class="adjthreshold"><div id="divTtl6" class="frm-text-bold text-left"></div></td>
-                            <td class="adjthreshold"></td>
+                            <!--threshold1 Funding-->
+                            <td class="threshold1"><div id="divTtl5" class="frm-text-bold text-left"></div></td>
+                            <td class="threshold1"></td>
+                            <td class="threshold1"></td>
+                            <td class="threshold2"></td>
+                            <td class="threshold2"><div id="divTtl6" class="frm-text-bold text-left"></div></td>
+                            <td class="threshold2"></td>
                         </tr>
                         <script>calcTotals();</script>
                         <% } %>
@@ -450,17 +462,35 @@
     </div>
     <script>
         toggleInterval(0);
-        if (document.getElementById('MainContent_chkThreshold').checked == true) trimIntervalFat();
-        $("#MainContent_chkThreshold").click(function () {
+        if (document.getElementById('MainContent_chkThreshold2').checked == true) trimIntervalFat();
+
+        $("#MainContent_chkThreshold1").click(function () {
+            if (!$(this).is(":checked")) {
+                document.forms[0].disabled = false;
+                sendThreshold1(0,'');
+                $(".threshold1").hide();
+            }
+
+            else {
+                if (document.getElementById('MainContent_txtThreshold1Val').value == '') {
+                    document.getElementById('MainContent_txtThreshold1Val').value = "0";
+                }
+                document.forms[0].disabled = false;
+                sendThreshold1(1,document.getElementById('MainContent_txtThreshold1Val').value);
+                $(".threshold1").show();
+            }
+        });
+
+        $("#MainContent_chkThreshold2").click(function () {
             if ($(this).is(":checked")) {
-                document.forms[0].disabled=false;
-                sendThreshold('true');
-                $(".adjthreshold").show();
+                document.forms[0].disabled = false;
+                sendThreshold2('true');
+                $(".threshold2").show();
             }
             else {
-                document.forms[0].disabled=false;
-                sendThreshold('false');
-                $(".adjthreshold").hide();
+                document.forms[0].disabled = false;
+                sendThreshold2('false');
+                $(".threshold2").hide();
             }
         });
 
@@ -492,7 +522,8 @@
         });
 
         $(document).ready(function () {
-            if ($("#MainContent_chkThreshold").prop("checked")==false) { $(".adjthreshold").hide(); }
+            if ($("#MainContent_chkThreshold1").prop("checked") == false) { $(".threshold1").hide(); } else { $(".threshold1").show() }
+            if ($("#MainContent_chkThreshold2").prop("checked") == false) { $(".threshold2").hide(); }
             if ($("#MainContent_chkDisp1").prop("checked") == false) { $(".current").hide(); }
             if ($("#MainContent_chkDisp2").prop("checked") == false) { $(".full").hide(); }
             if ($("#MainContent_chkDisp3").prop("checked") == false) { $(".baseline").hide(); }
