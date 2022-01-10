@@ -236,6 +236,11 @@ namespace reserve
             {
                 GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
             }
+
+            if (txtHdnType.Value == "Threshold1")
+            {
+                GoalSeek.GenerateThresholdType1(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+            }
         }
     }
 }
