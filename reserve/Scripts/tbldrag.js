@@ -187,9 +187,43 @@ document.addEventListener('DOMContentLoaded', function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
 
-        sSql = " category_id = " + document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value + " and component_id = " + table.rows[endRowIndex].cells[0].id;
-        sendComponent(sSql, 'order_id', endRowIndex, table.rows[endRowIndex].cells[0].id, -1);
-        //alert("Component: " + table.rows[endRowIndex].cells[0].id + ", Order: " + endRowIndex);
+        var arrComponents = [];
+
+        var tmp;
+        for (var i = 1; i < table.rows.length; i++) {
+            tmp = { Id: table.rows[i].cells[0].id, newOrder: i };
+            arrComponents.push(tmp);
+        }
+
+        var cat = document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value;
+        var yr = document.getElementById('MainContent_cboYear').options[document.getElementById('MainContent_cboYear').selectedIndex].value;
+        var myData = { components: arrComponents, category: cat, year: yr };
+
+        var myjson = JSON.stringify(myData);
+
+        toggleComponentsTable('disable');
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "components.aspx/Reorder",
+            data: myjson,
+            dataType: "json",
+            success: function (data) {
+                //response($.map(data.d, function (item) {
+                //    return {
+                //        label: item.split('|')[0],
+                //       val: item.split('|')[1]
+                //    }
+                //}))
+                //alert(data.responseText);
+                toggleComponentsTable('enable');
+            },
+            error: function (result) {
+                toggleComponentsTable('enable');
+                alert(result.responseText);
+            }
+        });
     };
 
     table.querySelectorAll('tr').forEach(function (row, index) {

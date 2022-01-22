@@ -356,6 +356,12 @@ namespace reserve
         }
 
         [WebMethod(enableSession: true)]
+        public string ReorderComponents(string json)
+        {
+            return "hi";
+        }
+
+        [WebMethod(enableSession: true)]
         public DataSet SaveComponent(string sCrit, string sField, string sVal, int iRow, int iCol, string pd)
         {
             var conn = Fn_enc.getconn();
@@ -430,10 +436,45 @@ namespace reserve
                     }
                     else if (sField=="order_id") //User dragged-dropped a component
                     {
-                        command = new SqlCommand("update info_components set order_id = order_id+1 where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and order_id>=" + sVal.ToString() + " and " + sCrit.Substring(1, sCrit.IndexOf("and component_id")-1), conn);
-                        command.ExecuteNonQuery();
-                        command = new SqlCommand("update info_components set last_updated_by = " + Session["userid"].ToString() + ", last_updated_date = GetDate(), order_id = " + sVal.ToString() + " where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit, conn);
-                        command.ExecuteNonQuery();
+                        int iComponent;
+                        int iCategory;
+                        //var i = 0;
+                        //Get the component_id we're changing
+                        //for (i=sCrit.Length; i>0; i--)
+                        //{
+                        //    if (sCrit.Substring(i,1)=="=") break;
+                        //}
+                        //i++;
+                        //iComponent = sCrit.Substring(i,sCrit.Length-i);
+                        //Get the new order
+                        int newOrder=9999;
+                        int oldOrder = 0;
+                        dr = Fn_enc.ExecuteReader($"select category_id, component_id, (select order_id from info_components where firm_id=@Param1 and project_id=@Param2 and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)} and component_id={sVal}) as newOrder, order_id as oldOrder from info_components i where firm_id=@Param1 and project_id=@Param2 and {sCrit}", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        if (dr.Read())
+                        {
+                            newOrder = Convert.ToInt32(dr["newOrder"].ToString());
+                            oldOrder = Convert.ToInt32(dr["oldOrder"].ToString());
+                            iCategory = Convert.ToInt32(dr["category_id"].ToString());
+                            iComponent = Convert.ToInt32(dr["component_id"].ToString());
+                        }
+                        dr.Close();
+
+                        if (newOrder!=9999)
+                        {
+                            if (oldOrder>newOrder) //They moved a component down the page
+                            {
+                                newOrder++;
+                                command = new SqlCommand($"update info_components set order_id = order_id+1 where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and order_id between {newOrder} and {oldOrder} and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)}", conn);
+                                command.ExecuteNonQuery();
+                            }
+                            else //They moved a component up the page
+                            {
+                                command = new SqlCommand($"update info_components set order_id = order_id-1 where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and order_id between {oldOrder} and {newOrder} and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)}", conn);
+                                command.ExecuteNonQuery();
+                            }
+                            command = new SqlCommand($"update info_components set order_id = {newOrder}, last_updated_by = {Session["userid"]}, last_updated_date = GetDate() where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and {sCrit}", conn);
+                            command.ExecuteNonQuery();
+                        }
                     }
                     else
                     {
