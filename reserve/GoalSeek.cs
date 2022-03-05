@@ -43,7 +43,8 @@ namespace reserve
 
             var conn = Fn_enc.getconn();
             conn.Open();
-            SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, year_id, annual_exp, pct_increase, tfa_annual_contr, tfa_res_fund_bal where firm_id=" + firmID + " and project_id='" + projectID + "'", conn);
+            //SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, year_id, annual_exp, ffa_avg_req_annual_contr, pct_increase, ffa_res_fund_bal, bfa_annual_contr, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal from info_projections where firm_id=" + firmID + " and project_id='" + projectID + "'", conn);
+            SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, year_id, annual_exp, pct_increase, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, isnull(ffa_res_fund_bal,0) as ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, generated_by, generated_date from info_projections where firm_id=" + firmID + " and project_id='" + projectID + "'", conn);
             DataSet ds = new DataSet();
             adapter.Fill(ds, "Projection");
             //Step 2b: populate local variables

@@ -216,29 +216,28 @@ namespace reserve
             LoadIntervals();
             LoadDisplayOptions();
 
-            if ((txtInflation.Value!="") || (txtInterest.Value!=""))
-            {
-                var inflation = new StringBuilder("");
-                var interest = new StringBuilder("");
-                if (txtInterest.Value!="") 
-                    interest.Append(txtInterest.Value);
-                else 
-                    interest.Append("0");
-                if (txtInflation.Value != "")
-                    inflation.Append(txtInflation.Value);
-                else 
-                    inflation.Append("0");
-                Fn_enc.ExecuteNonQuery("update info_project_info set interest=" + interest.ToString() + ", inflation=" + inflation.ToString() + " where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
-                txtHdnType.Value = "Gen";
-            }
-
             if (txtHdnType.Value == "Gen")
             {
+                if ((txtInflation.Value != "") || (txtInterest.Value != ""))
+                {
+                    var inflation = new StringBuilder("");
+                    var interest = new StringBuilder("");
+                    if (txtInterest.Value != "")
+                        interest.Append(txtInterest.Value);
+                    else
+                        interest.Append("0");
+                    if (txtInflation.Value != "")
+                        inflation.Append(txtInflation.Value);
+                    else
+                        inflation.Append("0");
+                    Fn_enc.ExecuteNonQuery("update info_project_info set interest=" + interest.ToString() + ", inflation=" + inflation.ToString() + " where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                }
                 GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
             }
 
             if (txtHdnType.Value == "Threshold1")
             {
+                Fn_enc.ExecuteNonQuery($"update info_project_info set threshold1_used=1, threshold1_value=@Param1 where firm_id=@Param2 and project_id=@Param3", new string[] { txtThreshold1Val.Value, Session["firmid"].ToString(), Session["projectid"].ToString() });
                 GoalSeek.GenerateThresholdType1(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
             }
         }

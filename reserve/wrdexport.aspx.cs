@@ -229,7 +229,7 @@ namespace reserve
                             chgText("@@funding_scenarios", "four (4)");
                             chgText("@@threshold_text", "The fourth funding scenario, entitled Threshold Funding, is based on keeping the Reserve Fund Balance above a specified threshold value at all times over the 30 year time frame.");
                             chgText("@@tfa_min", Convert.ToDouble(dr["min_tfa_bal"]).ToString("C0"));
-                            chgText("@@tfa", Convert.ToDouble(dr["tfa2_annual_contr"]).ToString("C0"));
+                            chgText("@@tfa", Convert.ToDouble(dr["tfa_annual_contr"]).ToString("C0"));
                         }
                         else
                         {
@@ -297,7 +297,8 @@ namespace reserve
                         conn = Fn_enc.getconn();
                         conn.Open();
                         //Table for projections
-                        SqlDataAdapter adapter = new SqlDataAdapter("select * from info_projections where firm_id=" + Session["firmid"].ToString() + " and project_id='" + Session["projectid"].ToString() + "'", conn);
+                        //SqlDataAdapter adapter = new SqlDataAdapter("select * from info_projections where firm_id=" + Session["firmid"].ToString() + " and project_id='" + Session["projectid"].ToString() + "'", conn);
+                        SqlDataAdapter adapter = new SqlDataAdapter($"sp_app_word_projections {Session["firmid"]}, '{Session["projectid"]}', {(Convert.ToBoolean(dr["threshold1_used"].ToString()) ? 1 : 2)}", conn);
                         DataSet ds = new DataSet();
                         adapter.Fill(ds, "Projection");
                         //Table for summary
@@ -325,7 +326,7 @@ namespace reserve
                                 if (!Convert.ToBoolean(dr["full_funding_hidden"].ToString())) lc.Elements<LineChartSeries>().Skip(0).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["ffa_res_fund_bal"].ToString();
                                 if (!Convert.ToBoolean(dr["current_funding_hidden"].ToString())) lc.Elements<LineChartSeries>().Skip(1).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["cfa_reserve_fund_bal"].ToString();
                                 if (!Convert.ToBoolean(dr["baseline_funding_hidden"].ToString())) lc.Elements<LineChartSeries>().Skip(2).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["bfa_res_fund_bal"].ToString();
-                                if (Convert.ToBoolean(dr["threshold_used"].ToString())) lc.Elements<LineChartSeries>().Skip(3).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["tfa2_res_fund_bal"].ToString();
+                                if (Convert.ToBoolean(dr["threshold_used"].ToString())) lc.Elements<LineChartSeries>().Skip(3).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["tfa_res_fund_bal"].ToString();
                             }
                             //Remove from the legend if hidden
                             if (!Convert.ToBoolean(dr["threshold_used"].ToString())) lc.ElementAt(FindLCPos(lc, "threshold")).Remove(); //Threshold
@@ -368,14 +369,14 @@ namespace reserve
                                 int lowestTFYear = -1; double lowestTFAmt=0;
                                 int lowestBFYear = -1; double lowestBFAmt=0;
 
-                                if (Convert.ToBoolean(dr["threshold_used"].ToString())) lowestTFAmt = Convert.ToDouble(ds.Tables[0].Rows[0]["tfa2_res_fund_bal"].ToString());
+                                if (Convert.ToBoolean(dr["threshold_used"].ToString())) lowestTFAmt = Convert.ToDouble(ds.Tables[0].Rows[0]["tfa_res_fund_bal"].ToString());
                                 if (!Convert.ToBoolean(dr["baseline_funding_hidden"].ToString())) lowestBFAmt = Convert.ToDouble(ds.Tables[0].Rows[0]["bfa_res_fund_bal"].ToString());
                                 for (var i=0; i<ds.Tables[0].Rows.Count; i++)
                                 {
-                                    if (Convert.ToBoolean(dr["threshold_used"].ToString()) && (Convert.ToDouble(ds.Tables[0].Rows[i]["tfa2_res_fund_bal"].ToString())<lowestTFAmt))
+                                    if (Convert.ToBoolean(dr["threshold_used"].ToString()) && (Convert.ToDouble(ds.Tables[0].Rows[i]["tfa_res_fund_bal"].ToString())<lowestTFAmt))
                                     {
                                         lowestTFYear= Convert.ToInt32(ds.Tables[0].Rows[i]["year_id"].ToString());
-                                        lowestTFAmt= Convert.ToDouble(ds.Tables[0].Rows[i]["tfa2_res_fund_bal"].ToString()); 
+                                        lowestTFAmt= Convert.ToDouble(ds.Tables[0].Rows[i]["tfa_res_fund_bal"].ToString()); 
                                     }
                                     if (!Convert.ToBoolean(dr["baseline_funding_hidden"].ToString()) && (Convert.ToDouble(ds.Tables[0].Rows[i]["bfa_res_fund_bal"].ToString()) < lowestBFAmt))
                                     {
@@ -406,21 +407,21 @@ namespace reserve
                                             tr.Append(MakeCell(Convert.ToDouble(ds.Tables[0].Rows[i]["bfa_res_fund_bal"]).ToString("C0"), false, true, "", "276"));
                                         }
                                     }
-                                    if ((Convert.ToBoolean(dr["threshold_used"].ToString()) == true) && (ds.Tables[0].Rows[i]["tfa2_annual_contr"].ToString()==""))
+                                    if ((Convert.ToBoolean(dr["threshold_used"].ToString()) == true) && (ds.Tables[0].Rows[i]["tfa_annual_contr"].ToString()==""))
                                         tr.Append(MakeCell("-", false,false,"","276"));
                                     else if (Convert.ToBoolean(dr["threshold_used"].ToString()) == true)
-                                        tr.Append(MakeCell(Convert.ToDouble(ds.Tables[0].Rows[i]["tfa2_annual_contr"]).ToString("C0"), false, true, "", "276"));
+                                        tr.Append(MakeCell(Convert.ToDouble(ds.Tables[0].Rows[i]["tfa_annual_contr"]).ToString("C0"), false, true, "", "276"));
 
-                                    if ((Convert.ToBoolean(dr["threshold_used"].ToString()) == true) && (ds.Tables[0].Rows[i]["tfa2_res_fund_bal"].ToString()==""))
+                                    if ((Convert.ToBoolean(dr["threshold_used"].ToString()) == true) && (ds.Tables[0].Rows[i]["tfa_res_fund_bal"].ToString()==""))
                                         tr.Append(MakeCell("-", false,false,"","276"));
                                     else if (Convert.ToBoolean(dr["threshold_used"].ToString()) == true)
                                     {
                                         if (Convert.ToDouble(ds.Tables[0].Rows[i]["year_id"].ToString())==lowestTFYear) {
-                                            tr.Append(MakeCell(Convert.ToDouble(ds.Tables[0].Rows[i]["tfa2_res_fund_bal"]).ToString("C0"), false, false, "92D050","276"));
+                                            tr.Append(MakeCell(Convert.ToDouble(ds.Tables[0].Rows[i]["tfa_res_fund_bal"]).ToString("C0"), false, false, "92D050","276"));
                                         }
                                         else
                                         {
-                                            tr.Append(MakeCell(Convert.ToDouble(ds.Tables[0].Rows[i]["tfa2_res_fund_bal"]).ToString("C0"), false, true,"","276"));
+                                            tr.Append(MakeCell(Convert.ToDouble(ds.Tables[0].Rows[i]["tfa_res_fund_bal"]).ToString("C0"), false, true,"","276"));
                                         }
                                     }
 
@@ -430,7 +431,7 @@ namespace reserve
                                     if (!Convert.ToBoolean(dr["full_funding_hidden"].ToString())) ttl[1] += Convert.ToDouble(ds.Tables[0].Rows[i]["ffa_req_annual_contr"].ToString());
                                     if (!Convert.ToBoolean(dr["full_funding_hidden"].ToString())) ttl[2] += Convert.ToDouble(ds.Tables[0].Rows[i]["ffa_avg_req_annual_contr"].ToString());
                                     if (!Convert.ToBoolean(dr["baseline_funding_hidden"].ToString())) ttl[3] += Convert.ToDouble(ds.Tables[0].Rows[i]["bfa_annual_contr"].ToString());
-                                    if ((Convert.ToBoolean(dr["threshold_used"].ToString()) == true) && (ds.Tables[0].Rows[i]["tfa2_annual_contr"].ToString()!="")) ttl[4] += Convert.ToDouble(ds.Tables[0].Rows[i]["tfa2_annual_contr"].ToString());
+                                    if ((Convert.ToBoolean(dr["threshold_used"].ToString()) == true) && (ds.Tables[0].Rows[i]["tfa_annual_contr"].ToString()!="")) ttl[4] += Convert.ToDouble(ds.Tables[0].Rows[i]["tfa_annual_contr"].ToString());
                                 }
 
                                 tr = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
@@ -512,8 +513,8 @@ namespace reserve
                                 tr.Append(MakeCell(ttl[3].ToString("C0"), true));
                                 tr.Append(MakeCell(ttl[4].ToString("C0"), true));
                                 tr.Append(MakeCell((ttl[1]/ttl[4]).ToString("P2"), true));
+                                chgText("@@percent_funded", (ttl[1] / ttl[4]).ToString("P2"));
                                 tbl.Append(tr);
-
                             }
                         }
                         dr.Close();
@@ -888,7 +889,7 @@ namespace reserve
                     new TableBorders(
                         new DocumentFormat.OpenXml.Wordprocessing.BottomBorder() { Val = new EnumValue<BorderValues>(BorderValues.Single), Size = 1 }
                     ),
-                    new TableWidth() { Width = "5000", Type = TableWidthUnitValues.Pct }
+                    new TableWidth() { Width = "5035", Type = TableWidthUnitValues.Pct }
                 );
 
                 tblProp.AppendChild(tblBorders);
@@ -899,17 +900,18 @@ namespace reserve
                 // Append the TableProperties object to the empty table.
                 table.AppendChild(tblProp);
 
+                var cs = new string[10] { "2.12in",".69in",".81in",".94in",".81in",".81in",".88in",".75in",".75in",".56in" };
                 var tr = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
-                tr.Append(MakeComponentCell("Component", false, true, JustificationValues.Left, "1.75in"));
-                tr.Append(MakeComponentCell("Quantity", false, true, JustificationValues.Center, ".62in"));
-                tr.Append(MakeComponentCell("Unit Cost", false, true, JustificationValues.Center, ".73in"));
-                tr.Append(MakeComponentCell("Reserve Requirement Present Dollars", false, true, JustificationValues.Center, ".67in"));
-                tr.Append(MakeComponentCell("Beginning Balance", false, true, JustificationValues.Center, ".64in"));
-                tr.Append(MakeComponentCell("Estimated Useful Life", false, true, JustificationValues.Center, ".64in"));
-                tr.Append(MakeComponentCell("Estimated Remaining Useful Life", false, true, JustificationValues.Center, ".63in"));
-                tr.Append(MakeComponentCell("Annual Reserve Funding Required", false, true, JustificationValues.Center, ".68in"));
-                tr.Append(MakeComponentCell("Full Funding Balance", false, true, JustificationValues.Center, ".68in"));
-                tr.Append(MakeComponentCell("Notes", false, true, JustificationValues.Center, ".43in"));
+                tr.Append(MakeComponentCell("Component", false, true, JustificationValues.Left, cs[0]));
+                tr.Append(MakeComponentCell("Quantity", false, true, JustificationValues.Center, cs[1]));
+                tr.Append(MakeComponentCell("Unit Cost", false, true, JustificationValues.Center, cs[2]));
+                tr.Append(MakeComponentCell("Reserve Requirement Present Dollars", false, true, JustificationValues.Center, cs[3]));
+                tr.Append(MakeComponentCell("Beginning Balance", false, true, JustificationValues.Center, cs[4]));
+                tr.Append(MakeComponentCell("Estimated Useful Life", false, true, JustificationValues.Center, cs[5]));
+                tr.Append(MakeComponentCell("Estimated Remaining Useful Life", false, true, JustificationValues.Center, cs[6]));
+                tr.Append(MakeComponentCell("Annual Reserve Funding Required", false, true, JustificationValues.Center, cs[7]));
+                tr.Append(MakeComponentCell("Full Funding Balance", false, true, JustificationValues.Center, cs[8]));
+                tr.Append(MakeComponentCell("Notes", false, true, JustificationValues.Center, cs[9]));
                 table.Append(tr);
 
                 ttl = new double[4] { 0, 0, 0, 0 };
@@ -917,16 +919,16 @@ namespace reserve
                 while (dr2.Read())
                 {
                     tr = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
-                    tr.Append(MakeComponentCell(dr2["component_desc"].ToString(), false, false, JustificationValues.Left, "1.75in"));
-                    tr.Append(MakeComponentCell(String.Format("{0:#,0}", Convert.ToDouble(dr2["comp_quantity"])).ToString() + " " + dr2["comp_unit"].ToString(), false, false, JustificationValues.Center, ".62in"));
-                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["unit_cost"]).ToString("C2"), false, false, JustificationValues.Center, ".73in"));
-                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["res_req_pres_dols"]).ToString("C0"), false, false, JustificationValues.Center, ".67in"));
-                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["begin_bal_calcd"]).ToString("C0"), false, false, JustificationValues.Center, ".64in"));
-                    tr.Append(MakeComponentCell(dr2["est_useful_life"].ToString(), false, false, JustificationValues.Center, ".64in"));
-                    tr.Append(MakeComponentCell(dr2["est_rem_useful_life"].ToString(), false, false, JustificationValues.Center, ".63in"));
-                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["annual_res_fund_req"]).ToString("C0"), false, false, JustificationValues.Center, ".68in"));
-                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["full_fund_bal"]).ToString("C0"), false, false, JustificationValues.Center, ".68in"));
-                    tr.Append(MakeComponentCell(dr2["comp_note"].ToString(), false, false, JustificationValues.Center, ".43in"));
+                    tr.Append(MakeComponentCell(dr2["component_desc"].ToString(), false, false, JustificationValues.Left, cs[0]));
+                    tr.Append(MakeComponentCell(String.Format("{0:#,0}", Convert.ToDouble(dr2["comp_quantity"])).ToString() + " " + dr2["comp_unit"].ToString(), false, false, JustificationValues.Center, cs[1]));
+                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["unit_cost"]).ToString("C2"), false, false, JustificationValues.Center, cs[2]));
+                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["res_req_pres_dols"]).ToString("C0"), false, false, JustificationValues.Center, cs[3]));
+                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["begin_bal_calcd"]).ToString("C0"), false, false, JustificationValues.Center, cs[4]));
+                    tr.Append(MakeComponentCell(dr2["est_useful_life"].ToString(), false, false, JustificationValues.Center, cs[5]));
+                    tr.Append(MakeComponentCell(dr2["est_rem_useful_life"].ToString(), false, false, JustificationValues.Center, cs[6]));
+                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["annual_res_fund_req"]).ToString("C0"), false, false, JustificationValues.Center, cs[7]));
+                    tr.Append(MakeComponentCell(Convert.ToDouble(dr2["full_fund_bal"]).ToString("C0"), false, false, JustificationValues.Center, cs[8]));
+                    tr.Append(MakeComponentCell(dr2["comp_note"].ToString(), false, false, JustificationValues.Center, cs[9]));
                     table.Append(tr);
                     ttl[0] += Convert.ToDouble(dr2["res_req_pres_dols"].ToString());
                     ttl[1] += Convert.ToDouble(dr2["begin_bal_calcd"].ToString());
@@ -936,16 +938,16 @@ namespace reserve
                 dr2.Close();
 
                 tr = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
-                tr.Append(MakeComponentCell("TOTALS", true, false, JustificationValues.Left, "1.75in"));
-                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, ".62in"));
-                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, ".73in"));
-                tr.Append(MakeComponentCell(ttl[0].ToString("C0"), true, false, JustificationValues.Center, ".67in"));
-                tr.Append(MakeComponentCell(ttl[1].ToString("C0"), true, false, JustificationValues.Center, ".64in"));
-                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, ".64in"));
-                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, ".63in"));
-                tr.Append(MakeComponentCell(ttl[2].ToString("C0"), true, false, JustificationValues.Center, ".68in"));
-                tr.Append(MakeComponentCell(ttl[3].ToString("C0"), true, false, JustificationValues.Center, ".68in"));
-                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, ".43in"));
+                tr.Append(MakeComponentCell("TOTALS", true, false, JustificationValues.Left, cs[0]));
+                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, cs[1]));
+                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, cs[2]));
+                tr.Append(MakeComponentCell(ttl[0].ToString("C0"), true, false, JustificationValues.Center, cs[3]));
+                tr.Append(MakeComponentCell(ttl[1].ToString("C0"), true, false, JustificationValues.Center, cs[4]));
+                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, cs[5]));
+                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, cs[6]));
+                tr.Append(MakeComponentCell(ttl[2].ToString("C0"), true, false, JustificationValues.Center, cs[7]));
+                tr.Append(MakeComponentCell(ttl[3].ToString("C0"), true, false, JustificationValues.Center, cs[8]));
+                tr.Append(MakeComponentCell("", false, false, JustificationValues.Center, cs[9]));
                 table.Append(tr);
 
                 pMarker.InsertBeforeSelf(table);

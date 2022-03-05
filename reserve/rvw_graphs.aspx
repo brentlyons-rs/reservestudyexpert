@@ -65,8 +65,8 @@
     <%
         double beginBal=0; double inflation=0; double interest=0;
         int firstYear = 0;
-        Boolean blThreshold = false; Boolean blHideCF = false; Boolean blHideFF = false; Boolean blHideBF = false;
-        string tfa_bal="";
+        Boolean blThreshold1 = false; Boolean blThreshold2 = false; Boolean blHideCF = false; Boolean blHideFF = false; Boolean blHideBF = false;
+        string tfa1_bal=""; string tfa2_bal = "";
 
         var conn = reserve.Fn_enc.getconn();
         conn.Open();
@@ -75,11 +75,12 @@
         adapter.Fill(ds,"Projection");
         conn.Close();
 
-        SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select begin_balance, isnull(threshold_used,0) as threshold_used, isnull(current_funding_hidden,convert(bit,0)) as current_funding_hidden, isnull(full_funding_hidden,convert(bit,0)) as full_funding_hidden, isnull(baseline_funding_hidden,convert(bit,0)) as baseline_funding_hidden, year(report_effective) as yr, isnull(interest,0) as interest, isnull(inflation,0) as inflation from info_project_info ipi where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+        SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select begin_balance, isnull(threshold1_used,0) as threshold1_used, isnull(threshold2_used,0) as threshold2_used, isnull(current_funding_hidden,convert(bit,0)) as current_funding_hidden, isnull(full_funding_hidden,convert(bit,0)) as full_funding_hidden, isnull(baseline_funding_hidden,convert(bit,0)) as baseline_funding_hidden, year(report_effective) as yr, isnull(interest,0) as interest, isnull(inflation,0) as inflation from info_project_info ipi where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
         if (dr.Read()) {
             firstYear = Convert.ToInt32(dr["yr"].ToString());
             beginBal = Convert.ToDouble(dr["begin_balance"].ToString());
-            blThreshold = Convert.ToBoolean(dr["threshold_used"].ToString());
+            blThreshold1 = Convert.ToBoolean(dr["threshold1_used"].ToString());
+            blThreshold2 = Convert.ToBoolean(dr["threshold2_used"].ToString());
             blHideCF = Convert.ToBoolean(dr["current_funding_hidden"].ToString());
             blHideFF = Convert.ToBoolean(dr["full_funding_hidden"].ToString());
             blHideBF = Convert.ToBoolean(dr["baseline_funding_hidden"].ToString());
@@ -93,6 +94,8 @@
         dataRow["cfa_reserve_fund_bal"] = beginBal;
         dataRow["ffa_res_fund_bal"] = beginBal;
         dataRow["bfa_res_fund_bal"] = beginBal;
+        dataRow["tfa_res_fund_bal"] = beginBal;
+        dataRow["tfa_annual_contr"] = beginBal;
         dataRow["tfa2_res_fund_bal"] = beginBal;
         dataRow["tfa2_annual_contr"] = beginBal;
 
@@ -102,7 +105,8 @@
         string cfa_bal = string.Join(", ", ds.Tables[0].Rows.OfType<DataRow>().Select(r => Convert.ToInt32(r["cfa_reserve_fund_bal"]).ToString()));
         string ffa_bal = string.Join(", ", ds.Tables[0].Rows.OfType<DataRow>().Select(r => Convert.ToInt32(r["ffa_res_fund_bal"]).ToString()));
         string bfa_bal = string.Join(", ", ds.Tables[0].Rows.OfType<DataRow>().Select(r => Convert.ToInt32(r["bfa_res_fund_bal"]).ToString()));
-        if (blThreshold) tfa_bal = string.Join(", ", ds.Tables[0].Rows.OfType<DataRow>().Select(r => Convert.ToInt32(r["tfa2_res_fund_bal"]).ToString()));
+        if (blThreshold1) tfa1_bal = string.Join(", ", ds.Tables[0].Rows.OfType<DataRow>().Select(r => Convert.ToInt32(r["tfa_res_fund_bal"]).ToString()));
+        if (blThreshold2) tfa2_bal = string.Join(", ", ds.Tables[0].Rows.OfType<DataRow>().Select(r => Convert.ToInt32(r["tfa2_res_fund_bal"]).ToString()));
 
         %>
     <canvas id="myChart" width="600px" height="150px"></canvas>
@@ -118,16 +122,28 @@
         data: {
             labels: [<%=years%>],
             datasets: [
-                <% if (blThreshold) { %>
+                <% if (blThreshold1) { %>
                 {
-                    label: 'Reserve Fund Balance - Projected Threshold Fund',
+                    label: 'Reserve Fund Balance - Projected Threshold Scenario 1',
                     fill: false,
                     pointStyle: 'rectRot',
                     pointRadius: 6,
                     pointHoverRadius: 6,
                     borderColor: 'rgb(241, 133, 43)',
                     borderWidth: 4,
-                    data: [<%=tfa_bal%>]
+                    data: [<%=tfa1_bal%>]
+                },
+                <% }
+                if (blThreshold2) { %>
+                {
+                    label: 'Reserve Fund Balance - Projected Threshold Scenario 2',
+                    fill: false,
+                    pointStyle: 'rectRot',
+                    pointRadius: 6,
+                    pointHoverRadius: 6,
+                    borderColor: 'rgb(241, 133, 43)',
+                    borderWidth: 4,
+                    data: [<%=tfa2_bal%>]
                 },
                 <% }
                 if (!blHideCF)
@@ -252,7 +268,7 @@
             document.forms[0].submit();
         }
     </script>
-    <% if (blThreshold)
+    <% if (blThreshold2)
         { %>
     <table style="width: 100%" id="tblThresh">
         <tr>

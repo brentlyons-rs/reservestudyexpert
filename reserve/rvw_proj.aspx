@@ -101,6 +101,11 @@
                 }
             }
         }
+
+        function saveThreshold1() {
+            document.getElementById('MainContent_txtHdnType').value = 'Threshold1';
+            document.forms[0].submit();
+        }
     </script>
 <form id="frmProject" method="post" runat="server" class="needs-validation">
     <div class="container_fluid" style="width: 100%; max-width: 100%">
@@ -225,7 +230,7 @@
                                         <td width="1%" style="text-wrap: none" nowrap>
                                             <input type="checkbox" id="chkThreshold1" name="chkThreshold1" runat="server"><label id="lblThreshold1" for="MainContent_chkThreshold1" class="frm-text">&nbsp;Threshold Scenario 1</label>:
                                             $<input type="text" id="txtThreshold1Val" class="frm-text" style="border: 1px solid #dddddd; border-radius: 5px; height: 25px" size="10" runat="server" onkeypress="return isNumber(event)" />
-                                            <button type="button" class="btn btn-primary" style="height: 25px !important; padding-top: 2px" onclick="sendThreshold1(1,document.getElementById('MainContent_txtThreshold1Val').value)">Save</button>
+                                            <button type="button" class="btn btn-primary" style="height: 25px !important; padding-top: 2px" onclick="saveThreshold1()">Save</button>
                                         </td>
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold1" style="display: none"></td>
                                     </tr>

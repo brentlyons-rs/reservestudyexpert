@@ -71,6 +71,12 @@ namespace reserve
                     icoPDG.Style.Add("color", "red");
                     blIssue = true;
                 }
+                if (dr["threshold_types"].ToString() == "MultiThresholds")
+                {
+                    icoMTU.Attributes["class"] = "fa fa-exclamation-circle";
+                    icoMTU.Style.Add("color", "red");
+                    blIssue = true;
+                }
                 if (blIssue)
                 {
                     lblStatus.InnerHtml = "One or more items require your attention before you can generate the final report.";
