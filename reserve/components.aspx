@@ -570,7 +570,7 @@ catch (trymicrosoft) {
             while (dr.Read())
             {
                 sql.Clear();
-                sql.Append("category_id=" + cboCC.Value + " and component_id=" + dr["component_id"].ToString());
+                sql.Append("category_id=" + cboCC.Value + " and component_id=" + dr["component_id"].ToString() + " and year_id=" + cboYear.Value);
             %>
         <tr>
             <td id="<%=dr["component_id"].ToString() %>" nowrap class="gridrow_wt clientHide" bgcolor=#f8f8f8 align=center nowrap><a id="aDel<%=iRow %>" href="javascript: checkDel(<%=iRow %>)" style="display: <% if (dr["year_id"].ToString() == cboYear.Value) { Response.Write("block"); } else { Response.Write("none"); } %>"><img src="images/x_white.jpg" border=0 alt="Delete" align="absmiddle"></a></td>
