@@ -51,7 +51,8 @@ namespace reserve
                     sqlUpdate.Append("insert into info_components (firm_id, project_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date)");
                     sqlUpdate.Append("select @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, @Param19, getdate()");
 
-                    Fn_enc.ExecuteNonQuery(sqlUpdate.ToString(), new string[19] { Session["firmid"].ToString(), Session["projectid"].ToString(), cYr, cCat, cID, cID, cDesc, cQty, cPP, cUnit, cBuc, cGeo, cUc, cEul, cErul, cNote, cVal, cComm, Session["userid"].ToString() });
+                    var tmp = $"{Session["firmid"].ToString()}, {Session["projectid"].ToString()}, {cYr}, {cCat}, {cID}, {cID}, {cDesc}, {cQty}, {cPP}, {cUnit}, {cBuc.Trim(',').Trim('$')}, {cGeo}, {cUc.Trim(',').Trim('$')}, {cEul}, {cErul}, {cNote}, {cVal}, {cComm}, {Session["userid"].ToString()}";
+                    Fn_enc.ExecuteNonQuery(sqlUpdate.ToString(), new string[19] { Session["firmid"].ToString(), Session["projectid"].ToString(), cYr, cCat, cID, cID, cDesc, cQty, cPP, cUnit, cBuc.Replace(",","").Replace("$",""), cGeo, cUc.Replace(",","").Replace("$",""), cEul, cErul, cNote, cVal, cComm, Session["userid"].ToString() });
                 }
                 catch (Exception ex)
                 {
