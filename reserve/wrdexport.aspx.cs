@@ -311,6 +311,8 @@ namespace reserve
                         if (lc != null)
                         {
                             LineChartSeries lcs = lc.Elements<LineChartSeries>().Skip(1).FirstOrDefault();
+                            LineChartSeries ls1 = cp.ChartSpace.Descendants<LineChartSeries>().Where
+                                (s => string.Compare(s.InnerText, "Sheet1!$A$2", true) > 0).First();
                             //Begin with the beginning balance
                             lcs.Elements<CategoryAxisData>().FirstOrDefault().FirstChild.ElementAt(1).ElementAt(2).Elements<NumericValue>().FirstOrDefault().Text = (Convert.ToDateTime(dr["report_effective"].ToString()).Year - 1).ToString();
                             if (!Convert.ToBoolean(dr["full_funding_hidden"].ToString())) lc.Elements<LineChartSeries>().Skip(0).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(0).Elements<NumericValue>().FirstOrDefault().Text = dr["begin_balance"].ToString();
@@ -321,7 +323,8 @@ namespace reserve
                             for (var i=0; i<ds.Tables[0].Rows.Count; i++)
                             {
                                 //Change the year
-                                lcs.Elements<CategoryAxisData>().FirstOrDefault().FirstChild.ElementAt(1).ElementAt(i+3).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["year_id"].ToString();
+                                //lcs.Elements<CategoryAxisData>().FirstOrDefault().FirstChild.ElementAt(1).ElementAt(i + 3).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["year_id"].ToString();
+                                ls1.Descendants<NumericValue>().ElementAt(i+1).Text = ds.Tables[0].Rows[i]["year_id"].ToString();
                                 //Change the data points for that year
                                 if (!Convert.ToBoolean(dr["full_funding_hidden"].ToString())) lc.Elements<LineChartSeries>().Skip(0).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["ffa_res_fund_bal"].ToString();
                                 if (!Convert.ToBoolean(dr["current_funding_hidden"].ToString())) lc.Elements<LineChartSeries>().Skip(1).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["cfa_reserve_fund_bal"].ToString();

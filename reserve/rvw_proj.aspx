@@ -12,7 +12,7 @@
 <link href="css/style.css" rel="stylesheet" />
 
 <style>
-    body:
+    body
     {
         line-height: 20px !important;
     }
@@ -413,7 +413,7 @@
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_9" name="hdnAnswer<%=iRow %>_9" value="<%=Convert.ToDouble(dr["tfa_res_fund_bal"]).ToString(fmt1) %>" />
                             </td>
                             <td class="threshold1" style="background-color: #ffffff; border-bottom: none !important;"></td>
-                            <!--Adjusted threshold1-->
+                            <!--threshold2 funding-->
                             <td class="frm-text bb threshold2" style="text-wrap: none">
                                 <% if (iRow != 1)
                                     { %>

@@ -51,7 +51,11 @@
 	    if ((request.readyState!=4) && (request.readyState!=0)) {
             setTimeout("addComponent(" + iRow + ")", 3000);
         }
-	    else {
+        else {
+            if (iCol == 4) //Base unit cost was changed -- update unit cost column.
+            {
+                calcRow(iRow);
+            }
             sOp = 'addComponent';
             var cGeo; var cVal;
             var cCat = document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value;
