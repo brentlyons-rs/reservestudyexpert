@@ -80,6 +80,13 @@
                 </div>
             </td>
         </tr>
+        <tr>
+            <td class="form-inline">
+                <div style="border-radius: 5px; border: 1px solid #cccccc; margin-left: 5px; text-align: left; padding: 5px; margin-top: 0px !important; margin-bottom: 0px !important; white-space: nowrap" class="frm-text">
+                    <i class="fa fa-check-circle" style="color: green; font-size: 16px" id="icoMTU" runat="server" title="Multiple threshold types cannot be used in the final report. If you have more than one selected, go to the Projections tab and select just one."></i>&nbsp;<label style="font-weight:400" title="Multiple threshold types cannot be used in the final report. If you have more than one selected, go to the Projections tab and select just one.">One or Less Thresholds Used</label>
+                </div>
+            </td>
+        </tr>
     </table>
 
     <div id="fader">

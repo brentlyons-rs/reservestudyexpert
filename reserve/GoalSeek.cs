@@ -25,6 +25,63 @@ namespace reserve
             //this.inflation = inflation;
         }
 
+        /// <summary>
+        /// Sets the threshold type 1 scenario (where a bottom threshold is specified)
+        /// after all other numbers have been generated.
+        /// </summary>
+        /// <param name="firmID"></param>
+        /// <param name="projectID"></param>
+        /// <param name="userID"></param>
+        public static void GenerateThresholdType1(string firmID, string projectID, string userID)
+        {
+            //Step 1: create a dataset that we can update locally
+            double beginBal = 0;
+            double threshold1Value = 0;
+            bool threshold1Used = false;
+            double interest = 0;
+            double curContrib = 0;
+
+            var conn = Fn_enc.getconn();
+            conn.Open();
+            //SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, year_id, annual_exp, ffa_avg_req_annual_contr, pct_increase, ffa_res_fund_bal, bfa_annual_contr, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal from info_projections where firm_id=" + firmID + " and project_id='" + projectID + "'", conn);
+            SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, year_id, annual_exp, pct_increase, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, isnull(ffa_res_fund_bal,0) as ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, generated_by, generated_date from info_projections where firm_id=" + firmID + " and project_id='" + projectID + "'", conn);
+            DataSet ds = new DataSet();
+            adapter.Fill(ds, "Projection");
+            //Step 2b: populate local variables
+            SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select isnull((select top 1 firm_id from info_projections_intervals where firm_id=@Param1 and project_id=@Param2),-1) as intervals, begin_balance, isnull(threshold1_used,0) as threshold1_used, threshold1_value, threshold2_used, interest, current_contrib from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { firmID, projectID });
+            if (dr.Read())
+            {
+                beginBal = Convert.ToDouble(dr["begin_balance"].ToString());
+                if (dr["interest"].ToString() != "") interest = Convert.ToDouble(dr["interest"].ToString());
+                if (dr["threshold1_used"].ToString() == "True")
+                {
+                    threshold1Used = true;
+                    threshold1Value = Convert.ToDouble(dr["threshold1_value"].ToString());
+                    curContrib = Convert.ToDouble(dr["current_contrib"].ToString());
+                }
+            }
+            dr.Close();
+            //Step 3: update the local dataset by calling the Goalseek functions
+            ds = Baseline(ds, beginBal, "baseline", interest, curContrib);
+            if (threshold1Used) ds = Baseline(ds, beginBal, "threshold", interest, curContrib, threshold1Value);
+
+            using (conn)
+            {
+                var cmd = new SqlCommand();
+                cmd.CommandText = "sp_add_projections_threshold1_highspeed";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = conn;
+                //Add table as a parameter
+                var param = new SqlParameter();
+                param.ParameterName = "@ProjectionData";
+                param.SqlDbType = SqlDbType.Structured;
+                cmd.Parameters.Add(param);
+                cmd.Parameters["@ProjectionData"].Value = ds.Tables[0];
+                cmd.ExecuteNonQuery();
+            }
+            conn.Close();
+        }
+
         public static void GenerateProjections(string firmID, string projectID, string userID)
         {
             //Step 1a: check if intervals exist
@@ -34,10 +91,11 @@ namespace reserve
             Fn_enc.ExecuteNonQuery("sp_app_rvw_proj1 @Param1, @Param2", new string[] { firmID, projectID });
             //Step 2a: create a dataset that we can update locally
             double beginBal = 0;
-            //double thresholdValue = 0;
+            double threshold1Value = 0;
+            bool threshold1Used = false;
+            bool threshold2Used = false;
             double interest = 0;
             double curContrib = 0;
-            Boolean blThreshold = false;
 
             var conn = Fn_enc.getconn();
             conn.Open();
@@ -45,23 +103,27 @@ namespace reserve
             DataSet ds = new DataSet();
             adapter.Fill(ds, "Projection");
             //Step 2b: populate some local variables we'll need later
-            SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select isnull((select top 1 firm_id from info_projections_intervals where firm_id=@Param1 and project_id=@Param2),-1) as intervals, begin_balance, isnull(threshold_used,0) as threshold_used, threshold_value, interest, current_contrib from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { firmID, projectID });
+            SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select isnull((select top 1 firm_id from info_projections_intervals where firm_id=@Param1 and project_id=@Param2),-1) as intervals, begin_balance, isnull(threshold1_used,0) as threshold1_used, threshold1_value, threshold2_used, interest, current_contrib from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { firmID, projectID });
             if (dr.Read())
             {
                 beginBal = Convert.ToDouble(dr["begin_balance"].ToString());
                 if (dr["interest"].ToString() != "") interest = Convert.ToDouble(dr["interest"].ToString());
-                if (dr["threshold_used"].ToString() == "True")
+                if (dr["threshold1_used"].ToString() == "True")
                 {
-                    //thresholdValue = Convert.ToDouble(dr["threshold_value"].ToString());
-                    blThreshold = true;
+                    threshold1Used = true;
+                    threshold1Value = Convert.ToDouble(dr["threshold1_value"].ToString());
                     curContrib = Convert.ToDouble(dr["current_contrib"].ToString());
+                }
+                if (dr["threshold2_used"].ToString() == "True")
+                {
+                    threshold2Used = true;
                 }
                 if (dr["intervals"].ToString() != "-1") blIntervals = true;
             }
             dr.Close();
             //Step 3: update the local dataset by calling the Goalseek functions
             ds = Baseline(ds, beginBal, "baseline", interest, curContrib);
-            //if (blThreshold) ds = Baseline(ds, beginBal, "threshold", interest, curContrib, thresholdValue);
+            if (threshold1Used) ds = Baseline(ds, beginBal, "threshold", interest, curContrib, threshold1Value);
             //Step 4: run a different kind of averaging if intervals have been configured
             if (blIntervals)
             {
@@ -100,7 +162,7 @@ namespace reserve
                     iPrev = Convert.ToInt16(ds.Tables[1].Rows[iInt]["interval_value"].ToString());
                 }
                 ds = Baseline(ds, beginBal, "baseline", interest, curContrib);
-                //if (blThreshold) ds = Baseline(ds, beginBal, "threshold", interest, curContrib, thresholdValue);
+                if (threshold1Used) ds = Baseline(ds, beginBal, "threshold", interest, curContrib, threshold1Value);
             }
 
             using (conn)
@@ -125,8 +187,8 @@ namespace reserve
                 cmd.ExecuteNonQuery();
             }
             conn.Close();
-            //If threshold is selected, run the stored proc specific to the Projected Threshold Fund data
-            if (blThreshold)
+            //If threshold scenario type 2 is selected, run the stored proc specific to the Projected Threshold Fund data
+            if (threshold2Used)
             {
                 Fn_enc.ExecuteNonQuery("update info_projections set tfa2_annual_contr=cfa_annual_contrib, tfa2_annual_contr_user_entered=1 where firm_id=@Param1 and project_id=@Param2 and year_id=(select min(year_id) from info_projections where firm_id=@Param1 and project_id=@Param2)", new string[] { firmID, projectID });
                 Fn_enc.ExecuteNonQuery("sp_app_proj_adj_threshold @Param1, @Param2", new string[] { firmID, projectID });

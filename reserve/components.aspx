@@ -51,7 +51,11 @@
 	    if ((request.readyState!=4) && (request.readyState!=0)) {
             setTimeout("addComponent(" + iRow + ")", 3000);
         }
-	    else {
+        else {
+            if (iCol == 4) //Base unit cost was changed -- update unit cost column.
+            {
+                calcRow(iRow);
+            }
             sOp = 'addComponent';
             var cGeo; var cVal;
             var cCat = document.getElementById('MainContent_cboCC').options[document.getElementById('MainContent_cboCC').selectedIndex].value;
@@ -61,13 +65,13 @@
             var cQty = escape(document.getElementById('txt' + iRow + '_1').value);
             var cPP = escape(document.getElementById('txt' + iRow + '_2').value);
             var cUnit = escape(document.getElementById('txt' + iRow + '_3').value);
-            var cBUC = escape(document.getElementById('txt' + iRow + '_4').value);
+            var cBUC = escape(document.getElementById('txt' + iRow + '_4').value.replace(/,/g, ''));
             if (document.getElementById('txt' + iRow + '_5').value == 'checked')
                 cGeo = 1;
             else
                 cGeo = 0;
 
-            var cUC = escape(document.getElementById('txt' + iRow + '_6').value);
+            var cUC = escape(document.getElementById('txt' + iRow + '_6').value.replace(/,/g, ''));
             var cEUL = escape(document.getElementById('txt' + iRow + '_7').value);
             var cERUL = escape(document.getElementById('txt' + iRow + '_8').value);
             var cNote = escape(document.getElementById('txt' + iRow + '_9').value);

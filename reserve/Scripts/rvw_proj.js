@@ -21,15 +21,31 @@ function sendProjection(sCrit, sSqlField, sVal, iRow, iCol) {
     }
 }
 
-function sendThreshold(sVal) {
+function sendThreshold1(iState, sVal) {
     if ((request.readyState != 4) && (request.readyState != 0)) {
-        setTimeout("sendThreshold('" + sVal + "')", 3000);
+        setTimeout("sendThreshold1(" + iState + ", '" + sVal + "')", 3000);
     }
     else {
-        document.getElementById('imgThreshold').style.display = 'block';
-        document.getElementById('MainContent_chkThreshold').disabled = true;
-        sOp = 'sendThreshold';
-        var url = "ws.asmx/SaveThreshold?sThreshold=" + escape(sVal) + "&pd=y";
+        document.getElementById('imgThreshold1').style.display = 'block';
+        document.getElementById('MainContent_chkThreshold1').disabled = true;
+        sOp = 'sendThreshold1';
+        var url = "ws.asmx/SaveThreshold1?iState=" + escape(iState) + "&sValue=" + escape(sVal) + "&pd=y";
+        gUrl = url;
+        request.open("GET", url, true);
+        request.onreadystatechange = updateSend;
+        request.send(null);
+    }
+}
+
+function sendThreshold2(sVal) {
+    if ((request.readyState != 4) && (request.readyState != 0)) {
+        setTimeout("sendThreshold2('" + sVal + "')", 3000);
+    }
+    else {
+        document.getElementById('imgThreshold2').style.display = 'block';
+        document.getElementById('MainContent_chkThreshold2').disabled = true;
+        sOp = 'sendThreshold2';
+        var url = "ws.asmx/SaveThreshold2?sThreshold=" + escape(sVal) + "&pd=y";
         gUrl = url;
         request.open("GET", url, true);
         request.onreadystatechange = updateSend;
@@ -79,8 +95,11 @@ function updateSend() {
                 if (sOp == 'sendTM') {
                     examineTM(XMLobj);
                 }
-                else if (sOp == 'sendThreshold') {
-                    examineThreshold(XMLobj);
+                else if (sOp == 'sendThreshold1') {
+                    examineThreshold1(XMLobj);
+                }
+                else if (sOp == 'sendThreshold2') {
+                    examineThreshold2(XMLobj);
                 }
                 else if (sOp == 'sendChkDisp') {
                     examineChkDisp(XMLobj);
@@ -94,8 +113,7 @@ function updateSend() {
     }
 }
 
-function examineThreshold(XMLObj) {
-    var sStatus = "";
+function examineThreshold1(XMLObj) {
     for (j = 0; j < XMLobj.getElementsByTagName('Results').length; j++) {
         if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Error') {
             alert("Error saving record. Please send the following error to an administrator: " + XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_desc')[0].firstChild.nodeValue);
@@ -107,14 +125,36 @@ function examineThreshold(XMLObj) {
         }
         if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Success') {
             calcTotals();
-            document.getElementById('imgThreshold').style.display = 'none';
-            document.getElementById('MainContent_chkThreshold').disabled = false;
+            document.getElementById('imgThreshold1').style.display = 'none';
+            document.getElementById('MainContent_chkThreshold1').disabled = false;
             document.getElementById('MainContent_lblStatus').innerHTML = 'Successfully updated threshold analysis.';
         }
     }
     document.forms[0].disabled = false;
     return true;
 }
+
+function examineThreshold2(XMLObj) {
+    for (j = 0; j < XMLobj.getElementsByTagName('Results').length; j++) {
+        if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Error') {
+            alert("Error saving record. Please send the following error to an administrator: " + XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_desc')[0].firstChild.nodeValue);
+            document.getElementById('MainContent_lblStatus').innerHTML = 'Error saving record.' + XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_desc')[0].firstChild.nodeValue;
+        }
+        if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Reject') {
+            alert(XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_desc')[0].firstChild.nodeValue);
+            document.getElementById('MainContent_lblStatus').innerHTML = 'Could not save record.';
+        }
+        if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Success') {
+            calcTotals();
+            document.getElementById('imgThreshold2').style.display = 'none';
+            document.getElementById('MainContent_chkThreshold2').disabled = false;
+            document.getElementById('MainContent_lblStatus').innerHTML = 'Successfully updated threshold 2 analysis.';
+        }
+    }
+    document.forms[0].disabled = false;
+    return true;
+}
+
 
 function examineChkDisp(XMLObj) {
     var sStatus = "";
@@ -394,7 +434,7 @@ function calcTotals() {
         iTtl2 = iTtl2 + fmtNum(document.getElementById('txt' + i + '_3').value);
         iTtl3 = iTtl3 + fmtNum(document.getElementById('txt' + i + '_4').value);
         iTtl4 = iTtl4 + fmtNum(document.getElementById('txt' + i + '_6').value);
-        //iTtl5 = iTtl5 + fmtNum(document.getElementById('txt' + i + '_11').value);
+        iTtl5 = iTtl5 + fmtNum(document.getElementById('txt' + i + '_11').value);
 
         if (iLowestBFA == -1) {
             iBFALine = i;
@@ -407,18 +447,18 @@ function calcTotals() {
             }
         }
 
-        if (document.getElementById('MainContent_chkThreshold').checked) {
-            //iTtl5 = iTtl5 + fmtNum(document.getElementById('txt' + i + '_8').value);
-            //if (iLowestTFA == -1) {
-            //    iTFALine = i;
-            //    iLowestTFA = fmtNum(document.getElementById('txt' + i + '_9').value);
-            //}
-            //else {
-            //    if (fmtNum(document.getElementById('txt' + i + '_9').value) < iLowestTFA) {
-            //        iTFALine = i;
-            //        iLowestTFA = fmtNum(document.getElementById('txt' + i + '_9').value);
-            //    }
-            //}
+        if (document.getElementById('MainContent_chkThreshold1').checked) {
+            iTtl5 = iTtl5 + fmtNum(document.getElementById('txt' + i + '_8').value);
+            if (iLowestTFA == -1) {
+                iTFALine = i;
+                iLowestTFA = fmtNum(document.getElementById('txt' + i + '_9').value);
+            }
+            else {
+                if (fmtNum(document.getElementById('txt' + i + '_9').value) < iLowestTFA) {
+                    iTFALine = i;
+                    iLowestTFA = fmtNum(document.getElementById('txt' + i + '_9').value);
+                }
+            }
             iTtl5 = iTtl5 + fmtNum(document.getElementById('txt' + i + '_11').value);
             if (iLowestTFA == -1) {
                 iTFALine = i;
@@ -432,7 +472,7 @@ function calcTotals() {
             }
         }
         document.getElementById('txt' + i + '_7').style.backgroundColor = "#ffffff";
-        //document.getElementById('txt' + i + '_9').style.backgroundColor = "#ffffff";
+        document.getElementById('txt' + i + '_9').style.backgroundColor = "#ffffff";
         document.getElementById('txt' + i + '_12').style.backgroundColor = "#ffffff";
     }
     document.getElementById('divTtl0').innerHTML = accounting.formatMoney(iTtl0, "$", 0, ",");
@@ -440,10 +480,10 @@ function calcTotals() {
     document.getElementById('divTtl2').innerHTML = accounting.formatMoney(iTtl2, "$", 0, ",");
     document.getElementById('divTtl3').innerHTML = accounting.formatMoney(iTtl3, "$", 0, ",");
     document.getElementById('divTtl4').innerHTML = accounting.formatMoney(iTtl4, "$", 0, ",");
-    if (document.getElementById('MainContent_chkThreshold').checked) document.getElementById('divTtl6').innerHTML = accounting.formatMoney(iTtl5, "$", 0, ",");
+    if (document.getElementById('MainContent_chkThreshold1').checked) document.getElementById('divTtl6').innerHTML = accounting.formatMoney(iTtl5, "$", 0, ",");
 
     if (iBFALine != -1) document.getElementById('txt' + iBFALine + '_7').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
-    //if (iTFALine != -1) document.getElementById('txt' + iTFALine + '_9').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
+    if (iTFALine != -1) document.getElementById('txt' + iTFALine + '_9').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
     if (iTFALine != -1) document.getElementById('txt' + iTFALine + '_12').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
 }
 

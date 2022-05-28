@@ -93,7 +93,7 @@ namespace reserve
         }
 
         [WebMethod(enableSession:true)]
-        public DataSet SaveThreshold(string sThreshold)
+        public DataSet SaveThreshold1(int iState, string sValue)
         {
             DataSet ds = new DataSet();
             DataRow row;
@@ -107,13 +107,63 @@ namespace reserve
 
                 try
                 {
-                    if (sThreshold=="true")
+                    if (iState==0)
                     {
-                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold_used=1 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold1_used=0 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                     }
                     else
                     {
-                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold_used=0 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        Fn_enc.ExecuteNonQuery($"update info_project_info set threshold1_used=1, threshold1_value=@Param1 where firm_id=@Param2 and project_id=@Param3", new string[] { sValue, Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    row = ds.Tables["Results"].NewRow();
+                    row["r_type"] = "Error";
+                    row["r_desc"] = ex.ToString();
+                    ds.Tables["Results"].Rows.Add(row);
+                    return ds;
+                }
+
+                row = ds.Tables["Results"].NewRow();
+                row["r_type"] = "Success";
+                row["r_desc"] = "";
+                ds.Tables["Results"].Rows.Add(row);
+            }
+            catch (Exception ex)
+            {
+                row = ds.Tables["Results"].NewRow();
+                row["r_type"] = "Error";
+                row["r_desc"] = ex.ToString();
+                ds.Tables["Results"].Rows.Add(row);
+            }
+
+            return ds;
+        }
+
+        [WebMethod(enableSession: true)]
+        public DataSet SaveThreshold2(string sThreshold)
+        {
+            DataSet ds = new DataSet();
+            DataRow row;
+
+            try
+            {
+                //Create the results table
+                ds.Tables.Add("Results");
+                ds.Tables["Results"].Columns.Add("r_type");
+                ds.Tables["Results"].Columns.Add("r_desc");
+
+                try
+                {
+                    if (sThreshold == "true")
+                    {
+                        Fn_enc.ExecuteNonQuery($"update info_project_info set threshold2_used=1 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                    }
+                    else
+                    {
+                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold2_used=0 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                     }
                 }
                 catch (Exception ex)
