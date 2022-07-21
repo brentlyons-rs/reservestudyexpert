@@ -320,6 +320,10 @@ namespace reserve
                     curReduction = Convert.ToDouble((newLB - iThreshold) / 100);
                     if (curReduction < .01) curReduction = .01;
                     iIter++;
+                    if (iIter>1000000)
+                    {
+                        break;
+                    }
                 }
             }
 
