@@ -82,13 +82,13 @@ namespace reserve
             conn.Close();
         }
 
-        public static void GenerateProjections(string firmID, string projectID, string userID)
+        public static void GenerateProjections(string firmID, string projectID, string userID, string blSaveOldThreshold)
         {
             //Step 1a: check if intervals exist
             bool blIntervals = false;
             
             //Step 1: execute the stored proc to generate all the initial numbers
-            Fn_enc.ExecuteNonQuery("sp_app_rvw_proj1 @Param1, @Param2", new string[] { firmID, projectID });
+            Fn_enc.ExecuteNonQuery("sp_app_rvw_proj1 @Param1, @Param2, @Param3", new string[] { firmID, projectID, blSaveOldThreshold });
             //Step 2a: create a dataset that we can update locally
             double beginBal = 0;
             double threshold1Value = 0;
@@ -183,6 +183,12 @@ namespace reserve
                 param.SqlDbType = SqlDbType.Float;
                 cmd.Parameters.Add(param);
                 cmd.Parameters["@interest"].Value = interest;
+                //Add parameter for whether we should save the old threshold calcs or not
+                param = new SqlParameter();
+                param.ParameterName = "@saveOldThreshold";
+                param.SqlDbType = SqlDbType.NVarChar;
+                cmd.Parameters.Add(param);
+                cmd.Parameters["@saveOldThreshold"].Value = blSaveOldThreshold;
 
                 cmd.ExecuteNonQuery();
             }

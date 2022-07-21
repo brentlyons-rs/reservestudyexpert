@@ -114,7 +114,7 @@ namespace reserve
                     else
                     {
                         Fn_enc.ExecuteNonQuery($"update info_project_info set threshold1_used=1, threshold1_value=@Param1 where firm_id=@Param2 and project_id=@Param3", new string[] { sValue, Session["firmid"].ToString(), Session["projectid"].ToString() });
-                        GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                        GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString(),"0");
                     }
                 }
                 catch (Exception ex)

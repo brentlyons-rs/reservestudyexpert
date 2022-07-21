@@ -106,6 +106,15 @@
             document.getElementById('MainContent_txtHdnType').value = 'Threshold1';
             document.forms[0].submit();
         }
+
+        function checkRetainThresholdVisibility() {
+            if ((document.getElementById('MainContent_chkThreshold1').checked == true) || (document.getElementById('MainContent_chkThreshold2').checked == true)) {
+                document.getElementById('trRetainThreshold').style.display = 'block';
+            }
+            else {
+                document.getElementById('trRetainThreshold').style.display = 'none';
+            }
+        }
     </script>
 <form id="frmProject" method="post" runat="server" class="needs-validation">
     <div class="container_fluid" style="width: 100%; max-width: 100%">
@@ -185,6 +194,11 @@
                                 %>
                                 <button type="button" class="btn btn-primary" onclick="checkExisting('<%=blGen %>')">Generate Projections</button><br />
                                 <table>
+                                    <tr id="trRetainThreshold">
+                                        <td colspan="2" class="frm-text form-inline">
+                                            <label id="lblRetainThreshold" name="lblRetainThreshold" class="frm-text form-inline"><input type="checkbox" id="chkRetainThreshold" name="chkRetainThreshold" runat="server" checked="checked" />&nbsp;Retain Threshold Numbers</label>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>Interest:&nbsp;</td>
                                         <td class="frm-text form-inline" nowrap>%<input type="text" runat="server" id="txtInterest" class="form-control" style="width: 100px" placeholder="0.00" onkeypress="return isNumber(event)" /></td>
@@ -228,14 +242,14 @@
                                     </tr>
                                     <tr>
                                         <td width="1%" style="text-wrap: none" nowrap>
-                                            <input type="checkbox" id="chkThreshold1" name="chkThreshold1" runat="server"><label id="lblThreshold1" for="MainContent_chkThreshold1" class="frm-text">&nbsp;Threshold Scenario 1</label>:
+                                            <input type="checkbox" id="chkThreshold1" name="chkThreshold1" runat="server" onclick="checkRetainThresholdVisibility()"><label id="lblThreshold1" for="MainContent_chkThreshold1" class="frm-text" onclick="checkRetainThresholdVisibility()">&nbsp;Threshold Scenario 1</label>:
                                             $<input type="text" id="txtThreshold1Val" class="frm-text" style="border: 1px solid #dddddd; border-radius: 5px; height: 25px" size="10" runat="server" onkeypress="return isNumber(event)" />
                                             <button type="button" class="btn btn-primary" style="height: 25px !important; padding-top: 2px" onclick="saveThreshold1()">Save</button>
                                         </td>
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold1" style="display: none"></td>
                                     </tr>
                                     <tr>
-                                        <td width="1%" style="text-wrap: none" nowrap><input type="checkbox" id="chkThreshold2" name="chkThreshold2" runat="server"><label id="lblThreshold2" for="MainContent_chkThreshold2" class="frm-text">&nbsp;Threshold Scenario 2</label></td>
+                                        <td width="1%" style="text-wrap: none" nowrap><input type="checkbox" id="chkThreshold2" name="chkThreshold2" runat="server" onclick="checkRetainThresholdVisibility()"><label id="lblThreshold2" for="MainContent_chkThreshold2" class="frm-text" onclick="checkRetainThresholdVisibility()">&nbsp;Threshold Scenario 2</label></td>
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold2" style="display: none"></td>
                                     </tr>
                                 </table>
@@ -468,6 +482,7 @@
     <script>
         toggleInterval(0);
         if (document.getElementById('MainContent_chkThreshold2').checked == true) trimIntervalFat();
+        checkRetainThresholdVisibility();
 
         $("#MainContent_chkThreshold1").click(function () {
             if (!$(this).is(":checked")) {

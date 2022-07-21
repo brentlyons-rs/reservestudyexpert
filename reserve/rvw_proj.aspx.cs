@@ -232,7 +232,7 @@ namespace reserve
                         inflation.Append("0");
                     Fn_enc.ExecuteNonQuery("update info_project_info set interest=" + interest.ToString() + ", inflation=" + inflation.ToString() + " where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                 }
-                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString(), chkRetainThreshold.Checked ? "1" : "0");
             }
 
             if (txtHdnType.Value == "Threshold1")

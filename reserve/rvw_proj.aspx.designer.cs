@@ -33,6 +33,15 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProject;
 
         /// <summary>
+        /// chkRetainThreshold control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkRetainThreshold;
+
+        /// <summary>
         /// txtInterest control.
         /// </summary>
         /// <remarks>
