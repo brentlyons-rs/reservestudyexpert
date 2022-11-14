@@ -404,6 +404,45 @@ function chkKeybd(sender, e, iRow, iCol) {
     }
 }
 
+function calcPctFunded() {
+    if (fullFundBal > 0) {
+        for (var i = 1; i < 31; i++) {
+            // Current
+            if (!document.getElementById('MainContent_chkPctFund1').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_2').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFund' + i + '_1').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Baseline
+            if (!document.getElementById('MainContent_chkPctFund2').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_7').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFund' + i + '_2').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Threshold1
+            if (!document.getElementById('MainContent_chkPctFund3').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_9').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFund' + i + '_3').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Threshold2
+            if (!document.getElementById('MainContent_chkPctFund4').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_12').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFund' + i + '_4').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+        }
+    }
+}
+
 function calcTotals() {
     var iTtl0 = 0;
     var iTtl1 = 0;
@@ -485,6 +524,8 @@ function calcTotals() {
     if (iBFALine != -1) document.getElementById('txt' + iBFALine + '_7').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
     if (iTFALine != -1) document.getElementById('txt' + iTFALine + '_9').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
     if (iTFALine != -1) document.getElementById('txt' + iTFALine + '_12').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
+
+    calcPctFunded();
 }
 
 function fmtNum(strNum) {

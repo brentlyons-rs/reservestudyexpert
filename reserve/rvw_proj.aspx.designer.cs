@@ -69,6 +69,15 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkDisp1;
 
         /// <summary>
+        /// chkPctFund1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkPctFund1;
+
+        /// <summary>
         /// chkDisp2 control.
         /// </summary>
         /// <remarks>
@@ -85,6 +94,15 @@ namespace reserve
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkDisp3;
+
+        /// <summary>
+        /// chkPctFund2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkPctFund2;
 
         /// <summary>
         /// chkThreshold1 control.
@@ -105,6 +123,15 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtThreshold1Val;
 
         /// <summary>
+        /// chkPctFund3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkPctFund3;
+
+        /// <summary>
         /// chkThreshold2 control.
         /// </summary>
         /// <remarks>
@@ -112,6 +139,15 @@ namespace reserve
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkThreshold2;
+
+        /// <summary>
+        /// chkPctFund4 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox chkPctFund4;
 
         /// <summary>
         /// chkIntervals control.
