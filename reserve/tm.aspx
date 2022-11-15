@@ -520,7 +520,7 @@ body
                 }
                 Response.Write("<input type=\"hidden\" id=\"hdnAnswer" + iRow + "_" + i + "\" name=\"hdnAnswer" + iRow + "_" + i + "\" value=\"" + strVal + "\" /></td>" + System.Environment.NewLine);
                 //Generate sql criteria
-                if (strPK.ToString().IndexOf("[" + ds.Tables["recs"].Columns[i].ColumnName + "]") > 0)
+                if (strPK.ToString().IndexOf("[" + ds.Tables["recs"].Columns[i].ColumnName + "]") >= 0)
                 {
                     Response.Write("<input type=\"hidden\" id=\"txtHdnReqd" + iRow + "_" + i + "\" name=\"txtHdnReqd" + iRow + "_" + i + "\" value=\"1\">" + System.Environment.NewLine);
                     if (strSql.ToString() == "")
