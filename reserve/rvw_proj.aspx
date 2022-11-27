@@ -238,17 +238,21 @@
                                         <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded1" name="chkPctFunded1" checked runat="server" onclick="toggleChkPctFunded(1)"><label id="lblPctFunded1" for="MainContent_chkPctFunded1" class="frm-text">&nbsp;% Funded</label></td>
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded1" style="display: none"></td>
                                     </tr>
-                                    <tr style="border-bottom: 1px dashed #cccccc">
+                                    <tr>
                                         <td style="text-wrap: none" nowrap><input type="checkbox" id="chkDisp2" name="chkDisp2" runat="server" checked onclick="toggleChkDisp(2)"><label id="lblChkDisp2" for="MainContent_chkDisp2" class="frm-text">&nbsp;Full Funding</label></td>
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkDisp2" style="display: none"></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px dashed #cccccc">
+                                        <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded2" name="chkPctFunded2" checked runat="server" onclick="toggleChkPctFunded(2)"><label id="lblPctFunded2" for="MainContent_chkPctFunded2" class="frm-text">&nbsp;% Funded</label></td>
+                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded2" style="display: none"></td>
                                     </tr>
                                     <tr>
                                         <td style="text-wrap: none" nowrap><input type="checkbox" id="chkDisp3" name="chkDisp3" runat="server" checked onclick="toggleChkDisp(3)"><label id="lblChkDisp3" for="MainContent_chkDisp3" class="frm-text">&nbsp;Baseline Funding</label></td>
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkDisp3" style="display: none"></td>
                                     </tr>
                                     <tr style="border-bottom: 1px dashed #cccccc">
-                                        <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded2" name="chkPctFunded2" checked runat="server" onclick="toggleChkPctFunded(2)"><label id="lblChkPctFunded2" for="MainContent_chkPctFunded2" class="frm-text">&nbsp;% Funded</label></td>
-                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded2" style="display: none"></td>
+                                        <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded3" name="chkPctFunded3" checked runat="server" onclick="toggleChkPctFunded(3)"><label id="lblChkPctFunded3" for="MainContent_chkPctFunded3" class="frm-text">&nbsp;% Funded</label></td>
+                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded3" style="display: none"></td>
                                     </tr>
                                     <tr>
                                         <td width="1%" style="text-wrap: none" nowrap>
@@ -259,16 +263,16 @@
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold1" style="display: none"></td>
                                     </tr>
                                     <tr style="border-bottom: 1px dashed #cccccc">
-                                        <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded3" name="chkPctFunded3" checked runat="server" onclick="toggleChkPctFunded(3)"><label id="lblChkPctFunded3" for="MainContent_chkPctFunded3" class="frm-text">&nbsp;% Funded</label></td>
-                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded3" style="display: none"></td>
+                                        <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded4" name="chkPctFunded4" checked runat="server" onclick="toggleChkPctFunded(4)"><label id="lblChkPctFunded4" for="MainContent_chkPctFunded4" class="frm-text">&nbsp;% Funded</label></td>
+                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded4" style="display: none"></td>
                                     </tr>
                                     <tr>
                                         <td width="1%" style="text-wrap: none" nowrap><input type="checkbox" id="chkThreshold2" name="chkThreshold2" runat="server"><label id="lblThreshold2" for="MainContent_chkThreshold2" class="frm-text">&nbsp;Threshold Scenario 2</label></td>
                                         <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgThreshold2" style="display: none"></td>
                                     </tr>
                                     <tr>
-                                        <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded4" name="chkPctFund4" checked runat="server" onclick="toggleChkPctFunded(4)"><label id="lblChkPctFunded4" for="MainContent_chkPctFunded4" class="frm-text">&nbsp;% Funded</label></td>
-                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded4" style="display: none"></td>
+                                        <td style="text-wrap: none; padding-left: 15px" nowrap><input type="checkbox" id="chkPctFunded5" name="chkPctFund5" checked runat="server" onclick="toggleChkPctFunded(5)"><label id="lblChkPctFunded5" for="MainContent_chkPctFunded5" class="frm-text">&nbsp;% Funded</label></td>
+                                        <td><img src="images/ajax_snake.gif" border=0 align="absmiddle" id="imgChkPctFunded5" style="display: none"></td>
                                     </tr>
                                 </table>
                             </td>
@@ -311,18 +315,19 @@
                             <td class="current" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
                             <td class="frm-text full" style="color: #ffffff; padding: 10px" colspan="3">FULL FUNDING ANALYSIS</td>
+                            <td class="frm-text full pctfunded2"></td>
                             <td class="full" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
                             <td class="frm-text baseline" style="color: #ffffff; padding: 10px" colspan="2">BASELINE FUNDING ANALYSIS</td>
-                            <td class="frm-text baseline pctfunded2"></td>
+                            <td class="frm-text baseline pctfunded3"></td>
                             <td class="baseline" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
                             <td class="frm-text threshold1" style="color: #ffffff; padding: 10px" colspan="2">THRESHOLD FUNDING ANALYSIS (SCENARIO 1)</td>
-                            <td class="threshold1 pctfunded3" style="width: 10px">&nbsp;</td>
+                            <td class="threshold1 pctfunded4" style="width: 10px">&nbsp;</td>
                             <td class="threshold1" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
                             <td class="frm-text threshold2" style="color: #ffffff; padding: 10px" colspan="3">THRESHOLD FUNDING ANALYSIS (SCENARIO 2)</td>
-                            <td class="threshold2 pctfunded4" style="width: 10px">&nbsp;</td>
+                            <td class="threshold2 pctfunded5" style="width: 10px">&nbsp;</td>
                         </tr>
                         <tr style="background-color: #E98300; padding: 5px">
                             <td class="frm-text" style="background-color: #ffffff !important">&nbsp;</td>
@@ -338,26 +343,27 @@
                             <td class="frm-text full" style="color: #ffffff; padding: 5px;">REQUIRED<br />ANNUAL<br />CONTR</td>
                             <td class="frm-text full" style="color: #ffffff; padding: 5px;">ADJUSTED<br />ANNUAL<br />REQUIRED<br />CONTR</td>
                             <td class="frm-text full" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="frm-text full pctfunded2" style="color: #ffffff; padding: 5px;">% FUNDED</td>
                             <td class="full" style="background-color: #ffffff"></td>
 
                             <td class="frm-text baseline" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTR</td>
                             <td class="frm-text baseline" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text baseline pctfunded2" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text baseline pctfunded3" style="color: #ffffff; padding: 5px;">% FUNDED</td>
                             <td class="baseline" style="background-color: #ffffff"></td>
 
                             <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTR</td>
                             <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text threshold1 pctfunded3" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text threshold1 pctfunded4" style="color: #ffffff; padding: 5px;">% FUNDED</td>
                             <td class="threshold1" style="background-color: #ffffff"></td>
 
                             <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">%<br />inc.</td>
                             <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTR</td>
                             <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text threshold2 pctfunded4" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text threshold2 pctfunded5" style="color: #ffffff; padding: 5px;">% FUNDED</td>
                         </tr>
                         <tr style="background-color: #eeeeee">
                             <%
-                            dr = reserve.Fn_enc.ExecuteReader("select year(report_effective)-1 as yr, begin_balance from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                            dr = reserve.Fn_enc.ExecuteReader("select year(report_effective)-1 as yr, begin_balance, (select top 1 full_fund_bal from info_projections where firm_id=@Param1 and project_id=@Param2 order by year_id) as full_fund_bal from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                                 dr.Read();
                                 %>
                             <!--Years-->
@@ -368,22 +374,23 @@
                             <!--Current Funding-->
                             <td class="current"></td>
                             <td class="frm-text current" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="frm-text current pctfunded1" style="text-align: left; font-size: 8pt; padding-left: 3px"></td>
+                            <td class="frm-text current pctfunded1" style="text-align: center; font-size: 8pt"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
                             <td class="current" style="background-color: #ffffff"></td>
                             <!--Full Funding-->
                             <td class="full"></td>
                             <td class="full"></td>
                             <td class="frm-text full" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
+                            <td class="frm-text full pctfunded2" style="text-align: center; font-size: 8pt"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
                             <td class="full" style="background-color: #ffffff"></td>
                             <!--Baseline Funding-->
                             <td class="baseline"></td>
                             <td class="frm-text baseline" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="frm-text baseline pctfunded2" style="text-align: left; font-size: 8pt; padding-left: 3px"></td>
+                            <td class="frm-text baseline pctfunded3" style="text-align: center; font-size: 8pt"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
                             <td class="baseline" style="background-color: #ffffff"></td>
                             <!--threshold1-->
                             <td class="frm-text threshold1"></td>
-                            <td class="threshold1" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="threshold1 pctfunded3"></td>
+                            <td class="threshold1" style="text-align: left; font-size: 8pt; padding-left: 3px; color: #000000"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
+                            <td class="threshold1 pctfunded4" style="text-align: center; font-size: 8pt; color: #000000"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
                             <td class="threshold1" style="background-color: #ffffff"></td>
                             <!--Adjusted threshold1-->
                             <td class="threshold2">
@@ -392,18 +399,24 @@
                             </td>
                             <td class="threshold2"></td>
                             <td class="frm-text threshold2" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="threshold2"></td>
+                            <td class="threshold2 pctfunded5" style="text-align: center; font-size: 8pt; color: #000000"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
                         </tr>
+                        <script>
+                            const fullFund = [];
+                        </script>
                         <%
                             dr.Close();
                             var iRow = 1; string fmt1 = "$#,##0";
                             StringBuilder sql = new StringBuilder();
-                            dr = reserve.Fn_enc.ExecuteReader("select i.year_id, i.annual_exp, isnull(i.pct_increase,0) as pct_increase, isnull(i.cfa_annual_contrib,0) as cfa_annual_contrib, isnull(i.cfa_reserve_fund_bal,0) as cfa_reserve_fund_bal, isnull(i.ffa_req_annual_contr,0) as ffa_req_annual_contr, isnull(i.ffa_avg_req_annual_contr,0) as ffa_avg_req_annual_contr, isnull(i.ffa_res_fund_bal,0) as ffa_res_fund_bal, isnull(i.bfa_annual_contr,0) as bfa_annual_contr, isnull(i.bfa_res_fund_bal,0) as bfa_res_fund_bal, isnull(i.tfa_annual_contr,0) as tfa_annual_contr, isnull(i.tfa_res_fund_bal,0) as tfa_res_fund_bal, isnull(i.tfa2_annual_contr,0) as tfa2_annual_contr, isnull(i.tfa2_res_fund_bal,0) as tfa2_res_fund_bal from info_projections i where i.firm_id=@Param1 and i.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                            dr = reserve.Fn_enc.ExecuteReader("select i.year_id, i.annual_exp, isnull(i.pct_increase,0) as pct_increase, isnull(i.cfa_annual_contrib,0) as cfa_annual_contrib, isnull(i.cfa_reserve_fund_bal,0) as cfa_reserve_fund_bal, isnull(i.ffa_req_annual_contr,0) as ffa_req_annual_contr, isnull(i.ffa_avg_req_annual_contr,0) as ffa_avg_req_annual_contr, isnull(i.ffa_res_fund_bal,0) as ffa_res_fund_bal, isnull(i.bfa_annual_contr,0) as bfa_annual_contr, isnull(i.bfa_res_fund_bal,0) as bfa_res_fund_bal, isnull(i.tfa_annual_contr,0) as tfa_annual_contr, isnull(i.tfa_res_fund_bal,0) as tfa_res_fund_bal, isnull(i.tfa2_annual_contr,0) as tfa2_annual_contr, isnull(i.tfa2_res_fund_bal,0) as tfa2_res_fund_bal, full_fund_bal from info_projections i where i.firm_id=@Param1 and i.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
                             while (dr.Read())
                             {
                                 sql.Clear();
                                 sql.Append("year_id=" + dr["year_id"].ToString());
                                 %>
+                        <script>
+                            fullFund.push(<%=dr["full_fund_bal"]%>);
+                        </script>
                         <tr>
                             <td nowrap bgcolor=#ffffff align=center style="width: 17px" nowrap id="rowHdr<%=iRow %>"></td>
                             <td class="frm-text text-left bb"><%=dr["year_id"].ToString() %></td>
@@ -436,6 +449,7 @@
                                 <input type="text" ID="txt<%=iRow %>_5" name="txt<%=iRow %>_5" value="<%=Convert.ToDouble(dr["ffa_res_fund_bal"]).ToString(fmt1) %>" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,<%=iRow %>,5)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('ffa_res_fund_bal','textbox',<%=iRow %>, 5)" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_5" name="hdnAnswer<%=iRow %>_5" value="<%=Convert.ToDouble(dr["ffa_res_fund_bal"]).ToString(fmt1) %>" />
                             </td>
+                            <td class="frm-text bb full pctfunded2"><div id="pctFunded<%=iRow %>_2" style="font-size: 8pt"></div></td>
                             <td class="full" style="background-color: #ffffff; border-bottom: none !important;"></td>
                             <!--Baseline Funding-->
                             <td class="frm-text bb baseline">
@@ -447,7 +461,7 @@
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_7" name="hdnAnswer<%=iRow %>_7" value="<%=Convert.ToDouble(dr["bfa_res_fund_bal"]).ToString(fmt1) %>" />
                                 <input type="hidden" id="txtHdnCrit<%=iRow %>" name="txtHdnCrit<%=iRow %>" value="<%=sql %>">
                             </td>
-                            <td class="frm-text bb baseline pctfunded2"><div id="pctFunded<%=iRow %>_2" style="font-size: 8pt"></div></td>
+                            <td class="frm-text bb baseline pctfunded3"><div id="pctFunded<%=iRow %>_3" style="font-size: 8pt"></div></td>
                             <td class="baseline" style="background-color: #ffffff; border-bottom: none !important;"></td>
                             <!--threshold1 Funding-->
                             <td class="frm-text bb threshold1">
@@ -458,7 +472,7 @@
                                 <input type="text" ID="txt<%=iRow %>_9" name="txt<%=iRow %>_9" value="<%=Convert.ToDouble(dr["tfa_res_fund_bal"]).ToString(fmt1) %>" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,<%=iRow %>,9)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('tfa_res_fund_bal','textbox',<%=iRow %>, 9)" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_9" name="hdnAnswer<%=iRow %>_9" value="<%=Convert.ToDouble(dr["tfa_res_fund_bal"]).ToString(fmt1) %>" />
                             </td>
-                            <td class="frm-text bb threshold1 pctfunded3"><div id="pctFunded<%=iRow %>_3" style="font-size: 8pt"></div></td>
+                            <td class="frm-text bb threshold1 pctfunded4"><div id="pctFunded<%=iRow %>_4" style="font-size: 8pt"></div></td>
                             <td class="threshold1" style="background-color: #ffffff; border-bottom: none !important;"></td>
                             <!--threshold2 funding-->
                             <td class="frm-text bb threshold2" style="text-wrap: none">
@@ -476,7 +490,7 @@
                                 <input type="text" ID="txt<%=iRow %>_12" name="txt<%=iRow %>_12" value="<%=Convert.ToDouble(dr["tfa2_res_fund_bal"]).ToString(fmt1) %>" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,<%=iRow %>,12)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('tfa2_res_fund_bal','textbox',<%=iRow %>, 12)" />
                                 <input type="hidden" id="hdnAnswer<%=iRow %>_12" name="hdnAnswer<%=iRow %>_12" value="<%=Convert.ToDouble(dr["tfa2_res_fund_bal"]).ToString(fmt1) %>" />
                             </td>
-                            <td class="frm-text bb threshold2 pctfunded4"><div id="pctFunded<%=iRow %>_4" style="font-size: 8pt"></div></td>
+                            <td class="frm-text bb threshold2 pctfunded5"><div id="pctFunded<%=iRow %>_5" style="font-size: 8pt"></div></td>
                         </tr>
                         <% 
                             iRow++;
@@ -494,21 +508,22 @@
                             <!--Full Funding-->
                             <td class="full"><div id="divTtl2" class="frm-text-bold text-left"></div></td>
                             <td class="full"><div id="divTtl3" class="frm-text-bold text-left"></div></td>
+                            <td class="current pctfunded2"></td>
                             <td class="full" colspan="2"></td>
                             <!--Baseline Funding-->
                             <td class="baseline"><div id="divTtl4" class="frm-text-bold text-left"></div></td>
                             <td class="baseline"></td>
-                            <td class="baseline pctfunded2"></td>
+                            <td class="baseline pctfunded3"></td>
                             <td class="baseline"></td>
                             <!--threshold1 Funding-->
                             <td class="threshold1"><div id="divTtl5" class="frm-text-bold text-left"></div></td>
                             <td class="threshold1"></td>
-                            <td class="threshold1 pctfunded3"></td>
+                            <td class="threshold1 pctfunded4"></td>
                             <td class="threshold1"></td>
                             <td class="threshold2"></td>
                             <td class="threshold2"><div id="divTtl6" class="frm-text-bold text-left"></div></td>
                             <td class="threshold2"></td>
-                            <td class="threshold2 pctfunded4"></td>
+                            <td class="threshold2 pctfunded5"></td>
                         </tr>
                         <input type="hidden" id="txtHdnFullFundBal" name="txtHdnFullFundBal" value="<%=fullFundTotal %>" />
                         <script>calcTotals();</script>
@@ -537,11 +552,11 @@
                 document.forms[0].disabled = false;
                 sendThreshold1(1,document.getElementById('MainContent_txtThreshold1Val').value);
                 $(".threshold1").show();
-                if (document.getElementById('MainContent_chkPctFunded3').checked) {
-                    $(".pctfunded3").show();
+                if (document.getElementById('MainContent_chkPctFunded4').checked) {
+                    $(".pctfunded4").show();
                 }
                 else {
-                    $(".pctfunded3").hide();
+                    $(".pctfunded4").hide();
                 }
             }
         });
@@ -551,11 +566,11 @@
                 document.forms[0].disabled = false;
                 sendThreshold2('true');
                 $(".threshold2").show();
-                if (document.getElementById('MainContent_chkPctFunded4').checked) {
-                    $(".pctfunded4").show();
+                if (document.getElementById('MainContent_chkPctFunded5').checked) {
+                    $(".pctfunded5").show();
                 }
                 else {
-                    $(".pctfunded4").hide();
+                    $(".pctfunded5").hide();
                 }
             }
             else {
@@ -583,6 +598,12 @@
         $("#MainContent_chkDisp2").click(function () {
             if ($(this).prop("checked") == true) {
                 $(".full").show();
+                if (document.getElementById('MainContent_chkPctFunded2').checked) {
+                    $(".pctfunded2").show();
+                }
+                else {
+                    $(".pctfunded2").hide();
+                }
             }
             else {
                 $(".full").hide();
@@ -592,11 +613,11 @@
         $("#MainContent_chkDisp3").click(function () {
             if ($(this).prop("checked") == true) {
                 $(".baseline").show();
-                if (document.getElementById('MainContent_chkPctFunded2').checked) {
-                    $(".pctfunded2").show();
+                if (document.getElementById('MainContent_chkPctFunded3').checked) {
+                    $(".pctfunded3").show();
                 }
                 else {
-                    $(".pctfunded2").hide();
+                    $(".pctfunded3").hide();
                 }
             }
             else {
@@ -640,6 +661,15 @@
             }
         });
 
+        $("#MainContent_chkPctFunded5").click(function () {
+            if ($(this).prop("checked") == true) {
+                $(".pctfunded5").show();
+            }
+            else {
+                $(".pctfunded5").hide();
+            }
+        });
+
         $(document).ready(function () {
             if ($("#MainContent_chkThreshold1").prop("checked") == false) { $(".threshold1").hide(); } else { $(".threshold1").show() }
             if ($("#MainContent_chkThreshold2").prop("checked") == false) { $(".threshold2").hide(); }
@@ -650,6 +680,7 @@
             if ($("#MainContent_chkPctFunded2").prop("checked") == false) { $(".pctfunded2").hide(); }
             if ($("#MainContent_chkPctFunded3").prop("checked") == false) { $(".pctfunded3").hide(); }
             if ($("#MainContent_chkPctFunded4").prop("checked") == false) { $(".pctfunded4").hide(); }
+            if ($("#MainContent_chkPctFunded5").prop("checked") == false) { $(".pctfunded5").hide(); }
         });
 
         $('#cmdIntervals').on('click', function () {

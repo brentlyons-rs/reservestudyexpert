@@ -484,9 +484,9 @@ function chkKeybd(sender, e, iRow, iCol) {
 }
 
 function calcPctFunded() {
-    var fullFundBal = document.getElementById('txtHdnFullFundBal').value;
-    if (fullFundBal > 0) {
-        for (var i = 1; i < 31; i++) {
+    for (var i = 1; i < 31; i++) {
+        var fullFundBal = fullFund[i-1];
+        if (fullFundBal > 0) {
             // Current
             if (document.getElementById('MainContent_chkPctFunded1').checked) {
                 var fund = fmtNum(document.getElementById('txt' + i + '_2').value);
@@ -495,37 +495,46 @@ function calcPctFunded() {
                     document.getElementById('pctFunded' + i + '_1').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
                 }
             }
-            // Baseline
+            // Full
             if (document.getElementById('MainContent_chkPctFunded2').checked) {
-                var fund = fmtNum(document.getElementById('txt' + i + '_7').value);
+                var fund = fmtNum(document.getElementById('txt' + i + '_5').value);
 
                 if (!isNaN(fund) && fullFundBal > 0) {
                     document.getElementById('pctFunded' + i + '_2').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
                 }
             }
-            // Threshold1
+            // Baseline
             if (document.getElementById('MainContent_chkPctFunded3').checked) {
-                var fund = fmtNum(document.getElementById('txt' + i + '_9').value);
+                var fund = fmtNum(document.getElementById('txt' + i + '_7').value);
 
                 if (!isNaN(fund) && fullFundBal > 0) {
                     document.getElementById('pctFunded' + i + '_3').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
                 }
             }
-            // Threshold2
+            // Threshold1
             if (document.getElementById('MainContent_chkPctFunded4').checked) {
-                var fund = fmtNum(document.getElementById('txt' + i + '_12').value);
+                var fund = fmtNum(document.getElementById('txt' + i + '_9').value);
 
                 if (!isNaN(fund) && fullFundBal > 0) {
                     document.getElementById('pctFunded' + i + '_4').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Threshold2
+            if (document.getElementById('MainContent_chkPctFunded5').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_12').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFunded' + i + '_5').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
                 }
             }
         }
     }
     // Disabled pct funded boxes if those sections aren't be displayed
     document.getElementById('MainContent_chkPctFunded1').disabled = !document.getElementById('MainContent_chkDisp1').checked;
-    document.getElementById('MainContent_chkPctFunded2').disabled = !document.getElementById('MainContent_chkDisp3').checked;
-    document.getElementById('MainContent_chkPctFunded3').disabled = !document.getElementById('MainContent_chkThreshold1').checked;
-    document.getElementById('MainContent_chkPctFunded4').disabled = !document.getElementById('MainContent_chkThreshold2').checked;
+    document.getElementById('MainContent_chkPctFunded2').disabled = !document.getElementById('MainContent_chkDisp2').checked;
+    document.getElementById('MainContent_chkPctFunded3').disabled = !document.getElementById('MainContent_chkDisp3').checked;
+    document.getElementById('MainContent_chkPctFunded4').disabled = !document.getElementById('MainContent_chkThreshold1').checked;
+    document.getElementById('MainContent_chkPctFunded5').disabled = !document.getElementById('MainContent_chkThreshold2').checked;
 }
 
 function calcTotals() {

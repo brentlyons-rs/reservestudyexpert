@@ -272,12 +272,15 @@ namespace reserve
                         sField = "current_pct_funded_hidden";
                         break;
                     case 2:
-                        sField = "baseline_pct_funded_hidden";
+                        sField = "full_pct_funded_hidden";
                         break;
                     case 3:
-                        sField = "threshold1_pct_funded_hidden";
+                        sField = "baseline_pct_funded_hidden";
                         break;
                     case 4:
+                        sField = "threshold1_pct_funded_hidden";
+                        break;
+                    case 5:
                         sField = "threshold2_pct_funded_hidden";
                         break;
                 }
