@@ -246,5 +246,17 @@ namespace reserve
                 GoalSeek.GenerateThresholdType1(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
             }
         }
+
+        public string FullFund(string fullFund, string resFund)
+        {
+            if (string.IsNullOrEmpty(resFund) || string.IsNullOrEmpty(fullFund) || fullFund=="0")
+            {
+                return "-";
+            }
+            else
+            {
+                return string.Format("{0:0}%", (Convert.ToDouble(resFund) / Convert.ToDouble(fullFund)) * 100);
+            }
+        }
     }
 }

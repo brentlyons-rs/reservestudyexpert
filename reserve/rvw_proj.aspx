@@ -374,23 +374,23 @@
                             <!--Current Funding-->
                             <td class="current"></td>
                             <td class="frm-text current" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="frm-text current pctfunded1" style="text-align: center; font-size: 8pt"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
+                            <td class="frm-text current pctfunded1" style="text-align: center; font-size: 8pt"><%= FullFund(dr["full_fund_bal"].ToString(), dr["begin_balance"].ToString()) %></td>
                             <td class="current" style="background-color: #ffffff"></td>
                             <!--Full Funding-->
                             <td class="full"></td>
                             <td class="full"></td>
                             <td class="frm-text full" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="frm-text full pctfunded2" style="text-align: center; font-size: 8pt"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
+                            <td class="frm-text full pctfunded2" style="text-align: center; font-size: 8pt"><%= FullFund(dr["full_fund_bal"].ToString(), dr["begin_balance"].ToString()) %></td>
                             <td class="full" style="background-color: #ffffff"></td>
                             <!--Baseline Funding-->
                             <td class="baseline"></td>
                             <td class="frm-text baseline" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="frm-text baseline pctfunded3" style="text-align: center; font-size: 8pt"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
+                            <td class="frm-text baseline pctfunded3" style="text-align: center; font-size: 8pt"><%= FullFund(dr["full_fund_bal"].ToString(), dr["begin_balance"].ToString()) %></td>
                             <td class="baseline" style="background-color: #ffffff"></td>
                             <!--threshold1-->
                             <td class="frm-text threshold1"></td>
                             <td class="threshold1" style="text-align: left; font-size: 8pt; padding-left: 3px; color: #000000"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="threshold1 pctfunded4" style="text-align: center; font-size: 8pt; color: #000000"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
+                            <td class="threshold1 pctfunded4" style="text-align: center; font-size: 8pt; color: #000000"><%= FullFund(dr["full_fund_bal"].ToString(), dr["begin_balance"].ToString()) %></td>
                             <td class="threshold1" style="background-color: #ffffff"></td>
                             <!--Adjusted threshold1-->
                             <td class="threshold2">
@@ -399,7 +399,7 @@
                             </td>
                             <td class="threshold2"></td>
                             <td class="frm-text threshold2" style="text-align: left; font-size: 8pt; padding-left: 3px"><%=Convert.ToDouble(dr["begin_balance"]).ToString("C0") %></td>
-                            <td class="threshold2 pctfunded5" style="text-align: center; font-size: 8pt; color: #000000"><%= String.Format("{0:0}%", (Convert.ToDouble(dr["begin_balance"].ToString()) / Convert.ToDouble(dr["full_fund_bal"].ToString()))*100) %></td>
+                            <td class="threshold2 pctfunded5" style="text-align: center; font-size: 8pt; color: #000000"><%= FullFund(dr["full_fund_bal"].ToString(), dr["begin_balance"].ToString()) %></td>
                         </tr>
                         <script>
                             const fullFund = [];
