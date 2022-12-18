@@ -296,47 +296,47 @@
                 </tr>
                 <tr><td colspan="8" class="text-left frm-text-blue-bold" style="background-color: #eeeeee"><i class="fa fa-chevron-circle-right" style="font-size: 18px"></i> Community Characteristics</td></tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Age of community:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtAoC" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right"><label class="frm-text">Age of community:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtAoC" onkeypress="return isNumber(event)"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold"># of units:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtNU" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right"><label class="frm-text"># of units:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtNU" onkeypress="return isNumber(event)"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold"># of bldgs:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtNB" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right"><label class="frm-text"># of bldgs:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtNB" onkeypress="return isNumber(event)"></td>
             
-                    <td class="form-inline text-right"><label class="frm-text-bold"># of floors:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtNF" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right"><label class="frm-text"># of floors:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtNF" onkeypress="return isNumber(event)"></td>
                 </tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Site address 1:</label></td>
-                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtSA1" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Site address 1:</label></td>
+                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtSA1" maxlength="50"></td>
 
                     <td class="form-inline text-right"><label class="frm-text">Site address 2:</label></td>
                     <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtSA2" maxlength="50"></td>
                 </tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Site city:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSC" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Site city:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSC" maxlength="50"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Site state:</label></td>
-                    <td class="form-inline"><select class="form-control" id="cboSS" runat="server" required></select></td>
+                    <td class="form-inline text-right"><label class="frm-text">Site state:</label></td>
+                    <td class="form-inline"><select class="form-control" id="cboSS" runat="server"></select></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Site zip:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSZ" maxlength="15" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Site zip:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSZ" maxlength="15"></td>
 
                     <td colspan="2"></td>
                 </tr>
                 <tr><td colspan="8" class="text-left frm-text-blue-bold" style="background-color: #eeeeee"><i class="fa fa-chevron-circle-right" style="font-size: 18px"></i> Inputs</td></tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Inspection date:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtID" placeholder="mm/dd/yyyy" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Inspection date:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtID" placeholder="mm/dd/yyyy"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Report effective:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtRE" placeholder="mm/dd/yyyy" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Report effective:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtRE" placeholder="mm/dd/yyyy"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Geo. factor:</label></td>
-                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtGF" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right"><label class="frm-text">Geo. factor:</label></td>
+                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtGF" onkeypress="return isNumber(event)"></td>
                 </tr>
                 <tr>
                     <td class="form-inline text-right"><label class="frm-text">Interest:</label></td>
@@ -349,20 +349,20 @@
                 </tr>
                 <tr><td colspan="8" class="text-left frm-text-blue-bold" style="background-color: #eeeeee"><i class="fa fa-chevron-circle-right" style="font-size: 18px"></i> Contact Information</td></tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Contact prefix:</label></td>
-                    <td class="form-inline"><select class="form-control" id="cboCP" runat="server" required><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></td>
+                    <td class="form-inline text-right"><label class="frm-text">Contact prefix:</label></td>
+                    <td class="form-inline"><select class="form-control" id="cboCP" runat="server"><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Contact name:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCN" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Contact name:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCN" maxlength="50"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Contact title:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCT" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Contact title:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCT" maxlength="50"></td>
 
                     <td colspan="2"></td>
                 </tr>
                 <tr>
-                    <td class="form-inline text-right text-nowrap"><label class="frm-text-bold">Association name:</label></td>
-                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtCoN" maxlength="50" required></td>
+                    <td class="form-inline text-right text-nowrap"><label class="frm-text">Association name:</label></td>
+                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtCoN" maxlength="50"></td>
 
                     <td class="form-inline text-right"><label class="frm-text">Contact phone:</label></td>
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCP" maxlength="25"></td>
@@ -377,30 +377,30 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Client address 1:</label></td>
-                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtClA1" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Client address 1:</label></td>
+                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtClA1" maxlength="50"></td>
 
                     <td class="form-inline text-right"><label class="frm-text">Client address 2:</label></td>
                     <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtClA2" maxlength="50"></td>
 
                 </tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Client city:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtClC" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Client city:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtClC" maxlength="50"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Client state:</label></td>
-                    <td class="form-inline"><select class="form-control" id="cboCS" runat="server" required></select></td>
+                    <td class="form-inline text-right"><label class="frm-text">Client state:</label></td>
+                    <td class="form-inline"><select class="form-control" id="cboCS" runat="server"></select></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Client zip:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtClZ" maxlength="15" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Client zip:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtClZ" maxlength="15"></td>
                 </tr>
                 <tr><td colspan="8" class="text-left frm-text-blue-bold" style="background-color: #eeeeee"><i class="fa fa-chevron-circle-right" style="font-size: 18px"></i> Financial Information</td></tr>
                 <tr>
-                    <td class="form-inline text-right text-nowrap"><label class="frm-text-bold">Effective Date Beginning balance:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtBB" placeholder="0.00" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right text-nowrap"><label class="frm-text">Effective Date Beginning balance:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtBB" placeholder="0.00" onkeypress="return isNumber(event)"></td>
             
-                    <td class="form-inline text-right"><label class="frm-text-bold">Current contrib:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCC" placeholder="0.00" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right"><label class="frm-text">Current contrib:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCC" placeholder="0.00" onkeypress="return isNumber(event)"></td>
                 </tr>
                 <tr>
                     <td class="frm-text text-left" style="padding: 0px; margin: 0px"></td>
@@ -409,24 +409,24 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text-bold">Source prefix:</label></td>
-                    <td class="form-inline"><select class="form-control" id="cboSP" runat="server" required><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></td>
+                    <td class="form-inline text-right"><label class="frm-text">Source prefix:</label></td>
+                    <td class="form-inline"><select class="form-control" id="cboSP" runat="server"><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Source name:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSN" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Source name:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSN" maxlength="50"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Source title:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtST" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Source title:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtST" maxlength="50"></td>
 
                     <td class="form-inline text-right" id="tdSBB1"><label id="lblSBB" class="frm-text">Source begin bal:</label></td>
                     <td class="form-inline" id="tdSBB2"><input type="text" class="form-control" runat="server" id="txtSBB"></td>
                 </tr>
                 <tr id="trUpdate">
-                    <td class="form-inline text-right"><label class="frm-text-bold">Previous preparer:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtPP" maxlength="50" required></td>
+                    <td class="form-inline text-right"><label class="frm-text">Previous preparer:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtPP" maxlength="50"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text-bold">Previous recomm. cont:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtPRC" placeholder="0.00" required onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline text-right"><label class="frm-text">Previous recomm. cont:</label></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtPRC" placeholder="0.00" onkeypress="return isNumber(event)"></td>
 
                     <td class="form-inline text-right"><label class="frm-text">Prev study date:</label></td>
                     <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtPSD" placeholder="mm/dd/yyyy"></td>
