@@ -116,7 +116,9 @@
                 <td class="frm-text-bold"><%= arrTotals[2].ToString("C0") %></td>
                 <td class="frm-text-bold"><%= arrTotals[3].ToString("C0") %></td>
                 <td class="frm-text-bold"><%= arrTotals[4].ToString("C0") %></td>
-                <td class="frm-text-bold"><% if (arrTotals[4] != 0) { Response.Write((arrTotals[1] / arrTotals[4]).ToString("P2")); } else { Response.Write("% FUNDED"); } %></td>
+                <td class="frm-text-bold"><% if (arrTotals[4] != 0) { Response.Write((arrTotals[1] / arrTotals[4]).ToString("P2")); } 
+                                             else if (arrTotals[4] == 0 && arrTotals[1] == 0) { Response.Write("100%"); }
+                                              else { Response.Write("% FUNDED"); } %></td>
             </tr>
         </table>
     </div>

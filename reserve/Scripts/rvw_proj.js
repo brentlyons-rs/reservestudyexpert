@@ -485,7 +485,7 @@ function chkKeybd(sender, e, iRow, iCol) {
 
 function calcPctFunded() {
     for (var i = 1; i < 31; i++) {
-        var fullFundBal = fullFund[i-1];
+        var fullFundBal = fullFund[i - 1];
         if (fullFundBal > 0) {
             // Current
             if (document.getElementById('MainContent_chkPctFunded1').checked) {

@@ -140,7 +140,7 @@ namespace reserve
             //chkDisp1.Checked = false;
             //chkDisp2.Checked = false;
             //chkDisp3.Checked = false;
-            SqlDataReader dr = Fn_enc.ExecuteReader("select current_funding_hidden, full_funding_hidden, baseline_funding_hidden, current_pct_funded_hidden, baseline_pct_funded_hidden, threshold1_pct_funded_hidden, threshold2_pct_funded_hidden from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("select current_funding_hidden, full_funding_hidden, baseline_funding_hidden, current_pct_funded_hidden, full_pct_funded_hidden, baseline_pct_funded_hidden, threshold1_pct_funded_hidden, threshold2_pct_funded_hidden from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
             if (dr.Read())
             {
                 if ((dr["current_funding_hidden"] != null) && (dr["current_funding_hidden"].ToString().ToLower() == "true")) chkDisp1.Checked = false;
@@ -148,9 +148,10 @@ namespace reserve
                 if ((dr["baseline_funding_hidden"] != null) && (dr["baseline_funding_hidden"].ToString().ToLower() == "true")) chkDisp3.Checked = false;
 
                 if ((dr["current_pct_funded_hidden"] != null) && (dr["current_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded1.Checked = false;
-                if ((dr["baseline_pct_funded_hidden"] != null) && (dr["baseline_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded2.Checked = false;
-                if ((dr["threshold1_pct_funded_hidden"] != null) && (dr["threshold1_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded3.Checked = false;
-                if ((dr["threshold2_pct_funded_hidden"] != null) && (dr["threshold2_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded4.Checked = false;
+                if ((dr["full_pct_funded_hidden"] != null) && (dr["full_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded2.Checked = false;
+                if ((dr["baseline_pct_funded_hidden"] != null) && (dr["baseline_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded3.Checked = false;
+                if ((dr["threshold1_pct_funded_hidden"] != null) && (dr["threshold1_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded4.Checked = false;
+                if ((dr["threshold2_pct_funded_hidden"] != null) && (dr["threshold2_pct_funded_hidden"].ToString().ToLower() == "true")) chkPctFunded5.Checked = false;
             }
             dr.Close();
         }
