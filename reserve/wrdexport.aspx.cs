@@ -331,6 +331,8 @@ namespace reserve
                                 if (!Convert.ToBoolean(dr["baseline_funding_hidden"].ToString())) lc.Elements<LineChartSeries>().Skip(2).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["bfa_res_fund_bal"].ToString();
                                 if (Convert.ToBoolean(dr["threshold_used"].ToString())) lc.Elements<LineChartSeries>().Skip(3).FirstOrDefault().Descendants<DocumentFormat.OpenXml.Drawing.Charts.Values>().First().Descendants<NumberingCache>().First().Elements<NumericPoint>().ElementAt(i+1).Elements<NumericValue>().FirstOrDefault().Text = ds.Tables[0].Rows[i]["tfa_res_fund_bal"].ToString();
                             }
+                            // Somehow an extra year is sometimes getting thrown in at the end here. Remove if it exists, as it will throw the graph off.
+                            ls1.Descendants<NumericValue>().ElementAt(ds.Tables[0].Rows.Count+1).Text = "";
                             //Remove from the legend if hidden
                             if (!Convert.ToBoolean(dr["threshold_used"].ToString())) lc.ElementAt(FindLCPos(lc, "threshold")).Remove(); //Threshold
                             if (Convert.ToBoolean(dr["baseline_funding_hidden"].ToString())) lc.ElementAt(FindLCPos(lc, "baseline")).Remove(); //Baseline
