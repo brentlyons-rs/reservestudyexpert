@@ -250,6 +250,72 @@ namespace reserve
             return ds;
         }
 
+
+        [WebMethod(enableSession: true)]
+        public DataSet SaveChkPctFunded(int iField, string sVal)
+        {
+            DataSet ds = new DataSet();
+            DataRow row;
+            string sField = "";
+
+            try
+            {
+                //Create the results table
+                ds.Tables.Add("Results");
+                ds.Tables["Results"].Columns.Add("r_type");
+                ds.Tables["Results"].Columns.Add("r_desc");
+                ds.Tables["Results"].Columns.Add("i_field");
+
+                switch (iField)
+                {
+                    case 1:
+                        sField = "current_pct_funded_hidden";
+                        break;
+                    case 2:
+                        sField = "full_pct_funded_hidden";
+                        break;
+                    case 3:
+                        sField = "baseline_pct_funded_hidden";
+                        break;
+                    case 4:
+                        sField = "threshold1_pct_funded_hidden";
+                        break;
+                    case 5:
+                        sField = "threshold2_pct_funded_hidden";
+                        break;
+                }
+                try
+                {
+                    Fn_enc.ExecuteNonQuery("update info_project_info set " + sField + "=" + sVal + " where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                }
+                catch (Exception ex)
+                {
+                    row = ds.Tables["Results"].NewRow();
+                    row["r_type"] = "Error";
+                    row["r_desc"] = ex.ToString();
+                    row["i_field"] = iField;
+                    ds.Tables["Results"].Rows.Add(row);
+                    return ds;
+                }
+
+                row = ds.Tables["Results"].NewRow();
+                row["r_type"] = "Success";
+                row["r_desc"] = "";
+                row["i_field"] = iField;
+                ds.Tables["Results"].Rows.Add(row);
+            }
+            catch (Exception ex)
+            {
+                row = ds.Tables["Results"].NewRow();
+                row["r_type"] = "Error";
+                row["r_desc"] = ex.ToString();
+                row["i_field"] = iField;
+                ds.Tables["Results"].Rows.Add(row);
+            }
+
+            return ds;
+        }
+
         [WebMethod(enableSession: true)]
         public DataSet SaveGraphThreshold(int iYear, string sVal)
         {

@@ -70,6 +70,24 @@ function sendChkDisp(iField, sVal) {
 
 }
 
+function sendChkPctFunded(iField, sVal) {
+    if ((request.readyState != 4) && (request.readyState != 0)) {
+        setTimeout("sendChkPctFunded(" + iField + ", '" + sVal + "')", 3000);
+    }
+    else {
+        document.getElementById('imgChkPctFunded' + iField).style.display = 'block';
+        document.getElementById('MainContent_chkPctFunded' + iField).disabled = true;
+        sOp = 'sendChkPctFunded';
+        var url = "ws.asmx/SaveChkPctFunded?iField=" + iField + "&sVal=" + sVal + "&pd=y";
+        gUrl = url;
+        request.open("GET", url, true);
+        request.onreadystatechange = updateSend;
+        request.send(null);
+    }
+
+}
+
+
 function updateSend() {
     if (request.readyState == 4) {
         if (request.status == 200) {
@@ -104,6 +122,9 @@ function updateSend() {
                 else if (sOp == 'sendChkDisp') {
                     examineChkDisp(XMLobj);
                 }
+                else if (sOp == 'sendChkPctFunded') {
+                    examineChkPctFunded(XMLobj);
+                }
             }
         }
         else if (request.status == 404)
@@ -127,6 +148,7 @@ function examineThreshold1(XMLObj) {
             calcTotals();
             document.getElementById('imgThreshold1').style.display = 'none';
             document.getElementById('MainContent_chkThreshold1').disabled = false;
+            examineDisablePctFunded('threshold1');
             document.getElementById('MainContent_lblStatus').innerHTML = 'Successfully updated threshold analysis.';
         }
     }
@@ -148,6 +170,7 @@ function examineThreshold2(XMLObj) {
             calcTotals();
             document.getElementById('imgThreshold2').style.display = 'none';
             document.getElementById('MainContent_chkThreshold2').disabled = false;
+            examineDisablePctFunded('threshold2');
             document.getElementById('MainContent_lblStatus').innerHTML = 'Successfully updated threshold 2 analysis.';
         }
     }
@@ -155,6 +178,36 @@ function examineThreshold2(XMLObj) {
     return true;
 }
 
+function examineDisablePctFunded(strObject) {
+    if (strObject == 'chkDisp1') {
+        if ((!document.getElementById('MainContent_chkDisp1').checked) && (document.getElementById('MainContent_chkPctFunded1').checked)) {
+            document.getElementById('MainContent_chkPctFunded1').checked = false;
+            sendChkPctFunded(1, "1");
+            return;
+        }
+    }
+    else if (strObject == 'chkDisp3') {
+        if ((!document.getElementById('MainContent_chkDisp3').checked) && (document.getElementById('MainContent_chkPctFunded2').checked)) {
+            document.getElementById('MainContent_chkPctFunded2').checked = false;
+            sendChkPctFunded(2, "1");
+            return;
+        }
+    }
+    else if (strObject == 'threshold1') {
+        if ((!document.getElementById('MainContent_chkThreshold1').checked) && (document.getElementById('MainContent_chkPctFunded3').checked)) {
+            document.getElementById('MainContent_chkPctFunded3').checked = false;
+            sendChkPctFunded(3, "1");
+            return;
+        }
+    }
+    else if (strObject == 'threshold2') {
+        if ((!document.getElementById('MainContent_chkThreshold2').checked) && (document.getElementById('MainContent_chkPctFunded4').checked)) {
+            document.getElementById('MainContent_chkPctFunded4').checked = false;
+            sendChkPctFunded(4, "1");
+            return;
+        }
+    }
+}
 
 function examineChkDisp(XMLObj) {
     var sStatus = "";
@@ -171,10 +224,36 @@ function examineChkDisp(XMLObj) {
             var i = XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('i_field')[0].firstChild.nodeValue;
             document.getElementById('imgChkDisp' + i).style.display = 'none';
             document.getElementById('MainContent_chkDisp' + i).disabled = false;
+            examineDisablePctFunded('chkDisp' + i);
             document.getElementById('MainContent_lblStatus').innerHTML = 'Successfully updated display option.';
         }
     }
     document.forms[0].disabled = false;
+    calcPctFunded();
+    return true;
+}
+
+
+function examineChkPctFunded(XMLObj) {
+    var sStatus = "";
+    for (j = 0; j < XMLobj.getElementsByTagName('Results').length; j++) {
+        if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Error') {
+            alert("Error saving record. Please send the following error to an administrator: " + XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_desc')[0].firstChild.nodeValue);
+            document.getElementById('MainContent_lblStatus').innerHTML = 'Error saving record.' + XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_desc')[0].firstChild.nodeValue;
+        }
+        if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Reject') {
+            alert(XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_desc')[0].firstChild.nodeValue);
+            document.getElementById('MainContent_lblStatus').innerHTML = 'Could not save record.';
+        }
+        if (XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('r_type')[0].firstChild.nodeValue == 'Success') {
+            var i = XMLobj.getElementsByTagName('Results')[j].getElementsByTagName('i_field')[0].firstChild.nodeValue;
+            document.getElementById('imgChkPctFunded' + i).style.display = 'none';
+            document.getElementById('MainContent_chkPctFunded' + i).disabled = false;
+            document.getElementById('MainContent_lblStatus').innerHTML = 'Successfully updated display option.';
+        }
+    }
+    document.forms[0].disabled = false;
+    calcPctFunded();
     return true;
 }
 
@@ -404,6 +483,60 @@ function chkKeybd(sender, e, iRow, iCol) {
     }
 }
 
+function calcPctFunded() {
+    for (var i = 1; i < 31; i++) {
+        var fullFundBal = fullFund[i - 1];
+        if (fullFundBal > 0) {
+            // Current
+            if (document.getElementById('MainContent_chkPctFunded1').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_2').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFunded' + i + '_1').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Full
+            if (document.getElementById('MainContent_chkPctFunded2').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_5').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFunded' + i + '_2').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Baseline
+            if (document.getElementById('MainContent_chkPctFunded3').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_7').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFunded' + i + '_3').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Threshold1
+            if (document.getElementById('MainContent_chkPctFunded4').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_9').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFunded' + i + '_4').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+            // Threshold2
+            if (document.getElementById('MainContent_chkPctFunded5').checked) {
+                var fund = fmtNum(document.getElementById('txt' + i + '_12').value);
+
+                if (!isNaN(fund) && fullFundBal > 0) {
+                    document.getElementById('pctFunded' + i + '_5').innerHTML = (fund / fullFundBal).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 });
+                }
+            }
+        }
+    }
+    // Disabled pct funded boxes if those sections aren't be displayed
+    document.getElementById('MainContent_chkPctFunded1').disabled = !document.getElementById('MainContent_chkDisp1').checked;
+    document.getElementById('MainContent_chkPctFunded2').disabled = !document.getElementById('MainContent_chkDisp2').checked;
+    document.getElementById('MainContent_chkPctFunded3').disabled = !document.getElementById('MainContent_chkDisp3').checked;
+    document.getElementById('MainContent_chkPctFunded4').disabled = !document.getElementById('MainContent_chkThreshold1').checked;
+    document.getElementById('MainContent_chkPctFunded5').disabled = !document.getElementById('MainContent_chkThreshold2').checked;
+}
+
 function calcTotals() {
     var iTtl0 = 0;
     var iTtl1 = 0;
@@ -485,6 +618,8 @@ function calcTotals() {
     if (iBFALine != -1) document.getElementById('txt' + iBFALine + '_7').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
     if (iTFALine != -1) document.getElementById('txt' + iTFALine + '_9').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
     if (iTFALine != -1) document.getElementById('txt' + iTFALine + '_12').style.backgroundColor = "rgba(110, 186, 60, 0.52)";
+
+    calcPctFunded();
 }
 
 function fmtNum(strNum) {
