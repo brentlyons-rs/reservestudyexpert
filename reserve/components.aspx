@@ -417,7 +417,7 @@ catch (trymicrosoft) {
     function calcRow(iRow) {
         var iGeo = <% 
         SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select geo_factor from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
-        if (dr.Read()) Response.Write(dr["geo_factor"].ToString());
+        if (dr.Read()) Response.Write(dr["geo_factor"].ToString() == "" ? "1" : dr["geo_factor"].ToString());
         else Response.Write("1");
         dr.Close();
         %>;
