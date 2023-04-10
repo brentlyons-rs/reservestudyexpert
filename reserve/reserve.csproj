@@ -237,6 +237,7 @@
     <Content Include="images\tm_save.jpg" />
     <Content Include="images\wg_edit.jpg" />
     <Content Include="images\x_white.jpg" />
+    <Content Include="info_balloons.aspx" />
     <Content Include="landing1.aspx" />
     <Content Include="main.aspx" />
     <Content Include="notes.aspx" />
@@ -247,6 +248,7 @@
     <Content Include="rvw_proj.aspx" />
     <Content Include="rvw_summ.aspx" />
     <Content Include="Scripts\accounting.js" />
+    <Content Include="Scripts\info-balloons.js" />
     <Content Include="Scripts\rvw_graph_thresh.js" />
     <Content Include="Scripts\rvw_proj.js" />
     <Content Include="Scripts\tbldrag.js" />
@@ -372,10 +374,18 @@
       <DependentUpon>finalize.aspx</DependentUpon>
     </Compile>
     <Compile Include="fn_enc.cs" />
+    <Compile Include="GenerateInfoBalloons.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GoalSeek.cs" />
+    <Compile Include="info_balloons.aspx.cs">
+      <DependentUpon>info_balloons.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="info_balloons.aspx.designer.cs">
+      <DependentUpon>info_balloons.aspx</DependentUpon>
+    </Compile>
     <Compile Include="landing1.aspx.cs">
       <DependentUpon>landing1.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

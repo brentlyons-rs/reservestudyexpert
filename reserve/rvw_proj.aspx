@@ -199,7 +199,8 @@
                                     dr.Close();
 
                                 %>
-                                <button type="button" class="btn btn-primary" onclick="checkExisting('<%=blGen %>')">Generate Projections</button><br />
+                                <button type="button" class="btn btn-primary" onclick="checkExisting('<%=blGen %>')">Generate Projections</button>
+                                <%= reserve.GenerateInfoBalloons.GetIcon(25,"Generate Projections","green") %><br />
                                 <table>
                                     <tr>
                                         <td>Interest:&nbsp;</td>
@@ -226,7 +227,7 @@
                         <% if (blGen)
                             { %>
                         <!--Display Options-->
-                        <tr><td class="text-left frm-text-blue-bold" style="background-color: #dddddd; height: 30px; border-top: 1px solid #aaaaaa; padding-left: 5px">Display Options</td></tr>
+                        <tr><td class="text-left frm-text-blue-bold" style="background-color: #dddddd; height: 30px; border-top: 1px solid #aaaaaa; padding-left: 5px"><%= reserve.GenerateInfoBalloons.GetIcon(26,"Display Options","dodgerblue") %>Display Options</td></tr>
                         <tr>
                             <td class="frm-text text-left" style="padding: 5px; background-color: #eeeeee; border-top: 1px solid #aaaaaa">
                                 <table>
@@ -278,7 +279,7 @@
                             </td>
                         </tr>
                         <!--Internal Averages-->
-                        <tr><td class="text-left frm-text-blue-bold" style="background-color: #dddddd; height: 30px; border-top: 1px solid #aaaaaa; padding-left: 5px">Interval Averages</td></tr>
+                        <tr><td class="text-left frm-text-blue-bold" style="background-color: #dddddd; height: 30px; border-top: 1px solid #aaaaaa; padding-left: 5px"><%= reserve.GenerateInfoBalloons.GetIcon(27,"Interval Averages","dodgerblue") %>Interval Averages</td></tr>
                         <tr>
                             <td class="frm-text text-left" style="padding: 5px; background-color: #eeeeee; border-top: 1px solid #aaaaaa">
                                 <input 
@@ -310,56 +311,56 @@
                             <td class="frm-text" style="color: #ffffff">&nbsp;</td>
                             <td style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
-                            <td class="frm-text current" style="color: #ffffff; padding: 10px" colspan="2">CURRENT FUNDING ANALYSIS</td>
+                            <td class="frm-text current" style="color: #ffffff; padding: 10px" colspan="2"><%= reserve.GenerateInfoBalloons.GetIcon(1,"Current Funding","#ffffff") %>CURRENT FUNDING ANALYSIS</td>
                             <td class="frm-text current pctfunded1"></td>
                             <td class="current" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
-                            <td class="frm-text full" style="color: #ffffff; padding: 10px" colspan="3">FULL FUNDING ANALYSIS</td>
+                            <td class="frm-text full" style="color: #ffffff; padding: 10px" colspan="3"><%= reserve.GenerateInfoBalloons.GetIcon(2,"Full Funding","#ffffff") %>FULL FUNDING ANALYSIS</td>
                             <td class="frm-text full pctfunded2"></td>
                             <td class="full" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
-                            <td class="frm-text baseline" style="color: #ffffff; padding: 10px" colspan="2">BASELINE FUNDING ANALYSIS</td>
+                            <td class="frm-text baseline" style="color: #ffffff; padding: 10px" colspan="2"><%= reserve.GenerateInfoBalloons.GetIcon(3,"Baseline Funding","#ffffff") %>BASELINE FUNDING ANALYSIS</td>
                             <td class="frm-text baseline pctfunded3"></td>
                             <td class="baseline" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
-                            <td class="frm-text threshold1" style="color: #ffffff; padding: 10px" colspan="2">THRESHOLD FUNDING ANALYSIS (SCENARIO 1)</td>
+                            <td class="frm-text threshold1" style="color: #ffffff; padding: 10px" colspan="2"><%= reserve.GenerateInfoBalloons.GetIcon(4,"Threshold Funding 1","#ffffff") %>THRESHOLD FUNDING ANALYSIS (SCENARIO 1)</td>
                             <td class="threshold1 pctfunded4" style="width: 10px">&nbsp;</td>
                             <td class="threshold1" style="background-color: #ffffff; width: 10px">&nbsp;</td>
 
-                            <td class="frm-text threshold2" style="color: #ffffff; padding: 10px" colspan="3">THRESHOLD FUNDING ANALYSIS (SCENARIO 2)</td>
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 10px" colspan="3"><%= reserve.GenerateInfoBalloons.GetIcon(5,"Threshold Funding 2","#ffffff") %>THRESHOLD FUNDING ANALYSIS (SCENARIO 2)</td>
                             <td class="threshold2 pctfunded5" style="width: 10px">&nbsp;</td>
                         </tr>
                         <tr style="background-color: #E98300; padding: 5px">
                             <td class="frm-text" style="background-color: #ffffff !important">&nbsp;</td>
-                            <td class="frm-text" style="color: #ffffff; padding: 5px; word-wrap:break-word">YEAR<br />BEGINNING</td>
-                            <td class="frm-text" style="color: #ffffff; padding: 5px">ANNUAL<br />EXPENDITURE</td>
+                            <td class="frm-text" style="color: #ffffff; padding: 5px; word-wrap:break-word"><%= reserve.GenerateInfoBalloons.GetIcon(6,"Year Beginning","#ffffff") %>YEAR<br />BEGINNING</td>
+                            <td class="frm-text" style="color: #ffffff; padding: 5px"><%= reserve.GenerateInfoBalloons.GetIcon(7,"Annual Expenditure","#ffffff") %>ANNUAL<br />EXPENDITURE</td>
                             <td style="background-color: #ffffff"></td>
 
-                            <td class="frm-text current" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTR</td>
-                            <td class="frm-text current" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text current pctfunded1" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text current" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(8,"Current Annual Contr","#ffffff") %>ANNUAL<br />CONTR</td>
+                            <td class="frm-text current" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(9,"Current Res Fund Bal","#ffffff") %>RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="frm-text current pctfunded1" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(10,"Current Pct Funded","#ffffff") %>% FUNDED</td>
                             <td class="current" style="background-color: #ffffff"></td>
 
-                            <td class="frm-text full" style="color: #ffffff; padding: 5px;">REQUIRED<br />ANNUAL<br />CONTR</td>
-                            <td class="frm-text full" style="color: #ffffff; padding: 5px;">ADJUSTED<br />ANNUAL<br />REQUIRED<br />CONTR</td>
-                            <td class="frm-text full" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text full pctfunded2" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text full" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(11,"Full Req Annual Contr","#ffffff") %>REQUIRED<br />ANNUAL<br />CONTR</td>
+                            <td class="frm-text full" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(12,"Full Adj Annual Req Contr","#ffffff") %>ADJUSTED<br />ANNUAL<br />REQUIRED<br />CONTR</td>
+                            <td class="frm-text full" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(13,"Full Fund Bal","#ffffff") %>RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="frm-text full pctfunded2" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(14,"Full Pct Funded","#ffffff") %>% FUNDED</td>
                             <td class="full" style="background-color: #ffffff"></td>
 
-                            <td class="frm-text baseline" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTR</td>
-                            <td class="frm-text baseline" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text baseline pctfunded3" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text baseline" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(15,"Baseline Annual Contr","#ffffff") %>ANNUAL<br />CONTR</td>
+                            <td class="frm-text baseline" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(16,"Baseline Res Fund Bal","#ffffff") %>RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="frm-text baseline pctfunded3" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(17,"Baseline Pct Funded","#ffffff") %>% FUNDED</td>
                             <td class="baseline" style="background-color: #ffffff"></td>
 
-                            <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTR</td>
-                            <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text threshold1 pctfunded4" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(18,"Threshold1 Annual Contr","#ffffff") %>ANNUAL<br />CONTR</td>
+                            <td class="frm-text threshold1" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(19,"Threshold1 Res Fund Bal","#ffffff") %>RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="frm-text threshold1 pctfunded4" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(20,"Threshold1 Pct Funded","#ffffff") %>% FUNDED</td>
                             <td class="threshold1" style="background-color: #ffffff"></td>
 
-                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">%<br />inc.</td>
-                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">ANNUAL<br />CONTR</td>
-                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;">RESERVE<br />FUND<br />BALANCE</td>
-                            <td class="frm-text threshold2 pctfunded5" style="color: #ffffff; padding: 5px;">% FUNDED</td>
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(21,"Threshold2 Pct Increase","#ffffff") %>%<br />inc.</td>
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(22,"Threshold2 Annual Contr","#ffffff") %>ANNUAL<br />CONTR</td>
+                            <td class="frm-text threshold2" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(23,"Threshold2 Res Fund Bal","#ffffff") %>RESERVE<br />FUND<br />BALANCE</td>
+                            <td class="frm-text threshold2 pctfunded5" style="color: #ffffff; padding: 5px;"><%= reserve.GenerateInfoBalloons.GetIcon(24,"Threshold2 Pct Funded","#ffffff") %>% FUNDED</td>
                         </tr>
                         <tr style="background-color: #eeeeee">
                             <%
@@ -532,6 +533,9 @@
                 </td>
             </tr>
         </table>
+        <% var iBalloonPage = "50"; %>
+        <script>var iBalloonPage = <%= iBalloonPage %>;</script>
+        <!-- #Include virtual="info_balloons.aspx" -->
     </div>
     <script>
         calcPctFunded();

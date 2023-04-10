@@ -791,6 +791,45 @@ namespace reserve
 
             return ds;
         }
-    }
 
+        [WebMethod(enableSession: true)]
+        public DataSet SaveBalloon(string iPage, string iId, string sField, string sText)
+        {
+            DataSet ds = new DataSet();
+            DataRow row;
+
+            try
+            {
+                //Create the results table
+                ds.Tables.Add("Results");
+                ds.Tables["Results"].Columns.Add("r_type");
+                ds.Tables["Results"].Columns.Add("r_desc");
+
+                var dr = Fn_enc.ExecuteReader("select info_id from lkup_information_balloons where info_page_id=@Param1 and info_id=@Param2", new string[] { iPage, iId });
+                if (dr.Read() && dr["info_id"]!=null)
+                {
+                    Fn_enc.ExecuteNonQuery("update lkup_information_balloons set info_field=@Param1, info_description=@Param2 where info_page_id=@Param3 and info_id=@Param4", new string[] { sField, sText, iPage, iId });
+                }
+                else
+                {
+                    Fn_enc.ExecuteNonQuery("insert into lkup_information_balloons (info_page_id, info_id, info_field, info_description) select @Param1, @Param2, @Param3, @Param4", new string[] { iPage, iId, sField, sText });
+                }
+                dr.Close();
+
+                row = ds.Tables["Results"].NewRow();
+                row["r_type"] = "Success";
+                row["r_desc"] = "";
+                ds.Tables["Results"].Rows.Add(row);
+            }
+            catch (Exception ex)
+            {
+                row = ds.Tables["Results"].NewRow();
+                row["r_type"] = "Error";
+                row["r_desc"] = ex.ToString();
+                ds.Tables["Results"].Rows.Add(row);
+            }
+
+            return ds;
+        }
+    }
 }

@@ -23,13 +23,14 @@
     <script type="text/javascript">
         var sElems = [];
 
-        $(document).ready(function() {  
+        $(document).ready(function() {
             SearchText();
             <% if (Session["client"].ToString() == "0") { %>
             $('#MainContent_txtPID').mask('00000-00');
             $('#MainContent_txtClonePID').mask('00000-00');
             <% } %>
         });  
+
         function SearchText() {  
             $("#MainContent_txtProject").autocomplete({  
                 source: function (request, response) {  
@@ -256,9 +257,8 @@
             document.forms[0].submit();
         }
     </script>  
-
 <form id="frmProject" runat="server" class="needs-validation">
-    <div class="container_fluid" style="max-width: 100%">
+    <div class="container_fluid" id="container_main" style="max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
             <div class="page-top-tab col-lg-3 float-right">
                 <p class="panel-title-fd">Input page for Reserve Study: <label id="lblProject" runat="server" class="frm-text"></label></p>
@@ -332,17 +332,17 @@
                     <td class="form-inline text-right"><label class="frm-text">Inspection date:</label></td>
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtID" placeholder="mm/dd/yyyy"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text">Report effective:</label></td>
+                    <td class="form-inline text-right"><%= reserve.GenerateInfoBalloons.GetIcon(1,"Report Effective","green") %><label class="frm-text">Report effective:</label></td>
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtRE" placeholder="mm/dd/yyyy"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text">Geo. factor:</label></td>
+                    <td class="form-inline text-right"><%= reserve.GenerateInfoBalloons.GetIcon(2,"Geo Factor","green") %><label class="frm-text">Geo. factor:</label></td>
                     <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtGF" onkeypress="return isNumber(event)"></td>
                 </tr>
                 <tr>
-                    <td class="form-inline text-right"><label class="frm-text">Interest:</label></td>
+                    <td class="form-inline text-right"><%= reserve.GenerateInfoBalloons.GetIcon(3,"Interest","green") %><label class="frm-text">Interest:</label></td>
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtInt" placeholder="0.00" onkeypress="return isNumber(event)"></td>
 
-                    <td class="form-inline text-right"><label class="frm-text">Inflation:</label></td>
+                    <td class="form-inline text-right"><%= reserve.GenerateInfoBalloons.GetIcon(4,"Inflation","green") %><label class="frm-text">Inflation:</label></td>
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtInf" placeholder="0.00" onkeypress="return isNumber(event)"></td>
 
                     <td colspan="4"></td>
@@ -396,10 +396,10 @@
                 </tr>
                 <tr><td colspan="8" class="text-left frm-text-blue-bold" style="background-color: #eeeeee"><i class="fa fa-chevron-circle-right" style="font-size: 18px"></i> Financial Information</td></tr>
                 <tr>
-                    <td class="form-inline text-right text-nowrap"><label class="frm-text">Effective Date Beginning balance:</label></td>
+                    <td class="form-inline text-right text-nowrap"><%= reserve.GenerateInfoBalloons.GetIcon(5,"Begin Balance","green") %><label class="frm-text">Effective Date Beginning balance:</label></td>
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtBB" placeholder="0.00" onkeypress="return isNumber(event)"></td>
             
-                    <td class="form-inline text-right"><label class="frm-text">Current contrib:</label></td>
+                    <td class="form-inline text-right"><%= reserve.GenerateInfoBalloons.GetIcon(6,"Current Contrib","green") %><label class="frm-text">Current contrib:</label></td>
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtCC" placeholder="0.00" onkeypress="return isNumber(event)"></td>
                 </tr>
                 <tr>
@@ -442,6 +442,9 @@
                 </tr>
             </tbody>
         </table>
+        <% var iBalloonPage = "10"; %>
+        <script>var iBalloonPage = <%= iBalloonPage %>;</script>
+        <!-- #Include virtual="info_balloons.aspx" -->
     </div>
     <!--Modal: Name-->
     <div class="modal fade" id="mdlNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -544,6 +547,10 @@
         $("#MainContent_txtID").datepicker();
         $("#MainContent_txtRE").datepicker();
         $("#MainContent_txtPSD").datepicker();
+
+        $('#MainContent_cmdSaveBalloonText').on('click', function () {
+            alert("hi");
+        });
 
         window.addEventListener('load', function() {
             // Fetch all the forms we want to apply custom Bootstrap validation styles to

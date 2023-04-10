@@ -1127,3 +1127,20 @@ ul.navbar-nav li a.btn-link-4 {
     vertical-align: bottom;
     font-weight: 800;
 }
+
+.balloon-popup {
+    min-width: 200px;
+    max-width: 400px;
+    transform: translate(-30%,-100%);
+    padding: 10px 20px;
+    color: #ffffff;
+    background-color: #009cdc;
+    font-weight: normal;
+    font-size: 14px;
+    border-radius: 8px;
+    position: absolute;
+    z-index: 99999999;
+    box-sizing: border-box;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.5);
+    display: block;
+}

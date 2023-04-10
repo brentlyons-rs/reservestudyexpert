@@ -71,15 +71,18 @@
                 %>
             
         </h5>
+        <% var iBalloonPage = "30"; %>
+        <script>var iBalloonPage = <%= iBalloonPage %>;</script>
+        <!-- #Include virtual="info_balloons.aspx" -->
         <table border="0" style="margin: 0 auto;">
             <tr style="background-color: #E98300">
                 <td class="frm-text" style="color: #ffffff; width: 28%">CATEGORY</td>
-                <td class="frm-text" style="color: #ffffff; width: 12%">RESERVE REQUIREMENT PRESENT DOLLARS</td>
-                <td class="frm-text" style="color: #ffffff; width: 12%">BEGINNING BALANCE</td>
-                <td class="frm-text" style="color: #ffffff; width: 12%">BALANCE REQUIRING FUNDING</td>
-                <td class="frm-text" style="color: #ffffff; width: 12%">ANNUAL RESERVE FUNDING REQUIRED</td>
-                <td class="frm-text" style="color: #ffffff; width: 12%">FULL FUNDING BALANCE</td>
-                <td class="frm-text" style="color: #ffffff; width: 12%">PERCENT FUNDED</td>
+                <td class="frm-text" style="color: #ffffff; width: 12%"><%= reserve.GenerateInfoBalloons.GetIcon(1,"Present Dollars","#ffffff") %>RESERVE REQUIREMENT PRESENT DOLLARS</td>
+                <td class="frm-text" style="color: #ffffff; width: 12%"><%= reserve.GenerateInfoBalloons.GetIcon(2,"Begin Balance","#ffffff") %>BEGINNING BALANCE</td>
+                <td class="frm-text" style="color: #ffffff; width: 12%"><%= reserve.GenerateInfoBalloons.GetIcon(3,"Balance Req Funding","#ffffff") %>BALANCE REQUIRING FUNDING</td>
+                <td class="frm-text" style="color: #ffffff; width: 12%"><%= reserve.GenerateInfoBalloons.GetIcon(4,"Annual Reserve Funding","#ffffff") %>ANNUAL RESERVE FUNDING REQUIRED</td>
+                <td class="frm-text" style="color: #ffffff; width: 12%"><%= reserve.GenerateInfoBalloons.GetIcon(5,"Full Funding","#ffffff") %>FULL FUNDING BALANCE</td>
+                <td class="frm-text" style="color: #ffffff; width: 12%"><%= reserve.GenerateInfoBalloons.GetIcon(6,"Pct Funded","#ffffff") %>PERCENT FUNDED</td>
             </tr>
             <%
                 double[] arrTotals = new double[] { 0,0,0,0,0 } ;
