@@ -260,9 +260,12 @@
 <form id="frmProject" runat="server" class="needs-validation">
     <div class="container_fluid" id="container_main" style="max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-            <div class="page-top-tab col-lg-3 float-right">
-                <p class="panel-title-fd">Input page for Reserve Study: <label id="lblProject" runat="server" class="frm-text"></label></p>
+            <div class="page-top-tab-project col-lg-3 float-right">
+                <p class="panel-title-fd">Input page for Reserve Study:&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
+            <div class="page-top-tab-revision col-lg-3 float-right">
+                <p class="panel-title-fd">Revision:&nbsp;<select id="cboRevision"></select></p>
+           </div>
         </div>
         <div class="input-group text-left col-lg-5 text-nowrap rounded-lg shadow form-inline" id="divProjManip" runat="server" style="margin-bottom: 5px; padding: 0px; margin-top: 3px">
             <input type="text" ID="txtProject" runat="server" class="form-control" placeholder="Search for an existing project" />  
