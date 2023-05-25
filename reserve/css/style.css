@@ -702,6 +702,28 @@ textarea {
     color: #ffffff !important;
 }
 
+.btn-revision {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    margin-bottom: 0;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
 ul.navbar-nav li a.btn-link-2 {
     position: relative;
     display: inline-block;

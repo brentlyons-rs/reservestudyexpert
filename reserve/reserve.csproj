@@ -16,7 +16,7 @@
     <AssemblyName>reserve</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress />
+    <Use64BitIISExpress>false</Use64BitIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -241,7 +241,7 @@
     <Content Include="landing1.aspx" />
     <Content Include="main.aspx" />
     <Content Include="notes.aspx" />
-    <Content Include="Properties\App_LocalResources\0018-revisions-scripts.sql" />
+    <None Include="Properties\App_LocalResources\0018-revisions-scripts.md" />
     <Content Include="rvw_comp.aspx" />
     <Content Include="rvw_exp.aspx" />
     <Content Include="rvw_future.aspx" />
@@ -259,6 +259,7 @@
     <Content Include="wrdexport.aspx" />
     <Content Include="ws.asmx" />
     <Content Include="Main.Master" />
+    <Content Include="Properties\App_LocalResources\readme.md" />
     <None Include="Properties\PublishProfiles\crossovertechnology.org - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Production %28VPS%29.pubxml" />
     <None Include="Properties\PublishProfiles\Production.pubxml" />

@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Configuration;
-using System.Data;
-using System.Linq;
 using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
 using System.Web.Services;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -22,15 +14,28 @@ namespace reserve
         {
             if (Session["firmid"] == null) Response.Redirect("default.aspx?timeout=1");
 
-            if (txtHdnSelected.Value=="selected")
+            if (txtHdnType.Value=="CreateRevision")
+            {
+            }
+            else if (txtHdnType.Value=="ChangeRevision")
+            {
+                Session["revisionid"] = cboRevision.Value;
+            }
+            else if (txtHdnSelected.Value=="selected")
             {
                 Session["projectid"] = txtHdnProject.Value;
+                loadRevisions();
+                cboRevision.SelectedIndex = 0;
+                Session["revisionid"] = "1";
+                divPnRevisions.Visible = true;
                 txtHdnSelected.Value = "";
                 txtPID.Disabled = true;
             }
             else if (txtHdnType.Value=="New")
             {
                 Session["projectid"] = "";
+                Session["revisionid"] = "";
+                divPnRevisions.Visible = false;
                 txtPID.Disabled = false;
                 txtHdnType.Value = "";
             }
@@ -38,9 +43,10 @@ namespace reserve
             {
                 if (Session["projectid"].ToString() != "")
                 {
-                    //txtPID.Value = Session["projectid"].ToString();
+                    loadRevisions();
                     txtHdnProject.Value = Session["projectid"].ToString();
                     txtPID.Disabled = true;
+                    divPnRevisions.Visible = true;
                 }
             }
 
@@ -77,6 +83,10 @@ namespace reserve
 
             if (IsPostBack)
             {
+                if (txtHdnType.Value == "CreateRevision")
+                {
+                    SaveNewRevision();
+                }
                 if (txtHdnSave.Value == "Save")
                 {
                     SaveForm();
@@ -113,6 +123,7 @@ namespace reserve
                 ClearFields();
                 lblProject.InnerHtml = "New Project";
                 Session["projectid"] = "";
+                divPnRevisions.Visible = false;
             }
 
             if (Session["client"].ToString() == "1")
@@ -123,6 +134,43 @@ namespace reserve
 
         }
 
+        public void SaveNewRevision()
+        {
+            var dr = Fn_enc.ExecuteReader("sp_app_create_revision @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), "", Session["userid"].ToString() });
+            if (dr.Read())
+            {
+                if (dr["status_info"].ToString() == "Error")
+                {
+                    divCloneStatus.InnerHtml = $"Error creating new revision: {dr["error_desc"]}";
+                }
+                else
+                {
+                    Session["revisionid"] = dr["revision_id"].ToString();
+                    divCloneStatus.InnerHtml = $"Successfully created revision #{dr["revision_id"]}";
+                    loadRevisions();
+                }
+            }
+            dr.Close();
+        }
+
+        public void loadRevisions()
+        {
+            if (Session["projectid"] != null && Session["projectid"].ToString() != "")
+            {
+                if (cboRevision.Items.Count>0)
+                {
+                    cboRevision.Items.Clear();
+                }
+
+                var dr = Fn_enc.ExecuteReader("select ipr.revision_id, ipr.revision_created_date, au.first_name + ' ' + au.last_name as created_by from info_projects_revisions ipr left join app_users au on ipr.firm_id=au.firm_id and ipr.revision_created_by=au.user_id where ipr.firm_id=@Param1 and ipr.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                while (dr.Read())
+                {
+                    cboRevision.Items.Add(new ListItem($"{dr["revision_id"]}: {DateTime.Parse(dr["revision_created_date"].ToString()):MM/dd/yyyy} ({dr["created_by"]})", dr["revision_id"].ToString()));
+                }
+                dr.Close();
+            }
+        }
+
         public void genClientData()
         {
             SqlDataReader dr = Fn_enc.ExecuteReader("select i.project_name, ipci.* from info_projects_client_invites ipci inner join info_projects i on ipci.firm_id=i.firm_id and ipci.project_id=i.project_id where ipci.firm_id=@Param1 and ipci.project_id=@Param2 and (ipci.data_generated is null or ipci.data_generated=0)", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString() });
@@ -130,7 +178,7 @@ namespace reserve
             {
                 string sProjName = dr["project_name"].ToString();
                 dr.Close();
-                dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString(), Session["projectid"].ToString(), sProjName, Session["userid"].ToString() });
+                dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString(), Session["projectid"].ToString(), sProjName, Session["userid"].ToString(), Session["revisionid"].ToString() });
                 if (dr.Read())
                 {
                     if (dr["status_info"].ToString() == "Success")
@@ -198,12 +246,13 @@ namespace reserve
         }
         public void CloneProject()
         {
-            SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, txtClonePID.Value, txtClonePName.Value, Session["userid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, txtClonePID.Value, txtClonePName.Value, Session["userid"].ToString(), Session["revisionid"].ToString() });
             if (dr.Read()) {
                 if (dr["status_info"].ToString() == "Success")
                 {
                     divCloneStatus.InnerHtml = "Successfully cloned project.";
                     Session["projectid"] = txtClonePID.Value;
+                    Session["revisionid"] = "1";
                     txtHdnProject.Value = txtClonePID.Value;
                     lblProject.InnerHtml = txtClonePName.Value;
                     LoadFields();
@@ -226,7 +275,7 @@ namespace reserve
                 {
                     dr.Close();
                     //Clone project
-                    dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, "C" + txtHdnProject.Value, txtPN.Value, Session["userid"].ToString() });
+                    dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, "C" + txtHdnProject.Value, txtPN.Value, Session["userid"].ToString(), Session["revisionid"].ToString() });
                     if (dr.Read() && dr["status_info"].ToString() != "Success")
                     {
                         Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
@@ -258,11 +307,6 @@ namespace reserve
                     divCloneStatus.InnerHtml = "Error sending email to <b>" + txtS2CEMail.Value + "</b>: " + mailResult;
                 }
             }
-            //    else if (dr["status_desc"].ToString()=="AlreadySent")
-            //    {
-            //        divCloneStatus.InnerHtml = "This project has already been sent before. If you need to send it again, please clone the project and send that.";
-            //    }
-            //}
             dr.Close();
         }
 
@@ -282,9 +326,9 @@ namespace reserve
                     {
                         dr.Close();
                         Fn_enc.ExecuteNonQuery("insert into info_projects (firm_id, project_id, project_name, last_updated_by, last_updated_date) select @Param1, @Param2, @Param3, @Param4, GetDate()", new string[] { Session["firmid"].ToString(), txtPID.Value, txtPN.Value, Session["userid"].ToString() });
-                        sql.Append("insert into info_project_info (firm_id, project_id, project_mgr, project_type_id, report_effective, begin_balance, current_contrib, age_community, geo_factor, num_units, num_bldgs, num_floors, contact_prefix, contact_name, contact_title, contact_phone, contact_email, association_name, client_city, client_zip, client_addr1, client_addr2, client_state, site_addr1, site_city, site_zip, site_addr2, site_state, prev_preparer, prev_recomm_cont, inspection_date, interest, inflation, source_prefix, source_name, source_title, last_updated_by, last_updated_date, prev_date, source_begin_balance) ");
-                        sql.Append("select @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, @Param19, @Param20, @Param21, @Param22, @Param23, @Param24, @Param25, @Param26, @Param27, @Param28, @Param29, @Param30, @Param31, @Param32, @Param33, @Param34, @Param35, @Param36, @Param37, GetDate(), @Param38, @Param39");
-                        var prm = new string[39] { Session["firmid"].ToString(), txtPID.Value, txtPM.Value, cboPT.Value, txtRE.Value, txtBB.Value, txtCC.Value, txtAoC.Value, txtGF.Value, txtNU.Value, txtNB.Value, txtNF.Value, cboCP.Value, txtCN.Value, txtCT.Value, txtCP.Value, txtCE.Value, txtCoN.Value, txtClC.Value, txtClZ.Value, txtClA1.Value, txtClA2.Value, cboCS.Value, txtSA1.Value, txtSC.Value, txtSZ.Value, txtSA2.Value, cboSS.Value, txtPP.Value, txtPRC.Value, txtID.Value, txtInt.Value, txtInf.Value, cboSP.Value, txtSN.Value, txtST.Value, Session["userid"].ToString(), txtPSD.Value, txtSBB.Value };
+                        sql.Append("insert into info_project_info (firm_id, project_id, revision_id, project_mgr, project_type_id, report_effective, begin_balance, current_contrib, age_community, geo_factor, num_units, num_bldgs, num_floors, contact_prefix, contact_name, contact_title, contact_phone, contact_email, association_name, client_city, client_zip, client_addr1, client_addr2, client_state, site_addr1, site_city, site_zip, site_addr2, site_state, prev_preparer, prev_recomm_cont, inspection_date, interest, inflation, source_prefix, source_name, source_title, last_updated_by, last_updated_date, prev_date, source_begin_balance) ");
+                        sql.Append("select @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, @Param19, @Param20, @Param21, @Param22, @Param23, @Param24, @Param25, @Param26, @Param27, @Param28, @Param29, @Param30, @Param31, @Param32, @Param33, @Param34, @Param35, @Param36, @Param37, GetDate(), @Param38, @Param39, @Param40");
+                        var prm = new string[40] { Session["firmid"].ToString(), txtPID.Value, "1", txtPM.Value, cboPT.Value, txtRE.Value, txtBB.Value, txtCC.Value, txtAoC.Value, txtGF.Value, txtNU.Value, txtNB.Value, txtNF.Value, cboCP.Value, txtCN.Value, txtCT.Value, txtCP.Value, txtCE.Value, txtCoN.Value, txtClC.Value, txtClZ.Value, txtClA1.Value, txtClA2.Value, cboCS.Value, txtSA1.Value, txtSC.Value, txtSZ.Value, txtSA2.Value, cboSS.Value, txtPP.Value, txtPRC.Value, txtID.Value, txtInt.Value, txtInf.Value, cboSP.Value, txtSN.Value, txtST.Value, Session["userid"].ToString(), txtPSD.Value, txtSBB.Value };
                         Fn_enc.ExecuteNonQuery(sql.ToString(), prm);
                         lblSaveStatus.InnerHtml = "Successfully saved new project.";
                         txtHdnProject.Value = txtPID.Value;
@@ -304,8 +348,8 @@ namespace reserve
                 {
                     Fn_enc.ExecuteNonQuery("update info_projects set project_name=@Param1, last_updated_by=@Param2, last_updated_date=GetDate() where firm_id=@Param3 and project_id=@Param4", new string[] { txtPN.Value, Session["userid"].ToString(), Session["firmid"].ToString(), txtHdnProject.Value });
                     sql.Append("update info_project_info set project_mgr=@Param1,project_type_id=@Param2,report_effective=@Param3,begin_balance=@Param4,current_contrib=@Param5,age_community=@Param6,geo_factor=@Param7,num_units=@Param8,num_bldgs=@Param9,num_floors=@Param10,contact_prefix=@Param11,contact_name=@Param12,contact_title=@Param13,contact_phone=@Param14,association_name=@Param15,client_city=@Param16,client_zip=@Param17,client_addr1=@Param18,client_addr2=@Param19,client_state=@Param20,site_addr1=@Param21,site_city=@Param22,site_zip=@Param23,site_addr2=@Param24,site_state=@Param25,prev_preparer=@Param26,prev_recomm_cont=@Param27,inspection_date=@Param28,interest=@Param29,inflation=@Param30,contact_email=@Param31,source_prefix=@Param32,source_name=@Param33,source_title=@Param34,last_updated_by=@Param35,prev_date=@Param36,source_begin_balance=@Param37,last_updated_date=GetDate() ");
-                    sql.Append("where firm_id=@Param38 and project_id=@Param39");
-                    var prm = new string[39] { txtPM.Value, cboPT.Value, txtRE.Value, txtBB.Value, txtCC.Value, txtAoC.Value, txtGF.Value, txtNU.Value, txtNB.Value, txtNF.Value, cboCP.Value, txtCN.Value, txtCT.Value, txtCP.Value, txtCoN.Value, txtClC.Value, txtClZ.Value, txtClA1.Value, txtClA2.Value, cboCS.Value, txtSA1.Value, txtSC.Value, txtSZ.Value, txtSA2.Value, cboSS.Value, txtPP.Value, txtPRC.Value, txtID.Value, txtInt.Value, txtInf.Value, txtCE.Value, cboSP.Value, txtSN.Value, txtST.Value, Session["userid"].ToString(), txtPSD.Value, txtSBB.Value, Session["firmid"].ToString(), txtHdnProject.Value };
+                    sql.Append("where firm_id=@Param38 and project_id=@Param39 and revision_id=@Param40");
+                    var prm = new string[40] { txtPM.Value, cboPT.Value, txtRE.Value, txtBB.Value, txtCC.Value, txtAoC.Value, txtGF.Value, txtNU.Value, txtNB.Value, txtNF.Value, cboCP.Value, txtCN.Value, txtCT.Value, txtCP.Value, txtCoN.Value, txtClC.Value, txtClZ.Value, txtClA1.Value, txtClA2.Value, cboCS.Value, txtSA1.Value, txtSC.Value, txtSZ.Value, txtSA2.Value, cboSS.Value, txtPP.Value, txtPRC.Value, txtID.Value, txtInt.Value, txtInf.Value, txtCE.Value, cboSP.Value, txtSN.Value, txtST.Value, Session["userid"].ToString(), txtPSD.Value, txtSBB.Value, Session["firmid"].ToString(), txtHdnProject.Value, cboRevision.Value };
                     Fn_enc.ExecuteNonQuery(sql.ToString(), prm);
                     lblSaveStatus.InnerHtml = "Successfully updated project.";
                     txtHdnProject.Value = txtPID.Value;
@@ -320,7 +364,7 @@ namespace reserve
 
         public void LoadFields()
         {
-            var dr = Fn_enc.ExecuteReader("sp_app_project_info @Param1, @Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
+            var dr = Fn_enc.ExecuteReader("sp_app_project_info @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, cboRevision.Value });
             if (dr.Read())
             {
                 lblProject.InnerHtml = dr["project_name"].ToString();
