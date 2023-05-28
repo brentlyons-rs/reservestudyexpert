@@ -22,7 +22,7 @@ namespace reserve
 
             if (flUp.FileContent.Length>0)
             {
-                System.Drawing.Image image_file = System.Drawing.Image.FromStream(flUp.PostedFile.InputStream);
+                Image image_file = Image.FromStream(flUp.PostedFile.InputStream);
                 int image_height = image_file.Height;
                 int image_width = image_file.Width;
                 int max_height = 240;
@@ -54,25 +54,26 @@ namespace reserve
 
 
             var conn = Fn_enc.getconn();
-            string sql = "insert into info_components_images (firm_id, project_id, category_id, component_id, image_id, image_bytes, image_comments, last_updated_by, last_updated_date) select @Param1, @Param2, @Param3, @Param4, isnull((select max(image_id) from info_components_images where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3 and component_id=@Param4),0)+1, @Param5, @Param6, @Param7, GetDate()";
+            string sql = "insert into info_components_images (firm_id, project_id, revision_id, category_id, component_id, image_id, image_bytes, image_comments, last_updated_by, last_updated_date) select @Param1, @Param2, @Param3, @Param4, @Param5, isnull((select max(image_id) from info_components_images where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param4 and component_id=@Param5),0)+1, @Param6, @Param7, @Param8, GetDate()";
             SqlCommand cmd = new SqlCommand(sql, conn);
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.AddWithValue("@Param1", Session["firmid"]);
             cmd.Parameters.AddWithValue("@Param2", Session["projectid"]);
-            cmd.Parameters.AddWithValue("@Param3", txtHdnCat.Value);
-            cmd.Parameters.AddWithValue("@Param4", txtHdnComp.Value);
+            cmd.Parameters.AddWithValue("@Param3", Session["revisionid"]);
+            cmd.Parameters.AddWithValue("@Param4", txtHdnCat.Value);
+            cmd.Parameters.AddWithValue("@Param5", txtHdnComp.Value);
             //cmd.Parameters.AddWithValue("@Param5", buffer);
-            cmd.Parameters.Add("@Param5", SqlDbType.VarBinary);
+            cmd.Parameters.Add("@Param6", SqlDbType.VarBinary);
             if (flUp.FileContent.Length > 0)
             {
-                cmd.Parameters["@Param5"].Value = data;
+                cmd.Parameters["@Param6"].Value = data;
             }
             else
             {
-                cmd.Parameters["@Param5"].Value = DBNull.Value;
+                cmd.Parameters["@Param6"].Value = DBNull.Value;
             }
-            cmd.Parameters.AddWithValue("@Param6", txtComments.Value);
-            cmd.Parameters.AddWithValue("@Param7", Session["userid"].ToString());
+            cmd.Parameters.AddWithValue("@Param7", txtComments.Value);
+            cmd.Parameters.AddWithValue("@Param8", Session["userid"].ToString());
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
@@ -88,7 +89,7 @@ namespace reserve
 
         protected void delImg()
         {
-            Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3 and component_id=@Param4 and image_id=@Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), txtHdnCat.Value, txtHdnComp.Value, txtHdnDel.Value });
+            Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param4 and component_id=@Param5 and image_id=@Param6", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtHdnCat.Value, txtHdnComp.Value, txtHdnDel.Value });
             lblStatus.InnerHtml = "Successfully removed image.";
             txtHdnDel.Value = "";
             txtHdnType.Value = "";
@@ -96,7 +97,7 @@ namespace reserve
 
         protected void updateComment()
         {
-            Fn_enc.ExecuteNonQuery("update info_components_images set image_comments=@Param1 where firm_id=@Param2 and project_id=@Param3 and category_id=@Param4 and component_id=@Param5 and image_id=@Param6", new string[] { Request.Form["txtComments" + txtHdnID.Value].ToString(), Session["firmid"].ToString(), Session["projectid"].ToString(), txtHdnCat.Value, txtHdnComp.Value, txtHdnID.Value });
+            Fn_enc.ExecuteNonQuery("update info_components_images set image_comments=@Param1 where firm_id=@Param2 and project_id=@Param3 and revision_id=@Param4 and category_id=@Param5 and component_id=@Param6 and image_id=@Param7", new string[] { Request.Form["txtComments" + txtHdnID.Value].ToString(), Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtHdnCat.Value, txtHdnComp.Value, txtHdnID.Value });
             lblStatus.InnerHtml = "Successfully updated comment.";
             txtHdnDel.Value = "";
             txtHdnType.Value = "";
