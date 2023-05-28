@@ -47,14 +47,14 @@ namespace reserve
             if (txtHdnType.Value=="Interest")
             {
                 Fn_enc.ExecuteNonQuery("update info_project_info set interest=@Param1 where firm_id=@Param2 and project_id=@Param3", new string[] { txtInt.Value, Session["firmid"].ToString(), Session["projectid"].ToString() });
-                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString(), Session["revisionid"].ToString());
                 lblInt.InnerHtml = "Successfully updated interest.";
                 lblInfl.InnerHtml = "";
             }
             if (txtHdnType.Value=="Inflation")
             {
                 Fn_enc.ExecuteNonQuery("update info_project_info set inflation=@Param1 where firm_id=@Param2 and project_id=@Param3", new string[] { txtInfl.Value, Session["firmid"].ToString(), Session["projectid"].ToString() });
-                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString(), Session["revisionid"].ToString());
                 lblInfl.InnerHtml = "Successfully updated inflation.";
                 lblInt.InnerHtml = "";
             }

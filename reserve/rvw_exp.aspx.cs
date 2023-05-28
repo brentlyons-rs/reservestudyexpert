@@ -25,6 +25,17 @@ namespace reserve
                 }
                 dr.Close();
             }
+
+            if (Session["revisionid"] != null && lblRevision.InnerHtml == "")
+            {
+                SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_revision_info @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
+
+                if (dr.Read())
+                {
+                    lblRevision.InnerHtml = $"{Session["revisionid"]}: {DateTime.Parse(dr["revision_created_date"].ToString()).ToString("MM/dd/yyyy")}";
+                }
+                dr.Close();
+            }
         }
     }
 }

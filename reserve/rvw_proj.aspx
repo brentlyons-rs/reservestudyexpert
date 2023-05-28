@@ -118,9 +118,15 @@
 <form id="frmProject" method="post" runat="server" class="needs-validation">
     <div class="container_fluid" style="width: 100%; max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-            <div class="page-top-tab col-lg-3 float-right">
-                <p class="panel-title-fd">Review&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
+            <div class="page-top-tab-project col-lg-3 float-right">
+                <p class="panel-title-fd">Review<br /><label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
+            <div id="divPnRevisions" runat="server" class="page-top-tab-revision col-lg-2 float-right">
+                <p class="panel-title-fd">
+                    Revision:<br />
+                    <label id="lblRevision" runat="server" class="frm-text"></label>
+                </p>
+           </div>
         </div>
     </div>
     <% if (Session["projectid"].ToString() == "")
@@ -157,7 +163,7 @@
                                     Boolean blGen = false;
                                     string sStatus;
 
-                                    SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select top 1 isnull(au.first_name + ' ' + au.last_name,'') as gen_by, ip.generated_date from info_projections ip left join app_users au on ip.firm_id=au.firm_id and ip.generated_by=au.user_id where ip.firm_id=@Param1 and ip.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                                    SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select top 1 isnull(au.first_name + ' ' + au.last_name,'') as gen_by, ip.generated_date from info_projections ip left join app_users au on ip.firm_id=au.firm_id and ip.generated_by=au.user_id where ip.firm_id=@Param1 and ip.project_id=@Param2 and ip.revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                                     if (dr.Read())
                                     {
                                         blGen = true;
@@ -177,7 +183,7 @@
                                     }
                                     dr.Close();
 
-                                    dr = reserve.Fn_enc.ExecuteReader("select isnull(threshold1_used,0) as threshold1_used, threshold1_value, isnull(threshold2_used,0) as threshold2_used, interest, inflation from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                                    dr = reserve.Fn_enc.ExecuteReader("select isnull(threshold1_used,0) as threshold1_used, threshold1_value, isnull(threshold2_used,0) as threshold2_used, interest, inflation from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                                     if (dr.Read()) {
                                         if (dr["threshold1_used"].ToString()=="True") {
                                             chkThreshold1.Checked = true;
@@ -192,7 +198,7 @@
                                     dr.Close();
 
                                     double fullFundTotal = 0;
-                                    dr = reserve.Fn_enc.ExecuteReader("sp_app_rvw_fullfunding @Param1, @Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                                    dr = reserve.Fn_enc.ExecuteReader("sp_app_rvw_fullfunding @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                                     if (dr.Read()) {
                                         double.TryParse(dr["full_fund_bal"].ToString(), out fullFundTotal);
                                     }
@@ -364,7 +370,7 @@
                         </tr>
                         <tr style="background-color: #eeeeee">
                             <%
-                            dr = reserve.Fn_enc.ExecuteReader("select year(report_effective)-1 as yr, begin_balance, (select top 1 full_fund_bal from info_projections where firm_id=@Param1 and project_id=@Param2 order by year_id) as full_fund_bal from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                            dr = reserve.Fn_enc.ExecuteReader("select year(report_effective)-1 as yr, begin_balance, (select top 1 full_fund_bal from info_projections where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 order by year_id) as full_fund_bal from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                                 dr.Read();
                                 %>
                             <!--Years-->
@@ -409,7 +415,7 @@
                             dr.Close();
                             var iRow = 1; string fmt1 = "$#,##0";
                             StringBuilder sql = new StringBuilder();
-                            dr = reserve.Fn_enc.ExecuteReader("select i.year_id, i.annual_exp, isnull(i.pct_increase,0) as pct_increase, isnull(i.cfa_annual_contrib,0) as cfa_annual_contrib, isnull(i.cfa_reserve_fund_bal,0) as cfa_reserve_fund_bal, isnull(i.ffa_req_annual_contr,0) as ffa_req_annual_contr, isnull(i.ffa_avg_req_annual_contr,0) as ffa_avg_req_annual_contr, isnull(i.ffa_res_fund_bal,0) as ffa_res_fund_bal, isnull(i.bfa_annual_contr,0) as bfa_annual_contr, isnull(i.bfa_res_fund_bal,0) as bfa_res_fund_bal, isnull(i.tfa_annual_contr,0) as tfa_annual_contr, isnull(i.tfa_res_fund_bal,0) as tfa_res_fund_bal, isnull(i.tfa2_annual_contr,0) as tfa2_annual_contr, isnull(i.tfa2_res_fund_bal,0) as tfa2_res_fund_bal, full_fund_bal from info_projections i where i.firm_id=@Param1 and i.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                            dr = reserve.Fn_enc.ExecuteReader("select i.year_id, i.annual_exp, isnull(i.pct_increase,0) as pct_increase, isnull(i.cfa_annual_contrib,0) as cfa_annual_contrib, isnull(i.cfa_reserve_fund_bal,0) as cfa_reserve_fund_bal, isnull(i.ffa_req_annual_contr,0) as ffa_req_annual_contr, isnull(i.ffa_avg_req_annual_contr,0) as ffa_avg_req_annual_contr, isnull(i.ffa_res_fund_bal,0) as ffa_res_fund_bal, isnull(i.bfa_annual_contr,0) as bfa_annual_contr, isnull(i.bfa_res_fund_bal,0) as bfa_res_fund_bal, isnull(i.tfa_annual_contr,0) as tfa_annual_contr, isnull(i.tfa_res_fund_bal,0) as tfa_res_fund_bal, isnull(i.tfa2_annual_contr,0) as tfa2_annual_contr, isnull(i.tfa2_res_fund_bal,0) as tfa2_res_fund_bal, full_fund_bal from info_projections i where i.firm_id=@Param1 and i.project_id=@Param2 and i.revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                             while (dr.Read())
                             {
                                 sql.Clear();
