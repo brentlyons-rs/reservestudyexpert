@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace reserve {
-    
-    
-    public partial class components {
-        
+namespace reserve
+{
+
+
+    public partial class components
+    {
+
         /// <summary>
         /// frmProject control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm frmProject;
-        
+
         /// <summary>
         /// lblProject control.
         /// </summary>
@@ -29,7 +31,25 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProject;
-        
+
+        /// <summary>
+        /// divPnRevisions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPnRevisions;
+
+        /// <summary>
+        /// lblRevision control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblRevision;
+
         /// <summary>
         /// cboCC control.
         /// </summary>
@@ -38,7 +58,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlSelect cboCC;
-        
+
         /// <summary>
         /// txtCatName control.
         /// </summary>
@@ -47,7 +67,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtCatName;
-        
+
         /// <summary>
         /// lblSaveStatus control.
         /// </summary>
@@ -56,7 +76,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblSaveStatus;
-        
+
         /// <summary>
         /// cboYear control.
         /// </summary>
@@ -65,7 +85,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlSelect cboYear;
-        
+
         /// <summary>
         /// lblSaveNew control.
         /// </summary>
@@ -74,7 +94,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblSaveNew;
-        
+
         /// <summary>
         /// lblStatus control.
         /// </summary>
@@ -83,7 +103,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblStatus;
-        
+
         /// <summary>
         /// txtHdnType control.
         /// </summary>
@@ -92,7 +112,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnType;
-        
+
         /// <summary>
         /// txtHdnDel control.
         /// </summary>
@@ -101,7 +121,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnDel;
-        
+
         /// <summary>
         /// txtHdnProjType control.
         /// </summary>

@@ -119,3 +119,50 @@ else
 				select 'Success' as status_info, '' as error_desc, (select project_name from info_projects where firm_id=@firm and project_id=@to_pid) as proj_name
 			end
 	end
+
+------------------------------
+CREATE procedure [dbo].[sp_app_revision_info] (@firmid smallint, @projid nvarchar(15), @revisionid smallint) as
+
+select ipr.revision_id, ipr.revision_name, au.first_name + ' ' + au.last_name as created_by, ipr.revision_created_date
+from info_projects_revisions ipr
+left join app_users au on ipr.firm_id=au.firm_id and ipr.revision_created_by=au.user_id
+where ipr.firm_id=@firmid and ipr.project_id=@projid and ipr.revision_id=@revisionid
+
+GO
+
+
+------------------------------
+ALTER procedure [dbo].[sp_app_component_reorder] @firm smallint, @project nvarchar(10), @revision smallint, @category smallint, @year smallint, @json nvarchar(max) as
+
+with json_data as (
+select [Id], [newOrder] from OPENJSON(@json) WITH (Id int, newOrder int)
+)
+
+update i set order_id=jd.newOrder
+from info_components i
+inner join json_data as jd on i.component_id=jd.Id
+where i.firm_id=@firm and i.project_id=@project and i.revision_id=@revision and i.category_id=@category and i.year_id=@year
+GO
+
+------------------------------
+ALTER procedure [dbo].[sp_app_components] @firm smallint, @project nvarchar(10), @revision smallint, @year smallint, @category smallint as
+
+declare @int float
+select @int=isnull(interest,0) from info_project_info where firm_id=@firm and project_id=@project
+
+select ic.firm_id, ic.project_id, ic.year_id, ic.category_id, ic.component_id, isnull(ic.order_id, ic.component_id) as order_id, ic.component_desc, ic.comp_quantity, ic.plus_pct, ic.comp_unit, format(dbo.fn_comp_int(@int,ic.base_unit_cost,@year-1),'N2') as base_unit_cost, ic.geo_factor, format(dbo.fn_comp_int(@int,ic.unit_cost,@year-1),'N2') as unit_cost, ic.est_useful_life,
+dbo.fn_est_rem_use_life(ic.firm_id, ic.project_id, @year, ic.category_id, ic.component_id) as est_remain_useful_life,
+ic.comp_note, isnull(ic.comp_value,0) as comp_value, ic.comp_comments, ic.last_updated_by, ic.last_updated_date,
+(select count(*) from info_components_images where firm_id=@firm and project_id=@project and revision_id=@revision and category_id=@category and component_id=ic.component_id) as ttl_images
+from info_components ic 
+left join info_components ic_fut on ic.firm_id=ic_fut.firm_id and ic.project_id=ic_fut.project_id and ic.revision_id=ic_fut.revision_id and ic.category_id=ic_fut.category_id and ic.component_id=ic_fut.component_id and ic_fut.year_id=@year
+where ic.firm_id=@firm and ic.project_id=@project and ic.revision_id=@revision and ic.category_id=@category and ic.year_id=(select max(year_id) from info_components where firm_id=@firm and project_id=@project and revision_id=@revision and category_id=@category and component_id=ic.component_id and year_id<=@year)
+and ic_fut.firm_id is null
+
+union all
+
+select ic.firm_id, ic.project_id, ic.year_id, ic.category_id, ic.component_id, isnull(ic.order_id, ic.component_id) as order_id, ic.component_desc, ic.comp_quantity, ic.plus_pct, ic.comp_unit, format(ic.base_unit_cost,'N2'), ic.geo_factor, format(ic.unit_cost,'N2'), ic.est_useful_life, ic.est_remain_useful_life, ic.comp_note, isnull(ic.comp_value,0) as comp_value, ic.comp_comments, ic.last_updated_by, ic.last_updated_date, (select count(*) from info_components_images where firm_id=@firm and project_id=@project and revision_id=@revision and category_id=@category and component_id=ic.component_id) as ttl_images
+from info_components ic 
+where ic.firm_id=@firm and ic.project_id=@project and ic.revision_id=@revision and ic.category_id=@category and ic.year_id=@year
+
+order by isnull(ic.order_id, ic.component_id)

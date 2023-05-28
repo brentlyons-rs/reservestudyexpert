@@ -166,6 +166,10 @@ namespace reserve
                 while (dr.Read())
                 {
                     cboRevision.Items.Add(new ListItem($"{dr["revision_id"]}: {DateTime.Parse(dr["revision_created_date"].ToString()):MM/dd/yyyy} ({dr["created_by"]})", dr["revision_id"].ToString()));
+                    if (Session["revisionid"].ToString() == dr["revision_id"].ToString())
+                    {
+                        cboRevision.SelectedIndex = cboRevision.Items.Count - 1;
+                    }
                 }
                 dr.Close();
             }
