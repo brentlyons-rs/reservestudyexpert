@@ -43,8 +43,7 @@ namespace reserve
 
             var conn = Fn_enc.getconn();
             conn.Open();
-            //SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, year_id, annual_exp, ffa_avg_req_annual_contr, pct_increase, ffa_res_fund_bal, bfa_annual_contr, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal from info_projections where firm_id=" + firmID + " and project_id='" + projectID + "'", conn);
-            SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, year_id, annual_exp, pct_increase, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, isnull(ffa_res_fund_bal,0) as ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, generated_by, generated_date from info_projections where firm_id=" + firmID + " and project_id='" + projectID + "' and revision_id=" + revisionID, conn);
+            SqlDataAdapter adapter = new SqlDataAdapter("select firm_id, project_id, revision_id, year_id, annual_exp, pct_increase, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, isnull(ffa_res_fund_bal,0) as ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, generated_by, generated_date from info_projections where firm_id=" + firmID + " and project_id='" + projectID + "' and revision_id=" + revisionID, conn);
             DataSet ds = new DataSet();
             adapter.Fill(ds, "Projection");
             //Step 2b: populate local variables
@@ -191,7 +190,7 @@ namespace reserve
             if (threshold2Used)
             {
                 Fn_enc.ExecuteNonQuery("update info_projections set tfa2_annual_contr=cfa_annual_contrib, tfa2_annual_contr_user_entered=1 where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and year_id=(select min(year_id) from info_projections where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3)", new string[] { firmID, projectID, revisionID });
-                Fn_enc.ExecuteNonQuery("sp_app_proj_adj_threshold @Param1, @Param2", new string[] { firmID, projectID });
+                Fn_enc.ExecuteNonQuery("sp_app_proj_adj_threshold @Param1, @Param2, @Param3", new string[] { firmID, projectID, revisionID });
             }
         }
 

@@ -428,13 +428,13 @@ namespace reserve
                     //If CFA is being updated, we need to update all the reserve fund balances, then return updated data
                     if (sField=="cfa_annual_contrib")
                     {
-                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_cfa " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "'", conn);
+                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_cfa " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString(), conn);
                         adapter.Fill(ds, "cfa");
                     }
                     //If an adjusted threshold field is being updated, we need to update all the numbers for those columns, then return updated data.
                     else if ((sField=="tfa2_annual_contr") || (sField=="pct_increase") || (sField=="pct_increase_all") || (sField=="tfa2_reserve_fund_bal"))
                     {
-                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_adj_threshold " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "'", conn);
+                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_adj_threshold " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString(), conn);
                         adapter.Fill(ds, "adjthresh");
                     }
                 }
@@ -556,14 +556,6 @@ namespace reserve
                     {
                         int iComponent;
                         int iCategory;
-                        //var i = 0;
-                        //Get the component_id we're changing
-                        //for (i=sCrit.Length; i>0; i--)
-                        //{
-                        //    if (sCrit.Substring(i,1)=="=") break;
-                        //}
-                        //i++;
-                        //iComponent = sCrit.Substring(i,sCrit.Length-i);
                         //Get the new order
                         int newOrder=9999;
                         int oldOrder = 0;

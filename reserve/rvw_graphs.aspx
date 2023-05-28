@@ -32,9 +32,15 @@
 <form id="frmProject" method="post" runat="server" class="needs-validation">
     <div class="container_fluid" style="width: 100%; max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-            <div class="page-top-tab col-lg-3 float-right">
-                <p class="panel-title-fd">Review&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
+            <div class="page-top-tab-project col-lg-3 float-right">
+                <p class="panel-title-fd">Review<br /><label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
+            <div id="divPnRevisions" runat="server" class="page-top-tab-revision col-lg-2 float-right">
+                <p class="panel-title-fd">
+                    Revision:<br />
+                    <label id="lblRevision" runat="server" class="frm-text"></label>
+                </p>
+           </div>
         </div>
     </div>
     <% if (Session["projectid"].ToString() == "")
@@ -70,12 +76,12 @@
 
         var conn = reserve.Fn_enc.getconn();
         conn.Open();
-        SqlDataAdapter adapter = new SqlDataAdapter("select * from info_projections where firm_id=" + Session["firmid"].ToString() + " and project_id='" + Session["projectid"].ToString() + "'", conn);
+        SqlDataAdapter adapter = new SqlDataAdapter("select * from info_projections where firm_id=" + Session["firmid"].ToString() + " and project_id='" + Session["projectid"].ToString() + "' and revision_id=" + Session["revisionid"].ToString(), conn);
         DataSet ds = new DataSet();
         adapter.Fill(ds,"Projection");
         conn.Close();
 
-        SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select begin_balance, isnull(threshold1_used,0) as threshold1_used, isnull(threshold2_used,0) as threshold2_used, isnull(current_funding_hidden,convert(bit,0)) as current_funding_hidden, isnull(full_funding_hidden,convert(bit,0)) as full_funding_hidden, isnull(baseline_funding_hidden,convert(bit,0)) as baseline_funding_hidden, year(report_effective) as yr, isnull(interest,0) as interest, isnull(inflation,0) as inflation from info_project_info ipi where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+        SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select begin_balance, isnull(threshold1_used,0) as threshold1_used, isnull(threshold2_used,0) as threshold2_used, isnull(current_funding_hidden,convert(bit,0)) as current_funding_hidden, isnull(full_funding_hidden,convert(bit,0)) as full_funding_hidden, isnull(baseline_funding_hidden,convert(bit,0)) as baseline_funding_hidden, year(report_effective) as yr, isnull(interest,0) as interest, isnull(inflation,0) as inflation from info_project_info ipi where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
         if (dr.Read()) {
             firstYear = Convert.ToInt32(dr["yr"].ToString());
             beginBal = Convert.ToDouble(dr["begin_balance"].ToString());
