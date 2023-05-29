@@ -23,9 +23,15 @@
 <form id="frmProject" method="post" runat="server" class="needs-validation">
     <div class="container_fluid" style="width: 100%; max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-            <div class="page-top-tab col-lg-3 float-right">
-                <p class="panel-title-fd">Review&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
+            <div class="page-top-tab-project col-lg-3 float-right">
+                <p class="panel-title-fd">Review<br /><label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
+            <div id="divPnRevisions" runat="server" class="page-top-tab-revision col-lg-2 float-right">
+                <p class="panel-title-fd">
+                    Revision:<br />
+                    <label id="lblRevision" runat="server" class="frm-text"></label>
+                </p>
+           </div>
         </div>
     </div>
     <% if (Session["projectid"].ToString() == "")
@@ -56,7 +62,7 @@
     <div style="padding: 10px">
     <%
         SqlDataReader dr;
-        SqlDataReader drcats = reserve.Fn_enc.ExecuteReader("select icc.category_id, icc.category_desc from info_component_categories icc where icc.firm_id=@Param1 and icc.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+        SqlDataReader drcats = reserve.Fn_enc.ExecuteReader("select icc.category_id, icc.category_desc from info_component_categories icc where icc.firm_id=@Param1 and icc.project_id=@Param2 and icc.revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
         while (drcats.Read())
         {
             %>
@@ -82,7 +88,7 @@
                     <%
                         int iRow = 0;
                         double[] arrTotals = new double[] { 0,0,0,0 } ;
-                        dr = reserve.Fn_enc.ExecuteReader("sp_app_rvw_comp1 @Param1, @Param2,1,@Param3", new string[] { Session["firmid"].ToString(),Session["projectid"].ToString(),drcats["category_id"].ToString() });
+                        dr = reserve.Fn_enc.ExecuteReader("sp_app_rvw_comp1 @Param1, @Param2, @Param3, 1, @Param4", new string[] { Session["firmid"].ToString(),Session["projectid"].ToString(),Session["revisionid"].ToString(), drcats["category_id"].ToString() });
                         while (dr.Read())
                         {%>
                         <tr style="border-bottom: 1px solid #dddddd">

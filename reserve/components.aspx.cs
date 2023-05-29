@@ -30,13 +30,24 @@ namespace reserve
                 dr.Close();
             }
 
-            if (txtHdnProjType.Value=="")
+            if (!string.IsNullOrEmpty(Session["projectid"].ToString()) && txtHdnProjType.Value=="")
             {
-                SqlDataReader dr = Fn_enc.ExecuteReader("select project_type_id from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                SqlDataReader dr = Fn_enc.ExecuteReader("select project_type_id from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
 
                 if (dr.Read())
                 {
                     txtHdnProjType.Value = dr["project_type_id"].ToString();
+                }
+                dr.Close();
+            }
+
+            if (Session["revisionid"] != null && lblRevision.InnerHtml=="")
+            {
+                SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_revision_info @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
+
+                if (dr.Read())
+                {
+                    lblRevision.InnerHtml = $"{Session["revisionid"]}: {DateTime.Parse(dr["revision_created_date"].ToString()).ToString("MM/dd/yyyy")}";
                 }
                 dr.Close();
             }
@@ -77,7 +88,7 @@ namespace reserve
         public void LoadYears()
         {
 
-            SqlDataReader dr = Fn_enc.ExecuteReader("select year(report_effective) as yr from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("select year(report_effective) as yr from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
             if (dr.Read())
             {
                 for (var i=0; i<30; i++)
@@ -90,9 +101,9 @@ namespace reserve
 
         public void DelCat()
         {
-            Fn_enc.ExecuteNonQuery("delete from info_component_categories where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3",  new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboCC.Value });
-            Fn_enc.ExecuteNonQuery("delete from info_components where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboCC.Value });
-            Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboCC.Value });
+            Fn_enc.ExecuteNonQuery("delete from info_component_categories where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param4",  new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboCC.Value });
+            Fn_enc.ExecuteNonQuery("delete from info_components where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param4", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboCC.Value });
+            Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param4", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboCC.Value });
             txtCatName.Value = "";
             cboCC.Items.Clear();
             LoadCats();
@@ -104,7 +115,7 @@ namespace reserve
         {
             if (cboCC.SelectedIndex==0) //New category
             {
-                Fn_enc.ExecuteNonQuery("insert into info_component_categories (firm_id, project_id, category_id, category_desc) select @Param1, @Param2, isnull((select max(category_id) from info_component_categories where firm_id=@Param1 and project_id=@Param2),0)+1, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), txtCatName.Value });
+                Fn_enc.ExecuteNonQuery("insert into info_component_categories (firm_id, project_id, revision_id, category_id, category_desc) select @Param1, @Param2, @Param3, isnull((select max(category_id) from info_component_categories where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3),0)+1, @Param4", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtCatName.Value });
                 cboCC.Items.Clear();
                 LoadCats();
                 cboCC.Value = txtCatName.Value;
@@ -114,7 +125,7 @@ namespace reserve
             else
             {
                 var iCatID = cboCC.SelectedIndex;
-                Fn_enc.ExecuteNonQuery("update info_component_categories set category_desc=@Param1 where firm_id=@Param2 and project_id=@Param3 and category_id=@Param4", new string[] { txtCatName.Value, Session["firmid"].ToString(), Session["projectid"].ToString(), cboCC.Value });
+                Fn_enc.ExecuteNonQuery("update info_component_categories set category_desc=@Param1 where firm_id=@Param2 and project_id=@Param3 and revision_id=@Param4 and category_id=@Param5", new string[] { txtCatName.Value, Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboCC.Value });
                 cboCC.Items.Clear();
                 LoadCats();
                 //cboCC.Value = txtCatName.Value;
@@ -133,14 +144,14 @@ namespace reserve
         {
             try
             {
-                var sql = $@"insert into hist_info_components_deletes (firm_id, project_id,year_id,category_id,component_id,del_id,component_desc,comp_quantity,comp_unit,base_unit_cost,geo_factor,unit_cost,est_useful_life,est_remain_useful_life,comp_note,comp_value,comp_comments,deleted_by,deleted_date,plus_pct)
-                            select firm_id, project_id, {cboYear.Value}, category_id, component_id, isnull((select max(del_id) from hist_info_components_deletes where firm_id = @Param1 and project_id = @Param2 and year_id = @Param3 and {txtHdnDel.Value}),0)+1,component_desc,comp_quantity,comp_unit,base_unit_cost,geo_factor,unit_cost,est_useful_life,est_remain_useful_life,comp_note,comp_value,comp_comments,{Session["userid"].ToString()},getdate(),plus_pct
-                            from info_components where firm_id = @Param1 and project_id = @Param2 and year_id = @Param3 and {txtHdnDel.Value}";
-                Fn_enc.ExecuteNonQuery(sql, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value });
+                var sql = $@"insert into hist_info_components_deletes (firm_id,project_id,revision_id,year_id,category_id,component_id,del_id,component_desc,comp_quantity,comp_unit,base_unit_cost,geo_factor,unit_cost,est_useful_life,est_remain_useful_life,comp_note,comp_value,comp_comments,deleted_by,deleted_date,plus_pct)
+                            select firm_id, project_id, revision_id, {cboYear.Value}, category_id, component_id, isnull((select max(del_id) from hist_info_components_deletes where firm_id = @Param1 and project_id = @Param2 and year_id = @Param3 and {txtHdnDel.Value}),0)+1,component_desc,comp_quantity,comp_unit,base_unit_cost,geo_factor,unit_cost,est_useful_life,est_remain_useful_life,comp_note,comp_value,comp_comments,{Session["userid"].ToString()},getdate(),plus_pct
+                            from info_components where firm_id = @Param1 and project_id = @Param2 and revision_id=@Param3 and year_id = @Param4 and {txtHdnDel.Value}";
+                Fn_enc.ExecuteNonQuery(sql, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboYear.Value });
 
                 var imageCrit = txtHdnDel.Value.Remove(txtHdnDel.Value.LastIndexOf("and"));
-                Fn_enc.ExecuteNonQuery("delete from info_components where firm_id=@Param1 and project_id=@Param2 and year_id>=@Param3 and " + txtHdnDel.Value, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value });
-                Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and " + imageCrit, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value });
+                Fn_enc.ExecuteNonQuery("delete from info_components where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and year_id>=@Param4 and " + txtHdnDel.Value, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboYear.Value });
+                Fn_enc.ExecuteNonQuery("delete from info_components_images where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and " + imageCrit, new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboYear.Value });
                 ClearLabels();
                 lblStatus.InnerHtml = "Successfully deleted component.";
             }
@@ -156,17 +167,20 @@ namespace reserve
             SqlDataReader dr;
 
             if (Session["client"].ToString() != "1") { cboCC.Items.Add(new ListItem("New Category", "-1")); }
-            dr = Fn_enc.ExecuteReader("select category_id, category_desc from info_component_categories where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
-            while (dr.Read())
+            if (Session["projectid"].ToString() != "")
             {
-                cboCC.Items.Add(new ListItem(dr["category_desc"].ToString(), dr["category_id"].ToString()));
+                dr = Fn_enc.ExecuteReader("select category_id, category_desc from info_component_categories where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
+                while (dr.Read())
+                {
+                    cboCC.Items.Add(new ListItem(dr["category_desc"].ToString(), dr["category_id"].ToString()));
+                }
+                dr.Close();
             }
-            dr.Close();
         }
 
         public void SaveNewComponent()
         {
-            Fn_enc.ExecuteNonQuery("insert into info_components (firm_id, project_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date) select @Param1, @Param2, @Param3, @Param4, isnull((select max(component_id) from info_components where firm_id=@Param1 and project_id=@Param2 and category_id=@Param4),0)+1, isnull((select max(component_id) from info_components where firm_id=@Param1 and project_id=@Param2 and category_id=@Param4),0)+1, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, GetDate()", new string[17] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value, cboCC.Value, Request.Form["txt0_0"], Request.Form["txt0_1"], Request.Form["chkPP_0"] == "on" ? Request.Form["txt0_2"] : "0", Request.Form["txt0_3"], Request.Form["txt0_4"], Request.Form["txt0_5"] == "on" ? "1" : "0", Request.Form["txt0_6"], Request.Form["txt0_7"], Request.Form["txt0_8"], Request.Form["txt0_9"], Request.Form["txt0_10"] == "on" ? "1" : "0", Request.Form["txt0_11"], Session["userid"].ToString() });
+            Fn_enc.ExecuteNonQuery("insert into info_components (firm_id, project_id, revision_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date) select @Param1, @Param2, @Param3, @Param4, @Param5, isnull((select max(component_id) from info_components where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param5),0)+1, isnull((select max(component_id) from info_components where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param5),0)+1, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, GetDate()", new string[18] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboYear.Value, cboCC.Value, Request.Form["txt0_0"], Request.Form["txt0_1"], Request.Form["chkPP_0"] == "on" ? Request.Form["txt0_2"] : "0", Request.Form["txt0_3"], Request.Form["txt0_4"], Request.Form["txt0_5"] == "on" ? "1" : "0", Request.Form["txt0_6"], Request.Form["txt0_7"], Request.Form["txt0_8"], Request.Form["txt0_9"], Request.Form["txt0_10"] == "on" ? "1" : "0", Request.Form["txt0_11"], Session["userid"].ToString() });
             ClearLabels();
             lblSaveNew.InnerHtml = "Successfully added new component.";
             txtHdnType.Value = "";
@@ -200,7 +214,7 @@ namespace reserve
         {
             var s = JsonConvert.SerializeObject(components);
             //var t = "[{\"Id\":1,\"Order\":1},{\"Id\":3,\"Order\":2},{\"Id\":11,\"Order\":3},{\"Id\":2,\"Order\":4},{\"Id\":4,\"Order\":5},{\"Id\":5,\"Order\":6},{\"Id\":7,\"Order\":7},{\"Id\":10,\"Order\":8},{\"Id\":6,\"Order\":9},{\"Id\":8,\"Order\":10},{\"Id\":9,\"Order\":11},{\"Id\":12,\"Order\":12}]"
-            Fn_enc.ExecuteNonQuery("sp_app_component_reorder @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { HttpContext.Current.Session["firmid"].ToString(), HttpContext.Current.Session["projectid"].ToString(), category, year, s });
+            Fn_enc.ExecuteNonQuery("sp_app_component_reorder @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { HttpContext.Current.Session["firmid"].ToString(), HttpContext.Current.Session["projectid"].ToString(), HttpContext.Current.Session["revisionid"].ToString(), category, year, s });
             return "success";
         }
     }

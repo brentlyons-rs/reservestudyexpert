@@ -33,6 +33,24 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProject;
 
         /// <summary>
+        /// divPnRevisions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPnRevisions;
+
+        /// <summary>
+        /// lblRevision control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblRevision;
+
+        /// <summary>
         /// icoTR control.
         /// </summary>
         /// <remarks>

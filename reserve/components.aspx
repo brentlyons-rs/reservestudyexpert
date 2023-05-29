@@ -416,7 +416,7 @@ catch (trymicrosoft) {
 
     function calcRow(iRow) {
         var iGeo = <% 
-        SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select geo_factor from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+        SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select geo_factor from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
         if (dr.Read()) Response.Write(dr["geo_factor"].ToString() == "" ? "1" : dr["geo_factor"].ToString());
         else Response.Write("1");
         dr.Close();
@@ -468,9 +468,15 @@ catch (trymicrosoft) {
 <form id="frmProject" method="post" runat="server" class="needs-validation">
     <div class="container_fluid" style="width: 100%; max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-            <div class="page-top-tab col-lg-3 float-right">
-                <p class="panel-title-fd">Components&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
+            <div class="page-top-tab-project col-lg-3 float-right">
+                <p class="panel-title-fd">Components<br /><label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
+            <div id="divPnRevisions" runat="server" class="page-top-tab-revision col-lg-2 float-right">
+                <p class="panel-title-fd">
+                    Revision:<br />
+                    <label id="lblRevision" runat="server" class="frm-text"></label>
+                </p>
+           </div>
         </div>
     </div>
     <% if (Session["projectid"].ToString() == "") { %>
@@ -570,7 +576,7 @@ catch (trymicrosoft) {
         <%
             var iRow = 1;
             StringBuilder sql = new StringBuilder();
-            SqlDataReader dr = reserve.Fn_enc.ExecuteReader("sp_app_components @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), cboYear.Value, cboCC.Value });
+            SqlDataReader dr = reserve.Fn_enc.ExecuteReader("sp_app_components @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cboYear.Value, cboCC.Value });
             while (dr.Read())
             {
                 sql.Clear();

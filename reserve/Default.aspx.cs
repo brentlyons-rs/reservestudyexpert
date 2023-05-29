@@ -54,6 +54,8 @@ namespace reserve
                                 Session["userid"] = p["user_id"];
                                 Session["realname"] = p["real_name"];
                                 Session["firmname"] = p["firm_name"];
+                                Session["projectid"] = "";
+                                Session["revisionid"] = "";
                                 Session["email"] = txtEM.Value;
                                 Session["client"] = "0";
                                 Session["superadmin"] = Convert.ToBoolean(p["super_admin"]) ? "1" : "0";

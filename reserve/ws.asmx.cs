@@ -48,11 +48,11 @@ namespace reserve
 
                 try
                 {
-                    sqlUpdate.Append("insert into info_components (firm_id, project_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date)");
-                    sqlUpdate.Append("select @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, @Param19, getdate()");
+                    sqlUpdate.Append("insert into info_components (firm_id, project_id, revision_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date)");
+                    sqlUpdate.Append("select @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12, @Param13, @Param14, @Param15, @Param16, @Param17, @Param18, @Param19, @Param20, getdate()");
 
-                    var tmp = $"{Session["firmid"].ToString()}, {Session["projectid"].ToString()}, {cYr}, {cCat}, {cID}, {cID}, {cDesc}, {cQty}, {cPP}, {cUnit}, {cBuc.Trim(',').Trim('$')}, {cGeo}, {cUc.Trim(',').Trim('$')}, {cEul}, {cErul}, {cNote}, {cVal}, {cComm}, {Session["userid"].ToString()}";
-                    Fn_enc.ExecuteNonQuery(sqlUpdate.ToString(), new string[19] { Session["firmid"].ToString(), Session["projectid"].ToString(), cYr, cCat, cID, cID, cDesc, cQty, cPP, cUnit, cBuc.Replace(",","").Replace("$",""), cGeo, cUc.Replace(",","").Replace("$",""), cEul, cErul, cNote, cVal, cComm, Session["userid"].ToString() });
+                    var tmp = $"{Session["firmid"]}, {Session["projectid"]}, {Session["revisionid"]}, {cYr}, {cCat}, {cID}, {cID}, {cDesc}, {cQty}, {cPP}, {cUnit}, {cBuc.Trim(',').Trim('$')}, {cGeo}, {cUc.Trim(',').Trim('$')}, {cEul}, {cErul}, {cNote}, {cVal}, {cComm}, {Session["userid"].ToString()}";
+                    Fn_enc.ExecuteNonQuery(sqlUpdate.ToString(), new string[20] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), cYr, cCat, cID, cID, cDesc, cQty, cPP, cUnit, cBuc.Replace(",","").Replace("$",""), cGeo, cUc.Replace(",","").Replace("$",""), cEul, cErul, cNote, cVal, cComm, Session["userid"].ToString() });
                 }
                 catch (Exception ex)
                 {
@@ -109,12 +109,12 @@ namespace reserve
                 {
                     if (iState==0)
                     {
-                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold1_used=0 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold1_used=0 where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                     }
                     else
                     {
-                        Fn_enc.ExecuteNonQuery($"update info_project_info set threshold1_used=1, threshold1_value=@Param1 where firm_id=@Param2 and project_id=@Param3", new string[] { sValue, Session["firmid"].ToString(), Session["projectid"].ToString() });
-                        GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                        Fn_enc.ExecuteNonQuery($"update info_project_info set threshold1_used=1, threshold1_value=@Param1 where firm_id=@Param2 and project_id=@Param3 and revision_id=@Param4", new string[] { sValue, Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
+                        GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString(), Session["revisionid"].ToString());
                     }
                 }
                 catch (Exception ex)
@@ -159,11 +159,11 @@ namespace reserve
                 {
                     if (sThreshold == "true")
                     {
-                        Fn_enc.ExecuteNonQuery($"update info_project_info set threshold2_used=1 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        Fn_enc.ExecuteNonQuery($"update info_project_info set threshold2_used=1 where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                     }
                     else
                     {
-                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold2_used=0 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        Fn_enc.ExecuteNonQuery("update info_project_info set threshold2_used=0 where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                     }
                 }
                 catch (Exception ex)
@@ -220,7 +220,7 @@ namespace reserve
                 }
                 try
                 {
-                    Fn_enc.ExecuteNonQuery("update info_project_info set " + sField + "=" + sVal + " where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                    Fn_enc.ExecuteNonQuery("update info_project_info set " + sField + "=" + sVal + " where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                 }
                 catch (Exception ex)
                 {
@@ -286,7 +286,7 @@ namespace reserve
                 }
                 try
                 {
-                    Fn_enc.ExecuteNonQuery("update info_project_info set " + sField + "=" + sVal + " where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                    Fn_enc.ExecuteNonQuery("update info_project_info set " + sField + "=" + sVal + " where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                 }
                 catch (Exception ex)
                 {
@@ -333,11 +333,12 @@ namespace reserve
                 try
                 {
                     conn.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter("sp_app_rvw_graph_threshold @Param1, @Param2, @Param3, @Param4", conn);
+                    SqlDataAdapter adapter = new SqlDataAdapter("sp_app_rvw_graph_threshold @Param1, @Param2, @Param3, @Param4, @Param5", conn);
                     adapter.SelectCommand.Parameters.AddWithValue("Param1", Session["firmid"].ToString());
                     adapter.SelectCommand.Parameters.AddWithValue("Param2", Session["projectid"].ToString());
-                    adapter.SelectCommand.Parameters.AddWithValue("Param3", iYear.ToString());
-                    adapter.SelectCommand.Parameters.AddWithValue("Param4", sVal);
+                    adapter.SelectCommand.Parameters.AddWithValue("Param3", Session["revisionid"].ToString());
+                    adapter.SelectCommand.Parameters.AddWithValue("Param4", iYear.ToString());
+                    adapter.SelectCommand.Parameters.AddWithValue("Param5", sVal);
                     adapter.Fill(ds, "Threshold");
 
                     row = ds.Tables["Results"].NewRow();
@@ -413,27 +414,27 @@ namespace reserve
                     sNewVal.Replace("$", "");
                     sNewVal.Replace(",", "");
                     if (sField=="pct_increase_all")
-                        sqlUpdate.Append("update info_projections set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), pct_increase='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "'");
+                        sqlUpdate.Append("update info_projections set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), pct_increase='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"]);
                     else if (sField == "cfa_annual_contrib")
-                        sqlUpdate.Append("update " + sSQLTable + " set cfa_annual_contrib_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
+                        sqlUpdate.Append("update " + sSQLTable + " set cfa_annual_contrib_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"] + " and " + sCrit);
                     else if (sField== "tfa2_annual_contr")
-                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "', pct_increase=null where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
+                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=1, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "', pct_increase=null where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"] + " and " + sCrit);
                     else if (sField == "pct_increase")
-                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit.Replace("year_id=","year_id>="));
+                        sqlUpdate.Append("update " + sSQLTable + " set tfa2_annual_contr_user_entered=null, generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"] + " and " + sCrit.Replace("year_id=","year_id>="));
                     else
-                        sqlUpdate.Append("update " + sSQLTable + " set generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
+                        sqlUpdate.Append("update " + sSQLTable + " set generated_by=" + Session["userid"].ToString() + ", generated_date=GetDate(), " + sField + "='" + sNewVal + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"] + " and " + sCrit);
                     command = new SqlCommand(sqlUpdate.ToString(), conn);
                     command.ExecuteNonQuery();
                     //If CFA is being updated, we need to update all the reserve fund balances, then return updated data
                     if (sField=="cfa_annual_contrib")
                     {
-                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_cfa " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "'", conn);
+                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_cfa " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString(), conn);
                         adapter.Fill(ds, "cfa");
                     }
                     //If an adjusted threshold field is being updated, we need to update all the numbers for those columns, then return updated data.
                     else if ((sField=="tfa2_annual_contr") || (sField=="pct_increase") || (sField=="pct_increase_all") || (sField=="tfa2_reserve_fund_bal"))
                     {
-                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_adj_threshold " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "'", conn);
+                        SqlDataAdapter adapter = new SqlDataAdapter("sp_app_proj_adj_threshold " + Session["firmid"].ToString() + ",'" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString(), conn);
                         adapter.Fill(ds, "adjthresh");
                     }
                 }
@@ -508,11 +509,11 @@ namespace reserve
                     {
                         var baseUnitCost = sVal.Replace("'", "").Replace(",", "").Replace("$", "");
                         var unitCost = baseUnitCost;
-                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select geo_factor from info_components where firm_id=@Param1 and project_id=@Param2 and  " + sCrit + "),0) as geo_factor_used from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select geo_factor from info_components where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and  " + sCrit + "),0) as geo_factor_used from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                         if ((dr.Read()) && (!dr.IsDBNull(0)) && (dr["geo_factor_used"].ToString()=="True")) unitCost = (Convert.ToDouble(baseUnitCost) * Convert.ToDouble(dr["geo_factor"].ToString())).ToString();
                         dr.Close();
 
-                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), base_unit_cost=" + baseUnitCost + ", unit_cost='" + unitCost + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
+                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), base_unit_cost=" + baseUnitCost + ", unit_cost='" + unitCost + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"] + " and " + sCrit);
                         command = new SqlCommand(sqlUpdate.ToString(), conn);
                         command.ExecuteNonQuery();
 
@@ -526,7 +527,7 @@ namespace reserve
                     }
                     else if (sField == "geo_factor") //If geo factor changes, update unit cost
                     {
-                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select base_unit_cost from info_components where firm_id=@Param1 and project_id=@Param2 and " + sCrit + "),0) as base_unit_cost from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        dr = Fn_enc.ExecuteReader("select geo_factor, isnull((select base_unit_cost from info_components where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and " + sCrit + "),0) as base_unit_cost from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                         var dataPresent = dr.Read();
 
                         var unitCost ="";
@@ -539,7 +540,7 @@ namespace reserve
                             if (dataPresent) unitCost = (Convert.ToDouble(dr["base_unit_cost"].ToString()) * Convert.ToDouble(dr["geo_factor"].ToString())).ToString();
                         }
                         dr.Close();
-                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), geo_factor='" + sVal + "', unit_cost=" + unitCost + " where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
+                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), geo_factor='" + sVal + "', unit_cost=" + unitCost + " where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"].ToString() + " and " + sCrit);
                         command = new SqlCommand(sqlUpdate.ToString(), conn);
                         command.ExecuteNonQuery();
 
@@ -555,18 +556,10 @@ namespace reserve
                     {
                         int iComponent;
                         int iCategory;
-                        //var i = 0;
-                        //Get the component_id we're changing
-                        //for (i=sCrit.Length; i>0; i--)
-                        //{
-                        //    if (sCrit.Substring(i,1)=="=") break;
-                        //}
-                        //i++;
-                        //iComponent = sCrit.Substring(i,sCrit.Length-i);
                         //Get the new order
                         int newOrder=9999;
                         int oldOrder = 0;
-                        dr = Fn_enc.ExecuteReader($"select category_id, component_id, (select order_id from info_components where firm_id=@Param1 and project_id=@Param2 and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)} and component_id={sVal}) as newOrder, order_id as oldOrder from info_components i where firm_id=@Param1 and project_id=@Param2 and {sCrit}", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                        dr = Fn_enc.ExecuteReader($"select category_id, component_id, (select order_id from info_components where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)} and component_id={sVal}) as newOrder, order_id as oldOrder from info_components i where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and {sCrit}", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                         if (dr.Read())
                         {
                             newOrder = Convert.ToInt32(dr["newOrder"].ToString());
@@ -581,21 +574,21 @@ namespace reserve
                             if (oldOrder>newOrder) //They moved a component down the page
                             {
                                 newOrder++;
-                                command = new SqlCommand($"update info_components set order_id = order_id+1 where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and order_id between {newOrder} and {oldOrder} and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)}", conn);
+                                command = new SqlCommand($"update info_components set order_id = order_id+1 where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and revision_id={Session["revisionid"]} and order_id between {newOrder} and {oldOrder} and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)}", conn);
                                 command.ExecuteNonQuery();
                             }
                             else //They moved a component up the page
                             {
-                                command = new SqlCommand($"update info_components set order_id = order_id-1 where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and order_id between {oldOrder} and {newOrder} and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)}", conn);
+                                command = new SqlCommand($"update info_components set order_id = order_id-1 where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and revision_id={Session["revisionid"]} and order_id between {oldOrder} and {newOrder} and {sCrit.Substring(1, sCrit.IndexOf("and component_id") - 1)}", conn);
                                 command.ExecuteNonQuery();
                             }
-                            command = new SqlCommand($"update info_components set order_id = {newOrder}, last_updated_by = {Session["userid"]}, last_updated_date = GetDate() where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and {sCrit}", conn);
+                            command = new SqlCommand($"update info_components set order_id = {newOrder}, last_updated_by = {Session["userid"]}, last_updated_date = GetDate() where firm_id={Session["firmid"]} and project_id='{Session["projectid"]}' and revision_id={Session["revisionid"]} and {sCrit}", conn);
                             command.ExecuteNonQuery();
                         }
                     }
                     else
                     {
-                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), " + sField + "='" + sVal.ToString().Replace("'", "''").Replace(",","") + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and " + sCrit);
+                        sqlUpdate.Append("update info_components set last_updated_by=" + Session["userid"].ToString() + ", last_updated_date=GetDate(), " + sField + "='" + sVal.ToString().Replace("'", "''").Replace(",","") + "' where firm_id=" + Session["firmid"] + " and project_id='" + Session["projectid"] + "' and revision_id=" + Session["revisionid"] + " and " + sCrit);
                         command = new SqlCommand(sqlUpdate.ToString(), conn);
                         command.ExecuteNonQuery();
                     }

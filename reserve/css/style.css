@@ -702,6 +702,28 @@ textarea {
     color: #ffffff !important;
 }
 
+.btn-revision {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    margin-bottom: 0;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
 ul.navbar-nav li a.btn-link-2 {
     position: relative;
     display: inline-block;
@@ -763,7 +785,7 @@ ul.navbar-nav li a.btn-link-4 {
         color: #fff;
     }
 
-.page-top-tab {
+.page-top-tab-project {
     font-family: 'Open Sans', Helvetica, sans-serif;
     background: #39b1cc;
     background: -moz-linear-gradient(top, #dbf3fe 0%, #bdeaff 100%);
@@ -775,11 +797,29 @@ ul.navbar-nav li a.btn-link-4 {
     color: #ffffff;
     padding: 5px 0px 2px 5px;
     border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
     border-left: 1px solid #88d8fe;
     border-right: 1px solid #88d8fe;
     border-bottom: 1px solid #88d8fe;
+    height: 50px;
 }
+
+.page-top-tab-revision {
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    background: #39b1cc;
+    background: -moz-linear-gradient(top, #dbf3fe 0%, #bdeaff 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #dbf3fe), color-stop(100%, #bdeaff));
+    background: -webkit-linear-gradient(top, #dbf3fe 0%, #bdeaff 100%);
+    background: -o-linear-gradient(top, #dbf3fe 0%, #bdeaff 100%);
+    background: -ms-linear-gradient(top, #dbf3fe 0%, #bdeaff 100%);
+    background: linear-gradient(to bottom, #dbf3fe 0%, #bdeaff 100%);
+    color: #ffffff;
+    padding: 5px 0px 2px 5px;
+    border-bottom-right-radius: 5px;
+    border-right: 1px solid #88d8fe;
+    border-bottom: 1px solid #88d8fe;
+    height: 50px;
+}
+
 
 .images-upload {
     font-family: 'Open Sans', Helvetica, sans-serif;
@@ -806,9 +846,28 @@ ul.navbar-nav li a.btn-link-4 {
     color: #2298cb;
     font-size: 12px;
     font-weight: 700;
-    /*color: #d3eced;*/
     text-transform: uppercase;
     letter-spacing: 1px
+}
+
+.panel-hdr-desc {
+    color: #2298cb;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    vertical-align: top;
+    text-align: right;
+}
+
+.panel-hdr-value {
+    color: #555;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    vertical-align: top;
+    text-align: left;
 }
 
 .frm-text {

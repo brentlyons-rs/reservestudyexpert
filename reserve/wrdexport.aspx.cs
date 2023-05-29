@@ -126,7 +126,7 @@ namespace reserve
             {
                 string docLoc = Fn_enc.DocLoc();
 
-                dr = Fn_enc.ExecuteReader("sp_app_create_word @Param1, @Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                dr = Fn_enc.ExecuteReader("sp_app_create_word @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                 if (dr.Read())
                 {
                     if (Session["Client"].ToString() == "1")
@@ -298,11 +298,11 @@ namespace reserve
                         conn.Open();
                         //Table for projections
                         //SqlDataAdapter adapter = new SqlDataAdapter("select * from info_projections where firm_id=" + Session["firmid"].ToString() + " and project_id='" + Session["projectid"].ToString() + "'", conn);
-                        SqlDataAdapter adapter = new SqlDataAdapter($"sp_app_word_projections {Session["firmid"]}, '{Session["projectid"]}', {(Convert.ToBoolean(dr["threshold1_used"].ToString()) ? 1 : 2)}", conn);
+                        SqlDataAdapter adapter = new SqlDataAdapter($"sp_app_word_projections {Session["firmid"]}, '{Session["projectid"]}', {Session["revisionid"]}, {(Convert.ToBoolean(dr["threshold1_used"].ToString()) ? 1 : 2)}", conn);
                         DataSet ds = new DataSet();
                         adapter.Fill(ds, "Projection");
                         //Table for summary
-                        adapter = new SqlDataAdapter("sp_app_rvw_comp1 " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "', 0", conn);
+                        adapter = new SqlDataAdapter("sp_app_rvw_comp1 " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString() + ", 0", conn);
                         adapter.Fill(ds, "Summary");
 
                         Chart chart = cp.ChartSpace.Elements<Chart>().First();
@@ -673,13 +673,13 @@ namespace reserve
             table.AppendChild<TableProperties>(tblProp);
 
             Int16 beginYear = 0;
-            SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select year(report_effective) as yr from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select year(report_effective) as yr from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
             if (dr.Read()) beginYear = Convert.ToInt16(dr["yr"].ToString());
             dr.Close();
 
             var conn = Fn_enc.getconn();
             conn.Open();
-            SqlDataAdapter adapter = new SqlDataAdapter("sp_app_rvw_expend " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "'", conn);
+            SqlDataAdapter adapter = new SqlDataAdapter("sp_app_rvw_expend " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString(), conn);
             DataSet ds = new DataSet();
             System.Data.DataTable dt;
             conn.Close();
@@ -775,7 +775,7 @@ namespace reserve
 
             int imgId = 1;
             
-            var dr2 = Fn_enc.ExecuteReader("select top 1 firm_id from info_components_images where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            var dr2 = Fn_enc.ExecuteReader("select top 1 firm_id from info_components_images where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
             if (dr2.Read())
             {
                 var conn = Fn_enc.getconn();
@@ -787,7 +787,7 @@ namespace reserve
                 imgtable.AppendChild(tableProp);
 
                 ImagePart ip;
-                SqlCommand cmd = new SqlCommand("sp_app_notes " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "', -1", conn);
+                SqlCommand cmd = new SqlCommand("sp_app_notes " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString() + ", -1", conn);
                 var img = cmd.ExecuteReader();
                 DocumentFormat.OpenXml.Wordprocessing.TableRow tr;
                 while (img.Read())
@@ -802,7 +802,6 @@ namespace reserve
 
                         tr.Append(MakeNoteCell("", img[3].ToString() + ". " + img[1].ToString(), true));
                         tr.Append(MakeNoteCell(wordDoc.MainDocumentPart.GetIdOfPart(ip), "", true));
-                        //System.Diagnostics.Debug.WriteLine(wordDoc.MainDocumentPart.GetIdOfPart(ip));
                         imgId++;
                         ms.Dispose();
                     }
@@ -845,7 +844,7 @@ namespace reserve
 
             Paragraph pReturn = new Paragraph();
             double[] ttl = new double[4] { 0, 0, 0, 0 };
-            SqlDataReader dr = Fn_enc.ExecuteReader("select ipi.project_type_id, icc.* from info_component_categories icc inner join info_project_info ipi on icc.firm_id=ipi.firm_id and icc.project_id=ipi.project_id where icc.firm_id=@Param1 and icc.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("select ipi.project_type_id, icc.* from info_component_categories icc inner join info_project_info ipi on icc.firm_id=ipi.firm_id and icc.project_id=ipi.project_id and icc.revision_id=ipi.revision_id where icc.firm_id=@Param1 and icc.project_id=@Param2 and icc.revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
             SqlDataReader dr2;
             DocumentFormat.OpenXml.Wordprocessing.TableCell tc;
             int i = 0;
@@ -858,17 +857,6 @@ namespace reserve
                 p.Append(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Break() { Type = BreakValues.Page }));
                 pMarker.InsertBeforeSelf(p);
 
-                //DocumentFormat.OpenXml.Wordprocessing.RunProperties rp = new DocumentFormat.OpenXml.Wordprocessing.RunProperties();
-
-                //RunFonts runFont = new RunFonts() { Ascii = "Verdana" };
-                //DocumentFormat.OpenXml.Wordprocessing.FontSize fs = new DocumentFormat.OpenXml.Wordprocessing.FontSize() { Val = "36" };
-                //DocumentFormat.OpenXml.Wordprocessing.Color c = new DocumentFormat.OpenXml.Wordprocessing.Color() { ThemeColor = ThemeColorValues.Accent6 };
-                //rp.Append(runFont);
-                //rp.Append(fs);
-                //rp.Append(new DocumentFormat.OpenXml.Wordprocessing.Bold());
-                //rp.Append(c);
-
-                //var run = new DocumentFormat.OpenXml.Wordprocessing.Run(rp, new Text(dr["category_desc"].ToString()));
                 var run = new DocumentFormat.OpenXml.Wordprocessing.Run(new Text(dr["category_desc"].ToString()));
 
                 p = new Paragraph();
@@ -920,7 +908,7 @@ namespace reserve
                 table.Append(tr);
 
                 ttl = new double[4] { 0, 0, 0, 0 };
-                dr2 = Fn_enc.ExecuteReader("sp_app_rvw_comp1 @Param1, @Param2, 1, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), dr["category_id"].ToString() });
+                dr2 = Fn_enc.ExecuteReader("sp_app_rvw_comp1 @Param1, @Param2, @Param3, 1, @Param4", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), dr["category_id"].ToString() });
                 while (dr2.Read())
                 {
                     tr = new DocumentFormat.OpenXml.Wordprocessing.TableRow();

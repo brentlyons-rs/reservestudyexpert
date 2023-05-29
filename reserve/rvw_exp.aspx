@@ -49,9 +49,15 @@
 <form id="frmProject" method="post" runat="server" class="needs-validation">
     <div class="container_fluid" style="width: 100%; max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-            <div class="page-top-tab col-lg-3 float-right">
-                <p class="panel-title-fd">Review&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
+            <div class="page-top-tab-project col-lg-3 float-right">
+                <p class="panel-title-fd">Review<br /><label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
+            <div id="divPnRevisions" runat="server" class="page-top-tab-revision col-lg-2 float-right">
+                <p class="panel-title-fd">
+                    Revision:<br />
+                    <label id="lblRevision" runat="server" class="frm-text"></label>
+                </p>
+           </div>
         </div>
     </div>
     <% if (Session["projectid"].ToString() == "")
@@ -83,7 +89,7 @@
                 Int16 beginYear = 0;
                 double ttl = 0;
 
-                SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select year(report_effective) as yr from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select year(report_effective) as yr from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                 if (dr.Read()) beginYear = Convert.ToInt16(dr["yr"].ToString());
                 dr.Close();
 
@@ -92,7 +98,7 @@
                 DataSet ds = new DataSet();
                 DataTable dt;
                 StringBuilder sb = new StringBuilder();
-                SqlDataAdapter adapter = new SqlDataAdapter("sp_app_rvw_expend " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "'", conn);
+                SqlDataAdapter adapter = new SqlDataAdapter("sp_app_rvw_expend " + Session["firmid"].ToString() + ", '" + Session["projectid"].ToString() + "', " + Session["revisionid"].ToString(), conn);
                 adapter.Fill(ds, "Expenditures");
                 conn.Close();
 

@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace reserve {
-    
-    
-    public partial class rvw_summ {
-        
+namespace reserve
+{
+
+
+    public partial class rvw_summ
+    {
+
         /// <summary>
         /// frmProject control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm frmProject;
-        
+
         /// <summary>
         /// lblProject control.
         /// </summary>
@@ -29,5 +31,23 @@ namespace reserve {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProject;
+
+        /// <summary>
+        /// divPnRevisions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPnRevisions;
+
+        /// <summary>
+        /// lblRevision control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblRevision;
     }
 }

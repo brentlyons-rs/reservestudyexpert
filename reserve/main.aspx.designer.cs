@@ -33,6 +33,24 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProject;
 
         /// <summary>
+        /// divPnRevisions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPnRevisions;
+
+        /// <summary>
+        /// cboRevision control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect cboRevision;
+
+        /// <summary>
         /// divProjManip control.
         /// </summary>
         /// <remarks>
@@ -463,6 +481,15 @@ namespace reserve
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtS2CEMail;
+
+        /// <summary>
+        /// txtRevisionName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtRevisionName;
 
         /// <summary>
         /// txtHdnType control.

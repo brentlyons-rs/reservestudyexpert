@@ -256,13 +256,32 @@
             document.getElementById('MainContent_divCloneStatus').innerHTML = 'Sending to client, please wait...';
             document.forms[0].submit();
         }
+
+        function confirmNewRevision() {
+            if (confirm("Continuing will copy all data (project info, components, projections, etc.) under a new revision. Would you like to continue?") == 1) {
+                document.getElementById('MainContent_txtHdnType').value = 'CreateRevision';
+                document.forms[0].submit();
+            }
+        }
+
+        function changeRevision() {
+            document.getElementById('MainContent_txtHdnType').value = 'ChangeRevision';
+            document.forms[0].submit();
+        }
     </script>  
 <form id="frmProject" runat="server" class="needs-validation">
     <div class="container_fluid" id="container_main" style="max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-            <div class="page-top-tab col-lg-3 float-right">
-                <p class="panel-title-fd">Input page for Reserve Study: <label id="lblProject" runat="server" class="frm-text"></label></p>
+            <div class="page-top-tab-project col-lg-3 float-right">
+                <p class="panel-title-fd">Input page for Reserve Study:&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
+            <div id="divPnRevisions" runat="server" class="page-top-tab-revision col-lg-2 float-right">
+                <p class="panel-title-fd">
+                    Revision:<br />
+                    <select id="cboRevision" runat="server" onchange="changeRevision()"></select>
+                    <button id="btnNewRevision" class="btn-revision showNewRevision" data-toggle="modal" data-target="#mdlNewRevision" data-cat="catg" data-comp="dcmp">+</button>
+                </p>
+           </div>
         </div>
         <div class="input-group text-left col-lg-5 text-nowrap rounded-lg shadow form-inline" id="divProjManip" runat="server" style="margin-bottom: 5px; padding: 0px; margin-top: 3px">
             <input type="text" ID="txtProject" runat="server" class="form-control" placeholder="Search for an existing project" />  
@@ -271,7 +290,7 @@
             &nbsp;or&nbsp;
             <button type="button" class="btn btn-primary" onclick="NewProj()">Create new project</button>
             <% if (txtHdnProject.Value != "-1") { %>
-            &nbsp;<a href="#" class="btn btn-primary showModal" id="cmdLogin" data-toggle="modal" data-target="#mdlNotes" data-cat="catg" data-comp="dcmp">Clone Project</a>
+            &nbsp;<a href="#" class="btn btn-primary showClone" id="cmdLogin" data-toggle="modal" data-target="#mdlNotes" data-cat="catg" data-comp="dcmp">Clone Project</a>
             &nbsp;<a href="#" class="btn btn-primary showSendToClient" id="cmdSendToClient" data-toggle="modal" data-target="#mdlClient" data-cat="catg" data-comp="dcmp">Send to Client</a>
             <div id="divCloneStatus" runat="server" class="frm-text-red"></div>
             <% } %>
@@ -446,7 +465,7 @@
         <script>var iBalloonPage = <%= iBalloonPage %>;</script>
         <!-- #Include virtual="info_balloons.aspx" -->
     </div>
-    <!--Modal: Name-->
+    <!--Modal: Clone Project-->
     <div class="modal fade" id="mdlNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <!--Content-->
@@ -523,16 +542,55 @@
         <!--/.Content-->
       </div>
     </div>
+    <!--Modal: Create new revision-->
+    <div class="modal fade" id="mdlNewRevision" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create new revision</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+              <!--Body-->
+            <div class="modal-body mt-0 mb-0 p-0" style="margin-top: 0px">
+                <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                    <table style="width: 100%">
+                        <tr>
+                            <td><h5 class="text-right">Revision Name:&nbsp;</h5></td>
+                            <td><input type="text" runat="server" class="form-control" id="txtRevisionName" maxlength="100" style="width: 100% !important"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">
+                                <button type="button" id="btnSaveNewRevision" class="btn btn-success" onclick="confirmNewRevision()">Create Revision</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        <!--/.Content-->
+      </div>
+    </div>
     <script>
         var iCurComp = -1;
         $(document).ready(function() {
-            $(".showModal").click(function (e) {
+            $(".showClone").click(function (e) {
                 e.preventDefault();
                 $("#mdlNotes").modal("show");
             });
             $(".showSendToClient").click(function (e) {
                 e.preventDefault();
                 $("#mdlClient").modal("show");
+            });
+            $(".showNewRevision").click(function (e) {
+                e.preventDefault();
+                $("#mdlRevision").modal("show");
             });
         });
     </script>

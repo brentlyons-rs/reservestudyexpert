@@ -115,7 +115,7 @@ namespace reserve
         public void SaveIntervals()
         {
             StringBuilder sVal = new StringBuilder();
-            Fn_enc.ExecuteNonQuery("delete from info_projections_intervals where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            Fn_enc.ExecuteNonQuery("delete from info_projections_intervals where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
             if (chkIntervals.Checked)
             {
                 for (var i = 1; i <= Convert.ToInt16(cboIntervals.Value); i++)
@@ -128,7 +128,7 @@ namespace reserve
                     if (i == 5) sVal.Append(cboI5.Value);
                     if (i == 6) sVal.Append(cboI6.Value);
 
-                    Fn_enc.ExecuteNonQuery("insert into info_projections_intervals (firm_id, project_id, interval_id, interval_value) select @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), i.ToString(), sVal.ToString() });
+                    Fn_enc.ExecuteNonQuery("insert into info_projections_intervals (firm_id, project_id, revision_id, interval_id, interval_value) select @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), i.ToString(), sVal.ToString() });
                 }
             }
             lblIntStatus.InnerHtml = "Successfully updated intervals.";
@@ -140,7 +140,7 @@ namespace reserve
             //chkDisp1.Checked = false;
             //chkDisp2.Checked = false;
             //chkDisp3.Checked = false;
-            SqlDataReader dr = Fn_enc.ExecuteReader("select current_funding_hidden, full_funding_hidden, baseline_funding_hidden, current_pct_funded_hidden, full_pct_funded_hidden, baseline_pct_funded_hidden, threshold1_pct_funded_hidden, threshold2_pct_funded_hidden from info_project_info where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("select current_funding_hidden, full_funding_hidden, baseline_funding_hidden, current_pct_funded_hidden, full_pct_funded_hidden, baseline_pct_funded_hidden, threshold1_pct_funded_hidden, threshold2_pct_funded_hidden from info_project_info where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
             if (dr.Read())
             {
                 if ((dr["current_funding_hidden"] != null) && (dr["current_funding_hidden"].ToString().ToLower() == "true")) chkDisp1.Checked = false;
@@ -181,7 +181,7 @@ namespace reserve
                 if (i>4) cboI5.Items.Add(new ListItem("Year " + i.ToString(), i.ToString()));
                 if (i>5) cboI6.Items.Add(new ListItem("Year " + i.ToString(), i.ToString()));
             }
-            SqlDataReader dr = Fn_enc.ExecuteReader("select * from info_projections_intervals where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("select * from info_projections_intervals where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
             while (dr.Read())
             {
                 if (dr["interval_id"].ToString() == "1") cboI1.Value = dr["interval_value"].ToString();
@@ -217,6 +217,17 @@ namespace reserve
                 dr.Close();
             }
 
+            if (Session["revisionid"] != null && lblRevision.InnerHtml == "")
+            {
+                SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_revision_info @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
+
+                if (dr.Read())
+                {
+                    lblRevision.InnerHtml = $"{Session["revisionid"]}: {DateTime.Parse(dr["revision_created_date"].ToString()).ToString("MM/dd/yyyy")}";
+                }
+                dr.Close();
+            }
+
             if (txtHdnType.Value=="Intervals") SaveIntervals();
 
             LoadIntervals();
@@ -236,15 +247,15 @@ namespace reserve
                         inflation.Append(txtInflation.Value);
                     else
                         inflation.Append("0");
-                    Fn_enc.ExecuteNonQuery("update info_project_info set interest=" + interest.ToString() + ", inflation=" + inflation.ToString() + " where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                    Fn_enc.ExecuteNonQuery("update info_project_info set interest=" + interest.ToString() + ", inflation=" + inflation.ToString() + " where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                 }
-                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                GoalSeek.GenerateProjections(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), Session["userid"].ToString());
             }
 
             if (txtHdnType.Value == "Threshold1")
             {
-                Fn_enc.ExecuteNonQuery($"update info_project_info set threshold1_used=1, threshold1_value=@Param1 where firm_id=@Param2 and project_id=@Param3", new string[] { txtThreshold1Val.Value, Session["firmid"].ToString(), Session["projectid"].ToString() });
-                GoalSeek.GenerateThresholdType1(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString());
+                Fn_enc.ExecuteNonQuery($"update info_project_info set threshold1_used=1, threshold1_value=@Param1 where firm_id=@Param2 and project_id=@Param3 and revision_id=@Param4", new string[] { txtThreshold1Val.Value, Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
+                GoalSeek.GenerateThresholdType1(Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), Session["userid"].ToString());
             }
         }
 
