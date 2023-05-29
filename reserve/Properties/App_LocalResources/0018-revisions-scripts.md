@@ -635,7 +635,7 @@ end;
 
 update @Totals set year_id=year_id+@rpt_effective-2
 
-delete from info_projections where firm_id=@firm and project_id=@project
+delete from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision
 insert into info_projections (firm_id, project_id, revision_id, year_id, annual_exp, interest, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, ext_res_cur_year, full_fund_bal)
 select @firm, @project, @revision, year_id, annual_exp, interest, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, ext_res_cur_year, full_fund_bal from @Totals
 GO
@@ -697,3 +697,76 @@ where i.firm_id=@firm and i.project_id=@project and i.revision_id=@revision
 select year_id, convert(decimal(10,2),pct_increase) as pct_increase, format(tfa2_annual_contr,'C0') as contrib, format(tfa2_res_fund_bal,'$#,##0; -$#,##0') as bal from @Totals
 GO
 
+
+------------------------------
+ALTER procedure [dbo].[sp_app_pre_finalize] @firm smallint, @project nvarchar(10), @revision smallint as
+
+select ipi.project_type_id, lpt.template_name,
+	case when (select firm_id from info_project_info where firm_id=@firm and project_id=@project and revision_id=@revision) is null then 'Missing' else 'Present' end as project_info,
+	case when (select top 1 firm_id from info_components where firm_id=@firm and project_id=@project and revision_id=@revision) is null then 'Missing' else 'Present' end as component_info,
+	case when (select top 1 firm_id from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision) is null then 'Missing' else 'Present' end as projection_info,
+	case when ipi.threshold1_used=1 and ipi.threshold2_used=1 then 'MultiThresholds' else 'Good' end as threshold_types
+	from info_project_info ipi 
+	left join lkup_project_types lpt on ipi.firm_id=lpt.firm_id and ipi.project_type_id=lpt.project_type_id
+	where ipi.firm_id=@firm and ipi.project_id=@project and ipi.revision_id=@revision
+GO
+
+------------------------------
+ALTER procedure [dbo].[sp_app_create_word] @firm smallint, @project nvarchar(10), @revision smallint as
+
+select 
+lf.firm_name_word, i.project_name, lpt.friendly_desc as project_type_desc, ipi.inspection_date, ipi.site_city, ls2.state_name as site_state, ipi.prev_date, ipi.source_begin_balance,
+ipi.project_id, ipi.project_mgr, ipi.project_type_id, ipi.contact_prefix, ipi.contact_name, ipi.association_name, ipi.client_addr1, ipi.client_city, ls.state_name as client_state, ipi.client_zip, ipi.contact_prefix, ipi.age_community, ipi.num_units, ipi.num_bldgs, ipi.num_floors, ipi.inspection_date, ipi.contact_title, ipi.prev_preparer,
+ipi.current_contrib, ipi.begin_balance, ipi.prev_recomm_cont, 
+case when isnull(ipi.threshold1_used,0)=1 or isnull(ipi.threshold2_used,0)=1 then convert(bit,1) else convert(bit,0) end as threshold_used, 
+isnull(ipi.threshold1_used,0) as threshold1_used, 
+isnull(ipi.threshold2_used,0) as threshold2_used,
+ipi.threshold1_value, ipi.report_effective,
+isnull(ipi.current_funding_hidden,convert(bit,0)) as current_funding_hidden, isnull(ipi.full_funding_hidden,convert(bit,0)) as full_funding_hidden, isnull(ipi.baseline_funding_hidden,convert(bit,0)) as baseline_funding_hidden,
+(select sum(((ic.comp_quantity*ic.unit_cost)/ic.est_useful_life)*(ic.est_useful_life-ic.est_remain_useful_life)) from info_components ic where firm_id=@firm and project_id=@project and revision_id=@revision and year_id=1) as full_fund_bal,
+iprj.cfa_annual_contrib, iprj.ffa_avg_req_annual_contr, iprj.bfa_annual_contr, 
+case when ipi.threshold1_used=1 then isnull(iprj.tfa_annual_contr,0) else isnull(iprj.tfa2_annual_contr,0) end as tfa_annual_contr,
+(select min(year_id) from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision and year_id<>year(ipi.report_effective)) as year2, 
+iprj30.year_id as year30, iprj30.ffa_avg_req_annual_contr as year30avgcontr, iprj29.ffa_req_annual_contr as year29contr, iprj30.ffa_req_annual_contr as year30contr,
+(select min(cfa_reserve_fund_bal) from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision) as min_cfa_bal,
+(select min(ffa_res_fund_bal) from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision) as min_ffa_bal,
+isnull((select case when ipi.threshold1_used=1 then min(tfa_res_fund_bal) else min(tfa2_res_fund_bal) end from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision),0) as min_tfa_bal,
+lpt.template_name,
+isnull(ipi.interest,0) as interest, isnull(ipi.inflation,0) as inflation
+from info_project_info ipi
+inner join info_projects i on ipi.firm_id=i.firm_id and ipi.project_id=i.project_id
+inner join lkup_firms lf on ipi.firm_id=lf.firm_id
+left join info_projections iprj on i.firm_id=iprj.firm_id and i.project_id=iprj.project_id and iprj.revision_id=@revision and iprj.year_id=year(ipi.report_effective)
+left join info_projections iprj29 on i.firm_id=iprj29.firm_id and i.project_id=iprj29.project_id and iprj29.revision_id=@revision and iprj29.year_id=(select max(year_id) from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision)-1
+left join info_projections iprj30 on i.firm_id=iprj30.firm_id and i.project_id=iprj30.project_id and iprj30.revision_id=@revision and iprj30.year_id=(select max(year_id) from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision)
+left join lkup_project_types lpt on ipi.firm_id=lpt.firm_id and ipi.project_type_id=lpt.project_type_id
+left join lkup_states ls on ipi.firm_id=ls.firm_id and ipi.client_state=ls.state_abbr
+left join lkup_states ls2 on ipi.firm_id=ls2.firm_id and ipi.site_state=ls2.state_abbr
+where ipi.firm_id=@firm and ipi.project_id=@project and ipi.revision_id=@revision
+GO
+
+------------------------------
+ALTER procedure [dbo].[sp_app_word_projections] @firm smallint, @project nvarchar(10), @revision smallint, @threshold_type smallint as
+
+select year_id, annual_exp, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, bfa_res_fund_bal, bfa_annual_contr,
+case when @threshold_type=1 then tfa_annual_contr else tfa2_annual_contr end as tfa_annual_contr,
+case when @threshold_type=1 then tfa_res_fund_bal else tfa2_res_fund_bal end as tfa_res_fund_bal
+from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision
+GO
+
+------------------------------
+ALTER procedure [dbo].[sp_app_notes] @firm smallint, @project nvarchar(10), @revision smallint, @category smallint as
+
+if @category=-1
+	select  ici.image_bytes, ici.image_comments, isnull(len(ici.image_bytes),0) as img_size, isnull(ic.comp_note,'') as comp_note
+	from info_components_images ici
+	left join info_components ic on ici.firm_id=ic.firm_id and ici.project_id=ic.project_id and ici.revision_id=ic.revision_id and ici.category_id=ic.category_id and ici.component_id=ic.component_id
+	where ici.firm_id=@firm and ici.project_id=@project and ici.revision_id=@revision
+	order by ici.category_id
+else
+	select  ici.image_bytes, ici.image_comments, isnull(len(ici.image_bytes),0) as img_size, isnull(ic.comp_note,'') as comp_note
+	from info_components_images ici
+	left join info_components ic on ici.firm_id=ic.firm_id and ici.project_id=ic.project_id and ici.revision_id=ic.revision_id and ici.category_id=ic.category_id and ici.component_id=ic.component_id
+	where ici.firm_id=@firm and ici.project_id=@project and ici.revision_id=@revision and ici.category_id=@category
+
+------------------------------
