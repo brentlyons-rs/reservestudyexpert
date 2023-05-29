@@ -185,7 +185,7 @@ body
 
 <div class="container_fluid" style="max-width: 100%">
     <div class="row float-right" style="margin-top: -4px; margin-left: -2px; margin-bottom: 10px">
-        <div class="page-top-tab col-lg-3 float-right">
+        <div class="page-top-tab-project col-lg-3 float-right">
             <p class="panel-title-fd">Admin | Table Maintenance</p>
         </div>
     </div>

@@ -106,7 +106,7 @@
 <form id="frmUsers" name="frmUsers" method="POST" action="admin_users.aspx" runat="server" autocomplete="off">
 <div class="container_fluid" style="width: 100%; max-width: 100%">
     <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
-        <div class="page-top-tab col-lg-3 float-right">
+        <div class="page-top-tab-project col-lg-3 float-right">
             <p class="panel-title-fd">Admin | User Administration</p>
         </div>
     </div>
