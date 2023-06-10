@@ -355,7 +355,7 @@
                     <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtRE" placeholder="mm/dd/yyyy"></td>
 
                     <td class="form-inline text-right"><%= reserve.GenerateInfoBalloons.GetIcon(2,"Geo Factor","green") %><label class="frm-text">Geo. factor:</label></td>
-                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtGF" onkeypress="return isNumber(event)"></td>
+                    <td class="form-inline" colspan="3"><input type="text" class="form-control" runat="server" id="txtGF" onkeypress="return isNumber(event)"><input id="txtHdnGF" type="hidden" runat="server" /></td>
                 </tr>
                 <tr>
                     <td class="form-inline text-right"><%= reserve.GenerateInfoBalloons.GetIcon(3,"Interest","green") %><label class="frm-text">Interest:</label></td>

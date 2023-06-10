@@ -350,12 +350,28 @@ namespace reserve
             {
                 try
                 {
+                    var status = "";
                     Fn_enc.ExecuteNonQuery("update info_projects set project_name=@Param1, last_updated_by=@Param2, last_updated_date=GetDate() where firm_id=@Param3 and project_id=@Param4", new string[] { txtPN.Value, Session["userid"].ToString(), Session["firmid"].ToString(), txtHdnProject.Value });
                     sql.Append("update info_project_info set project_mgr=@Param1,project_type_id=@Param2,report_effective=@Param3,begin_balance=@Param4,current_contrib=@Param5,age_community=@Param6,geo_factor=@Param7,num_units=@Param8,num_bldgs=@Param9,num_floors=@Param10,contact_prefix=@Param11,contact_name=@Param12,contact_title=@Param13,contact_phone=@Param14,association_name=@Param15,client_city=@Param16,client_zip=@Param17,client_addr1=@Param18,client_addr2=@Param19,client_state=@Param20,site_addr1=@Param21,site_city=@Param22,site_zip=@Param23,site_addr2=@Param24,site_state=@Param25,prev_preparer=@Param26,prev_recomm_cont=@Param27,inspection_date=@Param28,interest=@Param29,inflation=@Param30,contact_email=@Param31,source_prefix=@Param32,source_name=@Param33,source_title=@Param34,last_updated_by=@Param35,prev_date=@Param36,source_begin_balance=@Param37,last_updated_date=GetDate() ");
                     sql.Append("where firm_id=@Param38 and project_id=@Param39 and revision_id=@Param40");
                     var prm = new string[40] { txtPM.Value, cboPT.Value, txtRE.Value, txtBB.Value, txtCC.Value, txtAoC.Value, txtGF.Value, txtNU.Value, txtNB.Value, txtNF.Value, cboCP.Value, txtCN.Value, txtCT.Value, txtCP.Value, txtCoN.Value, txtClC.Value, txtClZ.Value, txtClA1.Value, txtClA2.Value, cboCS.Value, txtSA1.Value, txtSC.Value, txtSZ.Value, txtSA2.Value, cboSS.Value, txtPP.Value, txtPRC.Value, txtID.Value, txtInt.Value, txtInf.Value, txtCE.Value, cboSP.Value, txtSN.Value, txtST.Value, Session["userid"].ToString(), txtPSD.Value, txtSBB.Value, Session["firmid"].ToString(), txtHdnProject.Value, cboRevision.Value };
                     Fn_enc.ExecuteNonQuery(sql.ToString(), prm);
-                    lblSaveStatus.InnerHtml = "Successfully updated project.";
+                    status = "Successfully updated project info.";
+                    // Check if the geo factor changed. If so, we need to update all components' unit
+                    // costs to reflect the new geo factor.
+                    if (txtGF.Value != txtHdnGF.Value)
+                    {
+                        try
+                        {
+                            Fn_enc.ExecuteNonQuery("sp_app_project_geofactor @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtGF.Value });
+                            status += " Successfully updated all applicable component unit costs based on new geo factor.";
+                        }
+                        catch (Exception ex)
+                        {
+                            status += $" Warning: unable to update component unit costs based on new geo factor: {ex}";
+                        }
+                    }
+                    lblSaveStatus.InnerHtml = status;
                     txtHdnProject.Value = txtPID.Value;
                 }
                 catch (Exception ex)
@@ -382,6 +398,7 @@ namespace reserve
                 txtCC.Value = dr["current_contrib"].ToString();
                 txtAoC.Value = dr["age_community"].ToString();
                 txtGF.Value = dr["geo_factor"].ToString();
+                txtHdnGF.Value = dr["geo_factor"].ToString();
                 txtNU.Value = dr["num_units"].ToString();
                 txtNB.Value = dr["num_bldgs"].ToString();
                 txtNF.Value = dr["num_floors"].ToString();
