@@ -558,7 +558,7 @@
                 <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
                     <table style="width: 100%">
                         <tr>
-                            <td><h5 class="text-right">Revision Name:&nbsp;</h5></td>
+                            <td valign="top" width="25%"><h5 class="text-right">Revision Description:&nbsp;</h5></td>
                             <td><textarea runat="server" class="form-control" id="txtRevisionDesc" name="txtRevisionDesc" rows="8" style="width: 100% !important"></textarea></td>
                         </tr>
                         <tr>
