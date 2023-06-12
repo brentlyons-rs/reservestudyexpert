@@ -492,13 +492,13 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtS2CEMail;
 
         /// <summary>
-        /// txtRevisionName control.
+        /// txtRevisionDesc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtRevisionName;
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea txtRevisionDesc;
 
         /// <summary>
         /// txtHdnType control.

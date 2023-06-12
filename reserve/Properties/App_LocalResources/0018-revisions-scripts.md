@@ -3,7 +3,7 @@ CREATE TABLE [dbo].[info_projects_revisions](
 	[firm_id] [smallint] NOT NULL,
 	[project_id] [nvarchar](10) NOT NULL,
 	[revision_id] [smallint] NOT NULL,
-	[revision_name] [nvarchar](50) NULL,
+	[revision_desc] [nvarchar](MAX) NULL,
 	[revision_created_date] [datetime] NULL,
 	[revision_created_by] [smallint] NULL,
  CONSTRAINT [PK_info_projects_revisions] PRIMARY KEY CLUSTERED 
@@ -65,7 +65,7 @@ else
 				insert into info_projections_intervals (firm_id, project_id, revision_id, interval_id, interval_value) 
 					select firm_id, project_id, @new_revision_id, interval_id, interval_value from info_projections_intervals where firm_id=@firm and project_id=@project_id and revision_id=@current_revision_id
 				insert into info_projections (firm_id, project_id, revision_id, year_id, annual_exp, interest, cfa_annual_contrib_user_entered, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, pct_increase, tfa2_annual_contr_user_entered, tfa2_annual_contr, tfa2_res_fund_bal, full_fund_bal, generated_by, generated_date) 
-					select firm_id, project_id, @new_revision_id, year_id, annual_exp, interest, cfa_annual_contrib_user_entered, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, pct_increase, tfa2_annual_contr_user_entered, tfa2_annual_contr, tfa2_res_fund_bal, full_fund_bal, @user, getdate() from info_projections where firm_id=@firm and project_id=project_id and revision_id=@current_revision_id
+					select firm_id, project_id, @new_revision_id, year_id, annual_exp, interest, cfa_annual_contrib_user_entered, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, pct_increase, tfa2_annual_contr_user_entered, tfa2_annual_contr, tfa2_res_fund_bal, full_fund_bal, @user, getdate() from info_projections where firm_id=@firm and project_id=@project_id and revision_id=@current_revision_id
 			end try
 			begin catch
 				SELECT 'Error' as status_info, ERROR_MESSAGE() AS error_desc;
@@ -79,8 +79,8 @@ else
 				select 'Success' as status_info, '' as error_desc, @new_revision_id as revision_id
 			end
 	END
-GO
 
+GO
 ------------------------------
 ALTER procedure [dbo].[sp_app_project_info] (@firmid smallint, @projid nvarchar(15), @revisionid smallint) as
 

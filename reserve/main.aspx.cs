@@ -136,7 +136,7 @@ namespace reserve
 
         public void SaveNewRevision()
         {
-            var dr = Fn_enc.ExecuteReader("sp_app_create_revision @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), "", Session["userid"].ToString() });
+            var dr = Fn_enc.ExecuteReader("sp_app_create_revision @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtRevisionDesc.Value, Session["userid"].ToString() });
             if (dr.Read())
             {
                 if (dr["status_info"].ToString() == "Error")

@@ -559,7 +559,7 @@
                     <table style="width: 100%">
                         <tr>
                             <td><h5 class="text-right">Revision Name:&nbsp;</h5></td>
-                            <td><input type="text" runat="server" class="form-control" id="txtRevisionName" maxlength="100" style="width: 100% !important"></td>
+                            <td><textarea runat="server" class="form-control" id="txtRevisionDesc" name="txtRevisionDesc" rows="8" style="width: 100% !important"></textarea></td>
                         </tr>
                         <tr>
                             <td></td>
