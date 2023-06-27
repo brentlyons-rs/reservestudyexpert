@@ -81,13 +81,13 @@ namespace reserve
             conn.Close();
         }
 
-        public static void GenerateProjections(string firmID, string projectID, string revisionID, string userID)
+        public static void GenerateProjections(string firmID, string projectID, string revisionID, string userID, bool keepEdits=true)
         {
             //Step 1a: check if intervals exist
             bool blIntervals = false;
             
             //Step 1: execute the stored proc to generate all the initial numbers
-            Fn_enc.ExecuteNonQuery("sp_app_rvw_proj1 @Param1, @Param2, @Param3", new string[] { firmID, projectID, revisionID });
+            Fn_enc.ExecuteNonQuery("sp_app_rvw_proj1 @Param1, @Param2, @Param3, @Param4", new string[] { firmID, projectID, revisionID, keepEdits ? "1" : "0" });
             //Step 2a: create a dataset that we can update locally
             double beginBal = 0;
             double threshold1Value = 0;

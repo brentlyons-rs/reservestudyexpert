@@ -126,7 +126,7 @@ else
 ------------------------------
 create procedure [dbo].[sp_app_revision_info] (@firmid smallint, @projid nvarchar(15), @revisionid smallint) as
 
-select ipr.revision_id, ipr.revision_name, au.first_name + ' ' + au.last_name as created_by, ipr.revision_created_date
+select ipr.revision_id, ipr.revision_desc, au.first_name + ' ' + au.last_name as created_by, ipr.revision_created_date
 from info_projects_revisions ipr
 left join app_users au on ipr.firm_id=au.firm_id and ipr.revision_created_by=au.user_id
 where ipr.firm_id=@firmid and ipr.project_id=@projid and ipr.revision_id=@revisionid

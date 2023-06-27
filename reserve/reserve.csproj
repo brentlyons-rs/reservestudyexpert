@@ -261,6 +261,9 @@
     <Content Include="Main.Master" />
     <Content Include="Properties\App_LocalResources\readme.md" />
     <Content Include="Properties\App_LocalResources\0019-geofactor-scripts.md" />
+    <Content Include="Properties\App_LocalResources\0020_refreshprojections-scripts.md">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </Content>
     <None Include="Properties\PublishProfiles\crossovertechnology.org - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Production %28VPS%29.pubxml" />
     <None Include="Properties\PublishProfiles\Production.pubxml" />

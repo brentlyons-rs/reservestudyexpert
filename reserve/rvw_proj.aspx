@@ -204,7 +204,13 @@
                                     }
                                     dr.Close();
 
+                                    if (blGen)
+                                    {
                                 %>
+
+                                <input type="radio" id="rdoGenerate1" name="rdoGenerate" runat="server" checked />&nbsp;<label id="lblGenerate1" for="MainContent_rdoGenerate1" class="frm-text">Keep manual edits</label>
+                                <input type="radio" id="rdoGenerate2" name="rdoGenerate" runat="server" />&nbsp;<label id="lblGenerate2" for="MainContent_rdoGenerate2" class="frm-text">Override all manual edits</label>
+                                <% } %>
                                 <button type="button" class="btn btn-primary" onclick="checkExisting('<%=blGen %>')">Generate Projections</button>
                                 <%= reserve.GenerateInfoBalloons.GetIcon(25,"Generate Projections","green") %><br />
                                 <table>
