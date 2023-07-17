@@ -347,10 +347,17 @@ catch (trymicrosoft) {
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode != 46 && charCode != 190 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
+        // 8: backspace
+        // 9: tab
+        // 37: left
+        // 39: right
+        // 46: period
+        // 48-57: numbers
+        var allowableCodes = new Array(8, 9, 37, 39, 46, 190);
+        if (allowableCodes.includes(charCode) || (charCode > 47 && charCode < 58)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     function getCaretPosition(oField) {
@@ -534,19 +541,19 @@ catch (trymicrosoft) {
 	    </tr>
         <tr class="hideClient">
             <td class="gridrow_wt"><a href="#" onclick="saveNew()"><img src="images/tm_save.jpg" border="0" align="absmiddle"></a></td>
-            <td class="gridrow_wt"><input type="text" ID="txt0_0" name="txt0_0" class="gridrow_txtbox2 Component" onkeydown="chkKeybd(this, event,0,0)"/></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_1" name="txt0_1" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,1); return isNumber(event)"></td>
+            <td class="gridrow_wt"><input type="text" ID="txt0_0" name="txt0_0" class="gridrow_txtbox2 Component"></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_1" name="txt0_1" class="gridrow_txtbox2" onkeydown="return isNumber(event)"></td>
             <td class="gridrow_wt" style="display: <%=sPP%>" nowrap><input type="checkbox" id="chkPP0" name="chkPP0" onclick="togglePP(0)" /></td>
-            <td class="gridrow_wt" style="display: <%=sPP%>" nowrap><input type="text" id="txt0_2" name="txt0_2" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,2); return isNumber(event)"></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_3" name="txt0_3" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,3);"></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_4" name="txt0_4" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,4); return isNumber(event)" onblur="calcRow(0)"></td>
-            <td class="gridrow_wt"><input type="checkbox" id="txt0_5" name="txt0_5" onkeydown="chkKeybd(this, event,0,5)" onclick="calcRow(0)" /></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_6" name="txt0_6" class="gridrow_txtbox2" style="background-color: #e3f7ff" onkeydown="chkKeybd(this, event,0,6); return isNumber(event)"></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_7" name="txt0_7" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,7); return isNumber(event)"></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_8" name="txt0_8" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,8); return isNumber(event)"></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_9" name="txt0_9" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,9); return isNumber(event)"></td>
-            <td class="gridrow_wt"><input type="checkbox" id="txt0_10" name="txt0_10" onkeydown="chkKeybd(this, event,0,10)" /></td>
-            <td class="gridrow_wt"><input type="text" id="txt0_11" name="txt0_11" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,0,11)"></td>
+            <td class="gridrow_wt" style="display: <%=sPP%>" nowrap><input type="text" id="txt0_2" name="txt0_2" class="gridrow_txtbox2" onkeydown="return isNumber(event)"></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_3" name="txt0_3" class="gridrow_txtbox2"></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_4" name="txt0_4" class="gridrow_txtbox2" onkeydown="return isNumber(event)" onblur="calcRow(0)"></td>
+            <td class="gridrow_wt"><input type="checkbox" id="txt0_5" name="txt0_5" onclick="calcRow(0)" /></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_6" name="txt0_6" class="gridrow_txtbox2" style="background-color: #e3f7ff" onkeydown="return isNumber(event)"></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_7" name="txt0_7" class="gridrow_txtbox2" onkeydown="return isNumber(event)"></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_8" name="txt0_8" class="gridrow_txtbox2" onkeydown="return isNumber(event)"></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_9" name="txt0_9" class="gridrow_txtbox2" onkeydown="return isNumber(event)"></td>
+            <td class="gridrow_wt"><input type="checkbox" id="txt0_10" name="txt0_10"></td>
+            <td class="gridrow_wt"><input type="text" id="txt0_11" name="txt0_11" class="gridrow_txtbox2"></td>
             <td class="gridrow_wt"><a href="#" onclick="saveNew()"><img src="images/tm_save.jpg" border="0" align="absmiddle"></a></td>
         </tr>
     </table>
@@ -586,48 +593,48 @@ catch (trymicrosoft) {
             <td id="<%=dr["component_id"].ToString() %>" nowrap class="gridrow_wt clientHide" bgcolor=#f8f8f8 align=center nowrap><a id="aDel<%=iRow %>" href="javascript: checkDel(<%=iRow %>)" style="display: <% if (dr["year_id"].ToString() == cboYear.Value) { Response.Write("block"); } else { Response.Write("none"); } %>"><img src="images/x_white.jpg" border=0 alt="Delete" align="absmiddle"></a></td>
             <td nowrap class="gridrow_wt" bgcolor=#f8f8f8 align=center nowrap id="rowHdr<%=iRow %>"></td>
             <td class="gridrow_wt">
-                <input type="text" ID="txt<%=iRow %>_0" name="txt<%=iRow %>_0" value="<%=dr["component_desc"].ToString() %>" class="gridrow_txtbox2 Component clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,0)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('component_desc','textbox',<%=iRow %>, 0)" />
+                <input type="text" ID="txt<%=iRow %>_0" name="txt<%=iRow %>_0" value="<%=dr["component_desc"].ToString() %>" class="gridrow_txtbox2 Component clientDis" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('component_desc','textbox',<%=iRow %>, 0)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_0" name="hdnAnswer<%=iRow %>_0" value="<%=dr["component_desc"].ToString() %>" />
                 <input type="hidden" id="txtHdnCompID<%=iRow %>" name="txtHdnCompID<%=iRow %>" value="<%=dr["component_id"].ToString() %>" />
             </td>
             <td class="gridrow_wt">
-                <input type="text" ID="txt<%=iRow %>_1" name="txt<%=iRow %>_1" value="<%=dr["comp_quantity"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,1); return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('comp_quantity','textbox',<%=iRow %>, 1)" />
+                <input type="text" ID="txt<%=iRow %>_1" name="txt<%=iRow %>_1" value="<%=dr["comp_quantity"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('comp_quantity','textbox',<%=iRow %>, 1)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_1" name="hdnAnswer<%=iRow %>_1" value="<%=dr["comp_quantity"].ToString() %>" />
             </td>
 
             <td class="gridrow_wt clientHide" style="display: <%=sPP%>" nowrap>
-                <input type="checkbox" ID="chkPP<%=iRow %>" name="chkPP<%=iRow %>" <% if ((dr["plus_pct"].ToString() != "") && (dr["plus_pct"].ToString() != "0")) Response.Write("checked"); %> class="clientDis" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onkeydown="chkKeybd(this, event,<%=iRow %>,2)" onclick="togglePP(<%=iRow %>)" onblur="UpdateRowHeader(<%=iRow %>,'None')" />
+                <input type="checkbox" ID="chkPP<%=iRow %>" name="chkPP<%=iRow %>" <% if ((dr["plus_pct"].ToString() != "") && (dr["plus_pct"].ToString() != "0")) Response.Write("checked"); %> class="clientDis" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onclick="togglePP(<%=iRow %>)" onblur="UpdateRowHeader(<%=iRow %>,'None')" />
             </td>
             <td class="gridrow_wt clientHide" style="display: <%=sPP%>" nowrap>
-                <input type="text" ID="txt<%=iRow %>_2" name="txt<%=iRow %>_2" value="<% if ((dr["plus_pct"].ToString() != "") && (dr["plus_pct"].ToString() != "0")) Response.Write(dr["plus_pct"].ToString()); %>" class="gridrow_txtbox2 clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,2)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('plus_pct','textbox',<%=iRow %>, 2)" />
+                <input type="text" ID="txt<%=iRow %>_2" name="txt<%=iRow %>_2" value="<% if ((dr["plus_pct"].ToString() != "") && (dr["plus_pct"].ToString() != "0")) Response.Write(dr["plus_pct"].ToString()); %>" class="gridrow_txtbox2 clientDis" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('plus_pct','textbox',<%=iRow %>, 2)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_2" name="hdnAnswer<%=iRow %>_2" value="<%= dr["plus_pct"].ToString() %>" />
             </td>
 
             <td class="gridrow_wt">
-                <input type="text" ID="txt<%=iRow %>_3" name="txt<%=iRow %>_3" value="<%=dr["comp_unit"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,3)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('comp_unit','textbox',<%=iRow %>, 3)" />
+                <input type="text" ID="txt<%=iRow %>_3" name="txt<%=iRow %>_3" value="<%=dr["comp_unit"].ToString() %>" class="gridrow_txtbox2 clientDis" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('comp_unit','textbox',<%=iRow %>, 3)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_3" name="hdnAnswer<%=iRow %>_3" value="<%=dr["comp_unit"].ToString() %>" />
             </td>
             <td class="gridrow_wt">
-                <input type="text" ID="txt<%=iRow %>_4" name="txt<%=iRow %>_4" value="<%=dr["base_unit_cost"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,4); return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('base_unit_cost','textbox',<%=iRow %>, 4)" />
+                <input type="text" ID="txt<%=iRow %>_4" name="txt<%=iRow %>_4" value="<%=dr["base_unit_cost"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('base_unit_cost','textbox',<%=iRow %>, 4)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_4" name="hdnAnswer<%=iRow %>_4" value="<%=dr["base_unit_cost"].ToString() %>" />
             </td>
             <td class="gridrow_wt clientHide">
-                <input type="checkbox" ID="txt<%=iRow %>_5" name="txt<%=iRow %>_5" <%= Convert.ToBoolean(dr["geo_factor"].ToString()) == true ? "checked" : "" %> class="clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,5)" onclick="UpdateRowHeader(<%=iRow %>, 'Edit'); calcRow(<%=iRow%>); CheckRowChanges('geo_factor','checkbox',<%=iRow %>, 5)" onblur="UpdateRowHeader(<%=iRow %>,'None')" />
+                <input type="checkbox" ID="txt<%=iRow %>_5" name="txt<%=iRow %>_5" <%= Convert.ToBoolean(dr["geo_factor"].ToString()) == true ? "checked" : "" %> class="clientDis" onclick="UpdateRowHeader(<%=iRow %>, 'Edit'); calcRow(<%=iRow%>); CheckRowChanges('geo_factor','checkbox',<%=iRow %>, 5)" onblur="UpdateRowHeader(<%=iRow %>,'None')" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_5" name="hdnAnswer<%=iRow %>_5" value="<%=Convert.ToBoolean(dr["geo_factor"].ToString()) == true ? "1" : "0" %>" />
             </td>
 
             <td class="gridrow_wt">
-                <input type="text" ID="txt<%=iRow %>_6" name="txt<%=iRow %>_6" value="<%=dr["unit_cost"].ToString() %>" class="gridrow_txtbox2" style="background-color: #e3f7ff" onkeydown="chkKeybd(this, event,<%=iRow %>,6); return isNumber(event); calcRow(<%=iRow %>)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('unit_cost','textbox',<%=iRow %>, 6)" />
+                <input type="text" ID="txt<%=iRow %>_6" name="txt<%=iRow %>_6" value="<%=dr["unit_cost"].ToString() %>" class="gridrow_txtbox2" style="background-color: #e3f7ff" onkeydown="return isNumber(event); calcRow(<%=iRow %>)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('unit_cost','textbox',<%=iRow %>, 6)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_6" name="hdnAnswer<%=iRow %>_6" value="<%=dr["unit_cost"].ToString() %>" />
             </td>
 
 
             <td class="gridrow_wt">
-                <input type="text" ID="txt<%=iRow %>_7" name="txt<%=iRow %>_7" value="<%=dr["est_useful_life"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,7); return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('est_useful_life','textbox',<%=iRow %>, 7)" />
+                <input type="text" ID="txt<%=iRow %>_7" name="txt<%=iRow %>_7" value="<%=dr["est_useful_life"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('est_useful_life','textbox',<%=iRow %>, 7)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_7" name="hdnAnswer<%=iRow %>_7" value="<%=dr["est_useful_life"].ToString() %>" />
             </td>
             <td class="gridrow_wt">
-                <input type="text" ID="txt<%=iRow %>_8" name="txt<%=iRow %>_8" value="<%=dr["est_remain_useful_life"].ToString() %>" class="gridrow_txtbox2" onkeydown="chkKeybd(this, event,<%=iRow %>,8); return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('est_remain_useful_life','textbox',<%=iRow %>, 8)" />
+                <input type="text" ID="txt<%=iRow %>_8" name="txt<%=iRow %>_8" value="<%=dr["est_remain_useful_life"].ToString() %>" class="gridrow_txtbox2" onkeydown="return isNumber(event)" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('est_remain_useful_life','textbox',<%=iRow %>, 8)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_8" name="hdnAnswer<%=iRow %>_8" value="<%=dr["est_remain_useful_life"].ToString() %>" />
             </td>
             <td class="gridrow_wt">
@@ -635,11 +642,11 @@ catch (trymicrosoft) {
                 <input type="hidden" id="hdnAnswer<%=iRow %>_9" name="hdnAnswer<%=iRow %>_9" value="<%=dr["comp_note"].ToString() %>" />
             </td>
             <td class="gridrow_wt clientHide">
-                <input type="checkbox" ID="txt<%=iRow %>_10" name="txt<%=iRow %>_10" <%= Convert.ToBoolean(dr["comp_value"].ToString()) == true ? "checked" : "" %> class="clientDis" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onkeydown="chkKeybd(this, event,<%=iRow %>,10)" onclick="CheckRowChanges('comp_value','checkbox',<%=iRow %>, 10)" onblur="UpdateRowHeader(<%=iRow %>,'None')" />
+                <input type="checkbox" ID="txt<%=iRow %>_10" name="txt<%=iRow %>_10" <%= Convert.ToBoolean(dr["comp_value"].ToString()) == true ? "checked" : "" %> class="clientDis" onfocus="UpdateRowHeader(<%=iRow %>,'Edit');" onclick="CheckRowChanges('comp_value','checkbox',<%=iRow %>, 10)" onblur="UpdateRowHeader(<%=iRow %>,'None')" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_10" name="hdnAnswer<%=iRow %>_10" value="<%= Convert.ToBoolean(dr["comp_value"].ToString()) == true ? "1" : "0" %>" />
             </td>
             <td class="gridrow_wt clientHide">
-                <input type="text" ID="txt<%=iRow %>_11" name="txt<%=iRow %>_11" value="<%=dr["comp_comments"].ToString() %>" class="gridrow_txtbox2 clientDis" onkeydown="chkKeybd(this, event,<%=iRow %>,11)" onfocus="this.select(); UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('comp_comments','textbox',<%=iRow %>, 11)" />
+                <input type="text" ID="txt<%=iRow %>_11" name="txt<%=iRow %>_11" value="<%=dr["comp_comments"].ToString() %>" class="gridrow_txtbox2 clientDis" onfocus="this.select(); UpdateRowHeader(<%=iRow %>,'Edit')" onblur="UpdateRowHeader(<%=iRow %>,'None'); CheckRowChanges('comp_comments','textbox',<%=iRow %>, 11)" />
                 <input type="hidden" id="hdnAnswer<%=iRow %>_11" name="hdnAnswer<%=iRow %>_11" value="<%=dr["comp_comments"].ToString() %>" />
                 <input type="hidden" id="txtHdnCrit<%=iRow %>" name="txtHdnCrit<%=iRow %>" value="<%=sql %>">
                 <input type="hidden" id="txtHdnNew<%=iRow %>" name="txtHdnNew<%=iRow %>" value="<%= cboYear.Value == dr["year_id"].ToString() ? "0" : "1" %>" />
