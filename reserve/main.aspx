@@ -279,7 +279,7 @@
                 <p class="panel-title-fd">
                     Revision:<br />
                     <select id="cboRevision" runat="server" onchange="changeRevision()"></select>
-                    <button id="btnNewRevision" class="btn-revision showNewRevision" data-toggle="modal" data-target="#mdlNewRevision" data-cat="catg" data-comp="dcmp">+</button>
+                    <button id="btnNewRevision" runat="server" class="btn-revision showNewRevision" data-toggle="modal" data-target="#mdlNewRevision" data-cat="catg" data-comp="dcmp">+</button>
                 </p>
            </div>
         </div>

@@ -84,8 +84,10 @@ namespace reserve
                                 Session["firmname"] = p["firm_name"];
                                 Session["client"] = "1";
                                 Session["projectid"] = "C" + txtPWClient.Value;
+                                Session["revisionid"] = "";
                                 Session["oldprojectid"] = txtPWClient.Value;
                                 Session["multi"] = 0;
+                                Session["superadmin"] = "0";
                                 p.Close();
                                 p = Fn_enc.ExecuteReader("sp_appver", new string[] { });
                                 if (p.Read()) { Session["appver"] = p["appver"]; }
