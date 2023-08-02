@@ -94,31 +94,44 @@ else
 
 GO
 -------------------------------------------------------
-CREATE procedure sp_app_add_revision_to_client @firm smallint, @project nvarchar(10), @revision smallint, @user smallint as
+
+CREATE procedure [dbo].[sp_app_add_revisions_to_client] @firm smallint, @project nvarchar(10), @user smallint as
 
 DECLARE @clientproject nvarchar(15) = 'C' + @project
 
-if not exists(select * from info_projects_client_invites_revisions where firm_id=@firm and project_id=@clientproject and revision_id=@revision)
-BEGIN
+DECLARE @revs TABLE
+(revision_id INT NOT NULL)
 
+insert into @revs
+select ipcir.revision_id
+from info_projects_client_invites_revisions ipcir 
+left join info_projects_revisions ipr on ipcir.firm_id=ipr.firm_id and ipr.project_id=@clientproject and ipcir.revision_id=ipr.revision_id 
+where ipcir.firm_id=@firm and ipcir.project_id=@project and ipr.project_id is null
+
+if exists(select * from @revs)
+BEGIN
 	insert into info_projects_revisions (firm_id, project_id, revision_id, revision_name, revision_desc, revision_created_date, revision_created_by) 
-		select @firm, @clientproject, @revision, 'Client Invite', '', GETDATE(), @user
-	insert into info_projects_client_invites_revisions (firm_id, project_id, revision_id) 
-		select @firm, @clientproject, @revision
+		select @firm, @clientproject, revision_id, 'Client Invite', '', GETDATE(), @user from @revs
 	insert into info_project_info (firm_id, project_id, revision_id, project_mgr, project_type_id, dept_mgr, contract_value, inspection_date, report_effective, begin_balance, current_contrib, age_community, geo_factor, num_units, num_bldgs, num_floors, contact_prefix, contact_name, contact_title, contact_phone, contact_email, association_name, client_city, client_zip, client_addr1, client_addr2, client_state, site_addr1, site_city, site_zip, site_addr2, site_state, source_prefix, source_name, source_title, source_begin_balance, prev_preparer, prev_recomm_cont, prev_date, interest, inflation, current_funding_hidden, full_funding_hidden, baseline_funding_hidden, current_pct_funded_hidden, full_pct_funded_hidden, baseline_pct_funded_hidden, threshold1_pct_funded_hidden, threshold2_pct_funded_hidden, threshold1_used, threshold1_value, threshold2_used, last_updated_by, last_updated_date, threshold_used, threshold_value)
-		select firm_id, @clientproject, @revision, project_mgr, project_type_id, dept_mgr, contract_value, inspection_date, report_effective, begin_balance, current_contrib, age_community, geo_factor, num_units, num_bldgs, num_floors, contact_prefix, contact_name, contact_title, contact_phone, contact_email, association_name, client_city, client_zip, client_addr1, client_addr2, client_state, site_addr1, site_city, site_zip, site_addr2, site_state, source_prefix, source_name, source_title, source_begin_balance, prev_preparer, prev_recomm_cont, prev_date, interest, inflation, current_funding_hidden, full_funding_hidden, baseline_funding_hidden, current_pct_funded_hidden, full_pct_funded_hidden, baseline_pct_funded_hidden, threshold1_pct_funded_hidden, threshold2_pct_funded_hidden, threshold1_used, threshold1_value, threshold2_used, @user, getdate(), threshold_used, threshold_value from info_project_info where firm_id=@firm and project_id=@project and revision_id=@revision
+		select firm_id, @clientproject, revision_id, project_mgr, project_type_id, dept_mgr, contract_value, inspection_date, report_effective, begin_balance, current_contrib, age_community, geo_factor, num_units, num_bldgs, num_floors, contact_prefix, contact_name, contact_title, contact_phone, contact_email, association_name, client_city, client_zip, client_addr1, client_addr2, client_state, site_addr1, site_city, site_zip, site_addr2, site_state, source_prefix, source_name, source_title, source_begin_balance, prev_preparer, prev_recomm_cont, prev_date, interest, inflation, current_funding_hidden, full_funding_hidden, baseline_funding_hidden, current_pct_funded_hidden, full_pct_funded_hidden, baseline_pct_funded_hidden, threshold1_pct_funded_hidden, threshold2_pct_funded_hidden, threshold1_used, threshold1_value, threshold2_used, @user, getdate(), threshold_used, threshold_value from info_project_info where firm_id=@firm and project_id=@project and revision_id in (select revision_id from @revs)
 	insert into info_component_categories (firm_id, project_id, revision_id, category_id, category_desc, last_updated_by, last_updated_date) 
-		select firm_id, @clientproject, @revision, category_id, category_desc, @user, getdate() from info_component_categories where firm_id=@firm and project_id=@project and revision_id=@revision
+		select firm_id, @clientproject, revision_id, category_id, category_desc, @user, getdate() from info_component_categories where firm_id=@firm and project_id=@project and revision_id in (select revision_id from @revs)
 	insert into info_components (firm_id, project_id, revision_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, last_updated_by, last_updated_date) 
-		select firm_id, @clientproject, @revision, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, @user, getdate() from info_components where firm_id=@firm and project_id=@project and revision_id=@revision
+		select firm_id, @clientproject, revision_id, year_id, category_id, component_id, order_id, component_desc, comp_quantity, plus_pct, comp_unit, base_unit_cost, geo_factor, unit_cost, est_useful_life, est_remain_useful_life, comp_note, comp_value, comp_comments, @user, getdate() from info_components where firm_id=@firm and project_id=@project and revision_id in (select revision_id from @revs)
 	insert into info_components_images (firm_id, project_id, revision_id, category_id, component_id, image_id, image_bytes, image_comments, last_updated_by, last_updated_date) 
-		select firm_id, @clientproject, @revision, category_id, component_id, image_id, image_bytes, image_comments, @user, getdate() from info_components_images where firm_id=@firm and project_id=@project and revision_id=@revision
+		select firm_id, @clientproject, revision_id, category_id, component_id, image_id, image_bytes, image_comments, @user, getdate() from info_components_images where firm_id=@firm and project_id=@project and revision_id in (select revision_id from @revs)
 	insert into info_projections_intervals (firm_id, project_id, revision_id, interval_id, interval_value) 
-		select firm_id, @clientproject, @revision, interval_id, interval_value from info_projections_intervals where firm_id=@firm and project_id=@project and revision_id=@revision
+		select firm_id, @clientproject, revision_id, interval_id, interval_value from info_projections_intervals where firm_id=@firm and project_id=@project and revision_id in (select revision_id from @revs)
 	insert into info_projections (firm_id, project_id, revision_id, year_id, annual_exp, interest, cfa_annual_contrib_user_entered, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, pct_increase, tfa2_annual_contr_user_entered, tfa2_annual_contr, tfa2_res_fund_bal, full_fund_bal, generated_by, generated_date) 
-		select firm_id, @clientproject, @revision, year_id, annual_exp, interest, cfa_annual_contrib_user_entered, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, pct_increase, tfa2_annual_contr_user_entered, tfa2_annual_contr, tfa2_res_fund_bal, full_fund_bal, @user, getdate() from info_projections where firm_id=@firm and project_id=@project and revision_id=@revision
+		select firm_id, @clientproject, revision_id, year_id, annual_exp, interest, cfa_annual_contrib_user_entered, cfa_annual_contrib, cfa_reserve_fund_bal, ffa_req_annual_contr, ffa_avg_req_annual_contr, ffa_res_fund_bal, bfa_annual_contr, ext_res_cur_year, bfa_res_fund_bal, tfa_annual_contr, tfa_res_fund_bal, pct_increase, tfa2_annual_contr_user_entered, tfa2_annual_contr, tfa2_res_fund_bal, full_fund_bal, @user, getdate() from info_projections where firm_id=@firm and project_id=@project and revision_id in (select revision_id from @revs)
 
 END
+
+delete from info_projects_revisions where firm_id=@firm and project_id=@clientproject and revision_id not in 
+(select revision_id from info_projects_client_invites_revisions where firm_id=@firm and project_id=@project)
+
+GO
+
 --------------------------------------------------------
 ALTER procedure [dbo].[sp_app_clone_project] @firm smallint, @from_pid nvarchar(10), @to_pid nvarchar(10), @new_pname nvarchar(50), @user smallint as
 
