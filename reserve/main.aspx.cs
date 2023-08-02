@@ -14,7 +14,11 @@ namespace reserve
         {
             if (Session["firmid"] == null) Response.Redirect("default.aspx?timeout=1");
 
-            if (Session["client"].ToString() == "1") btnNewRevision.Visible = false;
+            if (Session["client"].ToString() == "1")
+            {
+                btnNewRevision.Visible = false;
+                btnManageRevisions.Visible = false;
+            }
 
             if (txtHdnType.Value=="CreateRevision")
             {
@@ -27,8 +31,8 @@ namespace reserve
             {
                 Session["projectid"] = txtHdnProject.Value;
                 loadRevisions();
-                cboRevision.SelectedIndex = 0;
-                Session["revisionid"] = "1";
+                cboRevision.SelectedIndex = cboRevision.Items.Count-1;
+                Session["revisionid"] = cboRevision.Items[cboRevision.SelectedIndex].Value;
                 divPnRevisions.Visible = true;
                 txtHdnSelected.Value = "";
                 txtPID.Disabled = true;
@@ -133,7 +137,13 @@ namespace reserve
 
             if (Session["client"].ToString() == "1")
             {
-                if (txtHdnGenClientData.Value == "") genClientData();
+                //if (txtHdnGenClientData.Value == "") { 
+                //    genClientData(); 
+                //}
+                if (Session["revisionid"].ToString()=="" && cboRevision.Items.Count>0)
+                {
+                    Session["revisionid"] = cboRevision.Items[cboRevision.Items.Count - 1].Value;
+                }
                 disableControls();
             }
 
@@ -141,7 +151,7 @@ namespace reserve
 
         public void SaveNewRevision()
         {
-            var dr = Fn_enc.ExecuteReader("sp_app_create_revision @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtRevisionDesc.Value, Session["userid"].ToString() });
+            var dr = Fn_enc.ExecuteReader("sp_app_create_revision @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtRevisionName.Value, txtRevisionDesc.Value, Session["userid"].ToString() });
             if (dr.Read())
             {
                 if (dr["status_info"].ToString() == "Error")
@@ -180,37 +190,37 @@ namespace reserve
             }
         }
 
-        public void genClientData()
-        {
-            SqlDataReader dr = Fn_enc.ExecuteReader("select i.project_name, ipci.* from info_projects_client_invites ipci inner join info_projects i on ipci.firm_id=i.firm_id and ipci.project_id=i.project_id where ipci.firm_id=@Param1 and ipci.project_id=@Param2 and (ipci.data_generated is null or ipci.data_generated=0)", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString() });
-            if (dr.Read())
-            {
-                string sProjName = dr["project_name"].ToString();
-                dr.Close();
-                dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString(), Session["projectid"].ToString(), sProjName, Session["userid"].ToString(), Session["revisionid"].ToString() });
-                if (dr.Read())
-                {
-                    if (dr["status_info"].ToString() == "Success")
-                    {
-                        Fn_enc.ExecuteNonQuery("update info_projects_client_invites set data_generated=1 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString() });
-                        txtHdnProject.Value = Session["projectid"].ToString();
-                        lblProject.InnerHtml = dr["proj_name"].ToString();
-                        txtHdnGenClientData.Value = Session["projectid"].ToString();
-                        LoadFields();
-                    }
-                    else
-                    {
-                        divCloneStatus.InnerHtml = "Error cloning project: " + dr["error_desc"].ToString();
-                    }
-                }
+        //public void genClientData()
+        //{
+        //    SqlDataReader dr = Fn_enc.ExecuteReader("select i.project_name, ipci.* from info_projects_client_invites ipci inner join info_projects i on ipci.firm_id=i.firm_id and ipci.project_id=i.project_id where ipci.firm_id=@Param1 and ipci.project_id=@Param2 and (ipci.data_generated=1)", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString() });
+        //    if (!dr.Read())
+        //    {
+        //        string sProjName = dr["project_name"].ToString();
+        //        dr.Close();
+        //        dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString(), Session["projectid"].ToString(), sProjName, Session["userid"].ToString(), Session["revisionid"].ToString() });
+        //        if (dr.Read())
+        //        {
+        //            if (dr["status_info"].ToString() == "Success")
+        //            {
+        //                Fn_enc.ExecuteNonQuery("update info_projects_client_invites set data_generated=1 where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["oldprojectid"].ToString() });
+        //                txtHdnProject.Value = Session["projectid"].ToString();
+        //                lblProject.InnerHtml = dr["proj_name"].ToString();
+        //                txtHdnGenClientData.Value = Session["projectid"].ToString();
+        //                LoadFields();
+        //            }
+        //            else
+        //            {
+        //                divCloneStatus.InnerHtml = "Error cloning project: " + dr["error_desc"].ToString();
+        //            }
+        //        }
 
-            }
-            else
-            {
-                txtHdnGenClientData.Value = Session["projectid"].ToString();
-            }
-            dr.Close();
-        }
+        //    }
+        //    else
+        //    {
+        //        txtHdnGenClientData.Value = Session["projectid"].ToString();
+        //    }
+        //    dr.Close();
+        //}
 
         public void disableControls()
         {
@@ -255,7 +265,7 @@ namespace reserve
         }
         public void CloneProject()
         {
-            SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, txtClonePID.Value, txtClonePName.Value, Session["userid"].ToString(), Session["revisionid"].ToString() });
+            SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, txtClonePID.Value, txtClonePName.Value, Session["userid"].ToString() });
             if (dr.Read()) {
                 if (dr["status_info"].ToString() == "Success")
                 {
@@ -276,47 +286,86 @@ namespace reserve
 
         public void SendToClient()
         {
-            //SendToClient
-            SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_send_project_to_client @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), "C" + txtHdnProject.Value, txtS2CEMail.Value, Session["userid"].ToString() });
-            if (dr.Read())
+            // Make sure we can iterate through the revisions
+            if (!int.TryParse(Request.Form["txtHdnTotalRevs"], out int iTotal))
             {
-                if (dr["status_desc"].ToString() == "Success")
-                {
-                    dr.Close();
-                    //Clone project
-                    dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, "C" + txtHdnProject.Value, txtPN.Value, Session["userid"].ToString(), Session["revisionid"].ToString() });
-                    if (dr.Read() && dr["status_info"].ToString() != "Success")
-                    {
-                        Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
-                        divCloneStatus.InnerHtml = "Error cloning project. Please send the following to an administrator:" + dr["error_desc"].ToString();
-                        dr.Close();
-                        return;
-                    }
-                }
+                divCloneStatus.InnerHtml = "Error sending invite: could not determine revision count. Please notify an administrator if this message continues.";
+                return;
+            }
 
-                StringBuilder sBody = new StringBuilder();
-                sBody.AppendLine("Hello,<br><br>");
-                sBody.AppendLine("You have been invited by " + Session["firmname"].ToString() + " to view your interactive Reserve Study online.<br><br>");
-                sBody.AppendLine("To view, modify, and generate your personalized study, please login at:<br><br>");
-                sBody.AppendLine("Website: <a href=\"https://reservestudyplus.com/default.aspx?c=1\" target=\"none\">https://reservestudyplus.com/default.aspx?c=1</a><br>");
-                sBody.AppendLine("Username: " + txtS2CEMail.Value + "<br>");
-                sBody.AppendLine("Password: C" + txtHdnProject.Value + "<br><br>");
-                sBody.AppendLine("Enjoy your interactive project!<br><br>");
-                sBody.AppendLine("Regards,<br><br>");
-                sBody.AppendLine("Kipcon, LLC.");
-
-                string mailResult = Fn_enc.sendMail(txtS2CEMail.Value, sBody.ToString(),"Online, interactive Reserve Study");
-                if (mailResult=="Success")
+            Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites_revisions where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            for (var i = 0; i < iTotal; i++)
+            {
+                if (Request.Form["chkClientRev" + i] == "on")
                 {
-                    divCloneStatus.InnerHtml = "Successfully sent project invite to <b>" + txtS2CEMail.Value + "</b>.";
-                }
-                else
-                {
-                    Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
-                    divCloneStatus.InnerHtml = "Error sending email to <b>" + txtS2CEMail.Value + "</b>: " + mailResult;
+                    Fn_enc.ExecuteNonQuery("insert into info_projects_client_invites_revisions (firm_id, project_id, revision_id) select @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Request.Form["txtHdnClientRev" + i] });
                 }
             }
-            dr.Close();
+            Fn_enc.ExecuteNonQuery("sp_app_add_revisions_to_client @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["userid"].ToString() });
+
+            StringBuilder sBody = new StringBuilder();
+            sBody.Append("Successfully created client login with credentials:</b><font color=black><br />");
+            sBody.Append($"- Url: https://reservestudyplus.com/default.aspx?c=1<br />");
+            sBody.Append($"- Username: {txtS2CEMail.Value} <br />");
+            sBody.Append($"- Password: C{Session["projectid"]}");
+            divCloneStatus.InnerHtml = sBody.ToString();
+
+            ////SendToClient
+            //SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_send_project_to_client @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), "C" + txtHdnProject.Value, txtS2CEMail.Value, Session["userid"].ToString() });
+            //if (dr.Read())
+            //{
+            //    if (dr["status_desc"].ToString() == "CloneNeeded")
+            //    {
+            //        dr.Close();
+            //        //Clone project
+            //        dr = Fn_enc.ExecuteReader("sp_app_clone_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), txtHdnProject.Value, "C" + txtHdnProject.Value, txtPN.Value, Session["userid"].ToString(), Session["revisionid"].ToString() });
+            //        if (dr.Read() && dr["status_info"].ToString() != "Success")
+            //        {
+            //            Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
+            //            divCloneStatus.InnerHtml = "Error cloning project. Please send the following to an administrator:" + dr["error_desc"].ToString();
+            //            dr.Close();
+            //            return;
+            //        }
+            //    }
+
+            //    Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites_revisions where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+            //    for (var i = 0; i<iTotal; i++)
+            //    {
+            //        if (Request.Form["chkClientRev" + i] == "on")
+            //        {
+            //            Fn_enc.ExecuteNonQuery("insert into info_projects_client_invites_revisions (firm_id, project_id, revision_id) select @Param1, @Param2, @Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Request.Form["txtHdnClientRev" + i] });
+            //        }
+            //    }
+            //    StringBuilder sBody = new StringBuilder();
+            //    sBody.Append("Successfully created client login with credentials:</b><font color=black><br />");
+            //    sBody.Append($"- Url: https://reservestudyplus.com/default.aspx?c=1<br />");
+            //    sBody.Append($"- Username: {txtS2CEMail.Value} <br />");
+            //    sBody.Append($"- Password: C{Session["projectid"]}");
+            //    divCloneStatus.InnerHtml = sBody.ToString();
+
+            //    //StringBuilder sBody = new StringBuilder();
+            //    //sBody.AppendLine("Hello,<br><br>");
+            //    //sBody.AppendLine("You have been invited by " + Session["firmname"].ToString() + " to view your interactive Reserve Study online.<br><br>");
+            //    //sBody.AppendLine("To view, modify, and generate your personalized study, please login at:<br><br>");
+            //    //sBody.AppendLine("Website: <a href=\"https://reservestudyplus.com/default.aspx?c=1\" target=\"none\">https://reservestudyplus.com/default.aspx?c=1</a><br>");
+            //    //sBody.AppendLine("Username: " + txtS2CEMail.Value + "<br>");
+            //    //sBody.AppendLine("Password: C" + txtHdnProject.Value + "<br><br>");
+            //    //sBody.AppendLine("Enjoy your interactive project!<br><br>");
+            //    //sBody.AppendLine("Regards,<br><br>");
+            //    //sBody.AppendLine("Kipcon, LLC.");
+
+            //    //string mailResult = Fn_enc.sendMail(txtS2CEMail.Value, sBody.ToString(),"Online, interactive Reserve Study");
+            //    //if (mailResult=="Success")
+            //    //{
+            //    //    divCloneStatus.InnerHtml = "Successfully sent project invite to <b>" + txtS2CEMail.Value + "</b>.";
+            //    //}
+            //    //else
+            //    //{
+            //    //    Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), txtHdnProject.Value });
+            //    //    divCloneStatus.InnerHtml = "Error sending email to <b>" + txtS2CEMail.Value + "</b>: " + mailResult;
+            //    //}
+            //}
+            //dr.Close();
         }
 
         public void SaveForm()

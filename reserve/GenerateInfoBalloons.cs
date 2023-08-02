@@ -1,9 +1,11 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
+using System.IO;
 using System.Web;
 
 namespace reserve
 {
-    public class GenerateInfoBalloons
+    public class GenerateInfoBalloons : System.Web.UI.Page
     {
         public static string GenerateInfoBalloonScript(string pageId)
         {

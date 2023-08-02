@@ -1,11 +1,14 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Main.Master"  CodeBehind="main.aspx.cs" Inherits="reserve.main" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
 
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
 
-<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.8.0.js"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.22/jquery-ui.js"></script>
+<script src="Scripts/jquery-3.3.1.js"></script>
+<script src="Scripts/jquery-ui.js"></script>
 <script src="assets/js/jquery.mask.min.js"></script>
-<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/themes/redmond/jquery-ui.css" rel="stylesheet" />
+<script src="Scripts/main.js"></script>
+<link href="css/jquery-ui.css" rel="stylesheet" />
 <link href="css/style.css" rel="stylesheet" />
     <style>
             td {
@@ -252,6 +255,16 @@
                 document.getElementById('MainContent_txtS2CEMail').focus();
                 return false;
             }
+            var blRevSelected = false;
+            for (var i = 0; i < parseInt(document.getElementById('txtHdnTotalRevs').value) - 1; i++) {
+                if (document.getElementById('chkClientRev' + i).checked) {
+                    blRevSelected = true;
+                }
+            }
+            if (!blRevSelected) {
+                alert("Please select at least one revision you would like the client to be able to access.");
+                return false;
+            }
             document.getElementById('MainContent_txtHdnType').value = 'SendToClient';
             document.getElementById('MainContent_divCloneStatus').innerHTML = 'Sending to client, please wait...';
             document.forms[0].submit();
@@ -268,7 +281,31 @@
             document.getElementById('MainContent_txtHdnType').value = 'ChangeRevision';
             document.forms[0].submit();
         }
-    </script>  
+
+        function toggleChkRev(i) {
+            if (document.getElementById('chkRev' + i).checked) {
+                document.getElementById('chkRev' + i).checked = false;
+            }
+            else {
+                document.getElementById('chkRev' + i).checked = true;
+            }
+        }
+
+        function toggleClientRev(i) {
+            if (document.getElementById('chkClientRev' + i).checked) {
+                document.getElementById('chkClientRev' + i).checked = false;
+            }
+            else {
+                document.getElementById('chkClientRev' + i).checked = true;
+            }
+        }
+
+        function checkDelRev(i) {
+            if (confirm("Are you sure you want to PERMANENTLY delete this revision, and all associated data for this revision?") == 1) {
+                deleteRevision(document.getElementById('txtHdnChkRev' + i).value, i);
+            }
+        }
+    </script>
 <form id="frmProject" runat="server" class="needs-validation">
     <div class="container_fluid" id="container_main" style="max-width: 100%">
         <div class="row float-right" style="margin-top: -4px; margin-left: -2px;">
@@ -279,7 +316,8 @@
                 <p class="panel-title-fd">
                     Revision:<br />
                     <select id="cboRevision" runat="server" onchange="changeRevision()"></select>
-                    <button id="btnNewRevision" runat="server" class="btn-revision showNewRevision" data-toggle="modal" data-target="#mdlNewRevision" data-cat="catg" data-comp="dcmp">+</button>
+                    <button id="btnNewRevision" title="Create New Revision" runat="server" class="btn-revision showNewRevision" data-toggle="modal" data-target="#mdlNewRevision" data-cat="catg" data-comp="dcmp"><i class="fa fa-plus-circle" style="color: white"></i></button>
+                    <button id="btnManageRevisions" title="Manage Existing Revisions" runat="server" class="btn-revision showManageRevisions" data-toggle="modal" data-target="#mdlManageRevisions" data-cat="catg" data-comp="dcmp"><i class="fa fa-gear" style="color: white"></i></button>
                 </p>
            </div>
         </div>
@@ -291,7 +329,7 @@
             <button type="button" class="btn btn-primary" onclick="NewProj()">Create new project</button>
             <% if (txtHdnProject.Value != "-1") { %>
             &nbsp;<a href="#" class="btn btn-primary showClone" id="cmdLogin" data-toggle="modal" data-target="#mdlNotes" data-cat="catg" data-comp="dcmp">Clone Project</a>
-            &nbsp;<a href="#" class="btn btn-primary showSendToClient" id="cmdSendToClient" data-toggle="modal" data-target="#mdlClient" data-cat="catg" data-comp="dcmp">Send to Client</a>
+            &nbsp;<a href="#" class="btn btn-primary showSendToClient" id="cmdSendToClient" data-toggle="modal" data-target="#mdlClient" data-cat="catg" data-comp="dcmp">Create Client Login</a>
             <div id="divCloneStatus" runat="server" class="frm-text-red"></div>
             <% } %>
             <span id="divLoadProject" class="frm-text" style="display: none; font-weight: 500;"><i class="fa fa-spinner fa-pulse fa-fw"></i>&nbsp;Loading, please wait...</span>
@@ -506,7 +544,7 @@
     </div>
     <!--Modal: Send to Client-->
     <div class="modal fade" id="mdlClient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-dialog-scrollable" role="document">
         <!--Content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -517,23 +555,111 @@
             </div>
               <!--Body-->
             <div class="modal-body mt-0 mb-0 p-0" style="margin-top: 0px">
-                <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                    <table style="width: 100%">
-                        <tr>
-                            <td nowrap colspan="2"><h5 class="text-left">Send <b><%=txtProject.Value %></b> to:</h5></td>
-                        </tr>
-                        <tr>
-                            <td><h5>Email: </h5></td>
-                            <td><input type="text" runat="server" class="form-control" id="txtS2CEMail" maxlength="100" style="width: 100% !important"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td class="text-left">
-                                <button type="button" id="btnSendToClient" class="btn btn-success" onclick="checkSendToClient()">Send to Client</button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                <table style="width: 100%; border-radius: 10px; background-color: #eeeeee">
+                    <tr>
+                        <td nowrap colspan="2" style="padding-left: 10px"><h5 class="text-left">Send <b><%=txtProject.Value %></b> to:</h5></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 10px"><h5>Email: </h5></td>
+                        <td style="padding-right: 10px"><input type="text" runat="server" class="form-control" id="txtS2CEMail" maxlength="100" style="width: 100% !important"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <table style="width: 100%">
+                                <tr style="background-color: #dddddd">
+                                    <td class="frm-text-bold">#</td>
+                                    <td class="frm-text-bold" style="text-align: left"></td>
+                                    <td class="frm-text-bold" style="text-align: left">Name</td>
+                                    <td class="frm-text-bold" style="text-align: left">Description</td>
+                                    <td class="frm-text-bold" style="text-align: left">Created By</td>
+                                    <td class="frm-text-bold" style="text-align: left">Created Date</td>
+                                </tr>
+                                <%
+                                    var i = 0;
+                                    var bgColor = "";
+
+                                    SqlDataReader dr = reserve.Fn_enc.ExecuteReader("sp_app_manage_revisions @Param1, @Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+
+                                    while (dr.Read())
+                                    {
+                                %>
+                                <tr>
+                                    <td class="frm-text" onclick="toggleClientRev(<%=i %>)"><%=dr["revision_id"].ToString() %></td>
+                                    <td>
+                                        <input id="chkClientRev<%=i %>" name="chkClientRev<%=i %>" type="checkbox" <% if (dr["isthere"].ToString()=="1") { Response.Write("checked"); } %> />
+                                        <input type="hidden" id="txtHdnClientRev<%=i %>" name="txtHdnClientRev<%=i %>" value="<%=dr["revision_id"].ToString() %>" />
+                                    </td>
+                                    <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleClientRev(<%=i %>)"><%=dr["revision_name"].ToString() %></td>
+                                    <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleClientRev(<%=i %>)"><%=dr["revision_desc"].ToString() %></td>
+                                    <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleClientRev(<%=i %>)"><%=dr["created_by"].ToString() %></td>
+                                    <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleClientRev(<%=i %>)"><%=dr["revision_created_date"].ToString() %></td>
+                                </tr>
+                                <% 
+                                i++;
+                                }
+                                dr.Close();
+                                %>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-left" style="padding-bottom: 10px">
+                            <button type="button" id="btnSendToClient" class="btn btn-success" onclick="checkSendToClient()">Create Client Login</button>
+                        </td>
+                    </tr>
+                </table>
+                <table style="width: 100%; border-top-left-radius: 10px; border-top-right-radius: 10px; background-color: #dddddd; margin-top: 10px">
+                    <tr>
+                        <td style="text-align: left; padding-top: 5px; padding-left: 2px" class="frm-text-bold">&nbsp;Previous client invitations:</td>
+                    </tr>
+                </table>
+                <table style="width: 100%; border-radius: 10px; background-color: #dddddd">
+                    <tr style="padding: 5px; background-color: #eeeeee; text-align: left" class="frm-text-bold">
+                        <td style="padding-left: 5px; padding-top: 3px; padding-bottom: 3px">Username</td>
+                        <td>Date Sent</td>
+                        <td>Sent By</td>
+                        <td># Logins</td>
+                        <td>Last Login</td>
+                    </tr>
+                    <%
+                    dr = reserve.Fn_enc.ExecuteReader("select i.client_email, i.project_id, i.invite_sent, au.first_name + ' ' + au.last_name as sent_by, i.num_logins, i.last_login from info_projects_client_invites i left join app_users au on i.firm_id=au.firm_id and i.invited_by=au.user_id where i.firm_id=@Param1 and i.project_id=@Param2 order by i.invite_sent desc", new string[] { Session["firmid"].ToString(), $"C{Session["projectid"].ToString()}" });
+                    while (dr.Read())
+                    {
+                        if (i % 2 == 0) 
+                        { 
+                            bgColor = "#eeeeee";
+                        } 
+                        else 
+                        { 
+                            bgColor = "#f9f9f9";
+                        }
+
+                    %>
+                    <tr style="background-color: <%=bgColor%>; text-align: left" class="frm-text">
+                        <td style="padding-top: 3px; padding-bottom: 3px; padding-left: 5px"><%=dr["client_email"] %></td>
+                        <td><%=dr["invite_sent"] %></td>
+                        <td><%=dr["sent_by"] %></td>
+                        <td><%=dr["num_logins"] %></td>
+                        <td><%=dr["last_login"] %></td>
+                    </tr>
+                    <% 
+                            i++;
+                        }
+                        dr.Close();
+                    %>
+                </table>
+                <table style="width: 100%; border-radius: 10px; background-color: #009CDC; margin-top: 10px">
+                    <tr>
+                        <td style="text-align: left; padding-top: 5px; padding-left: 2px; color: white" class="frm-text">
+                            Login information for all recipients is:<br /><br />
+                            - Url: https://reservestudyplus.com/default.aspx?c=1<br />
+                            - Username: {client email address}<br />
+                            - Password: C<%=Session["projectid"].ToString() %>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -548,7 +674,7 @@
         <!--Content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create new revision</h5>
+                <h5 class="modal-title">Create New Revision</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -558,7 +684,11 @@
                 <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
                     <table style="width: 100%">
                         <tr>
-                            <td valign="top" width="25%"><h5 class="text-right">Revision Description:&nbsp;</h5></td>
+                            <td valign="top" width="1%"><h5 class="text-right">Revision Name:&nbsp;</h5></td>
+                            <td><input type="text" id="txtRevisionName" name="txtRevisionName" runat="server" class="form-control" style="width: 100% !important"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="1%"><h5 class="text-right">Revision Description:&nbsp;</h5></td>
                             <td><textarea runat="server" class="form-control" id="txtRevisionDesc" name="txtRevisionDesc" rows="8" style="width: 100% !important"></textarea></td>
                         </tr>
                         <tr>
@@ -572,6 +702,74 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        <!--/.Content-->
+      </div>
+    </div>
+        <!--Modal: Manage Existing Revisions -->
+    <div class="modal fade" id="mdlManageRevisions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Manage Existing Revisions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+              <!--Body-->
+            <div class="modal-body mt-0 mb-0 p-0" style="margin-top: 0px">
+                <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                    <table style="width: 100%">
+                        <tr style="background-color: #dddddd">
+                            <td class="frm-text-bold">#</td>
+                            <td class="frm-text-bold" style="text-align: left">Client</td>
+                            <td class="frm-text-bold" style="text-align: left">Name</td>
+                            <td class="frm-text-bold" style="text-align: left">Description</td>
+                            <td class="frm-text-bold" style="text-align: left">Created By</td>
+                            <td class="frm-text-bold" style="text-align: left">Created Date</td>
+                            <td></td>
+                        </tr>
+                        <%
+                            dr = reserve.Fn_enc.ExecuteReader("sp_app_manage_revisions @Param1, @Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                            i = 0;
+                            while (dr.Read())
+                            {
+                                if (i % 2 == 0)
+                                {
+                                    bgColor = "#eeeeee";
+                                }
+                                else
+                                {
+                                    bgColor = "#f9f9f9";
+                                }
+                        %>
+                        <tr id="trRev<%=i %>" style="background-color:<%=bgColor%>">
+                            <td class="frm-text" onclick="toggleChkRev(<%=i %>)"><%=dr["revision_id"].ToString() %></td>
+                            <td>
+                                <input id="chkRev<%=i %>" type="checkbox" <% if (dr["isthere"].ToString()=="1") { Response.Write("checked"); } %> />
+                                <input type="hidden" id="txtHdnChkRev<%=i %>" name="txtHdnChkRev<%=i %>" value="<%=dr["revision_id"].ToString() %>" />
+                            </td>
+                            <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleChkRev(<%=i %>)"><%=dr["revision_name"].ToString() %></td>
+                            <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleChkRev(<%=i %>)"><%=dr["revision_desc"].ToString() %></td>
+                            <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleChkRev(<%=i %>)"><%=dr["created_by"].ToString() %></td>
+                            <td class="frm-text" style="text-align: left; cursor: default" onclick="toggleChkRev(<%=i %>)"><%=dr["revision_created_date"].ToString() %></td>
+                            <td style="text-align: right; cursor: pointer"><img src="images/x_white.jpg" style="font-size: 0; display: inline-block" onclick="checkDelRev(<%=i %>)" /></td>
+                        </tr>
+                        <% 
+                            i++;
+                            }
+                            dr.Close();
+                            %>
+                    </table>
+                    <input type="hidden" id="txtHdnTotalRevs" name="txtHdnTotalRevs" value="<%=i %>" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSaveClientRevisions" class="btn btn-success" onclick="sendAvailableRevs()">Make Available to Client</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button><br />
+                <label id="lblRevStatus" name="lblRevStatus" style="color: red"></label>
             </div>
         </div>
         <!--/.Content-->
@@ -591,6 +789,10 @@
             $(".showNewRevision").click(function (e) {
                 e.preventDefault();
                 $("#mdlRevision").modal("show");
+            });
+            $(".showManageRevisions").click(function (e) {
+                e.preventDefault();
+                $("#mdlManageRevisions").modal("show");
             });
         });
     </script>
