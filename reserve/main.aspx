@@ -329,7 +329,7 @@
             <button type="button" class="btn btn-primary" onclick="NewProj()">Create new project</button>
             <% if (txtHdnProject.Value != "-1") { %>
             &nbsp;<a href="#" class="btn btn-primary showClone" id="cmdLogin" data-toggle="modal" data-target="#mdlNotes" data-cat="catg" data-comp="dcmp">Clone Project</a>
-            &nbsp;<a href="#" class="btn btn-primary showSendToClient" id="cmdSendToClient" data-toggle="modal" data-target="#mdlClient" data-cat="catg" data-comp="dcmp">Create Client Login</a>
+            &nbsp;<a href="#" class="btn btn-primary showSendToClient" id="cmdSendToClient" data-toggle="modal" data-target="#mdlClient" data-cat="catg" data-comp="dcmp">Client Invites</a>
             <div id="divCloneStatus" runat="server" class="frm-text-red"></div>
             <% } %>
             <span id="divLoadProject" class="frm-text" style="display: none; font-weight: 500;"><i class="fa fa-spinner fa-pulse fa-fw"></i>&nbsp;Loading, please wait...</span>
