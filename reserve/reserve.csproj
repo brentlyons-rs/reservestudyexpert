@@ -121,6 +121,7 @@
     <Content Include="admin_users.aspx" />
     <Content Include="ajax.aspx" />
     <Content Include="apiComponents.asmx" />
+    <Content Include="api\main.asmx" />
     <Content Include="assets\bootstrap\css\bootstrap-theme.css" />
     <Content Include="assets\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="assets\bootstrap\css\bootstrap.css" />
@@ -242,6 +243,7 @@
     <Content Include="main.aspx" />
     <Content Include="notes.aspx" />
     <None Include="Properties\App_LocalResources\0018-revisions-scripts.md" />
+    <None Include="Properties\App_LocalResources\0043_managerevisions.md" />
     <Content Include="rvw_comp.aspx" />
     <Content Include="rvw_exp.aspx" />
     <Content Include="rvw_future.aspx" />
@@ -250,6 +252,7 @@
     <Content Include="rvw_summ.aspx" />
     <Content Include="Scripts\accounting.js" />
     <Content Include="Scripts\info-balloons.js" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\rvw_graph_thresh.js" />
     <Content Include="Scripts\rvw_proj.js" />
     <Content Include="Scripts\tbldrag.js" />
@@ -342,6 +345,10 @@
       <DependentUpon>apiComponents.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="api\main.asmx.cs">
+      <DependentUpon>main.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
@@ -381,7 +388,9 @@
       <DependentUpon>finalize.aspx</DependentUpon>
     </Compile>
     <Compile Include="fn_enc.cs" />
-    <Compile Include="GenerateInfoBalloons.cs" />
+    <Compile Include="GenerateInfoBalloons.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

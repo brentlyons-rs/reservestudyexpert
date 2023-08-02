@@ -83,7 +83,7 @@ namespace reserve
                                 Session["realname"] = p["real_name"];
                                 Session["firmname"] = p["firm_name"];
                                 Session["client"] = "1";
-                                Session["projectid"] = "C" + txtPWClient.Value;
+                                Session["projectid"] = txtPWClient.Value;
                                 Session["revisionid"] = "";
                                 Session["oldprojectid"] = txtPWClient.Value;
                                 Session["multi"] = 0;
