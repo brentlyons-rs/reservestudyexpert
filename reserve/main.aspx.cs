@@ -293,6 +293,16 @@ namespace reserve
                 return;
             }
 
+            SqlDataReader dr = Fn_enc.ExecuteReader("select firm_id from info_projects_client_invites where firm_id=@Param1 and project_id=@Param2 and client_email=@Param3", new string[] { Session["firmid"].ToString(), $"C{Session["projectid"]}", txtS2CEMail.Value });
+            if (!dr.Read())
+            {
+                dr.Close();
+                Fn_enc.ExecuteNonQuery("insert into info_projects_client_invites (firm_id, project_id, client_email, invite_sent, invited_by) select @Param1, @Param2, @Param3, GetDate(), @Param4", new string[] { Session["firmid"].ToString(), $"C{Session["projectid"]}", txtS2CEMail.Value, Session["userid"].ToString() });
+            }
+            else
+            {
+                dr.Close();
+            }
             Fn_enc.ExecuteNonQuery("delete from info_projects_client_invites_revisions where firm_id=@Param1 and project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
             for (var i = 0; i < iTotal; i++)
             {
@@ -309,6 +319,7 @@ namespace reserve
             sBody.Append($"- Username: {txtS2CEMail.Value} <br />");
             sBody.Append($"- Password: C{Session["projectid"]}");
             divCloneStatus.InnerHtml = sBody.ToString();
+            txtHdnType.Value = "";
 
             ////SendToClient
             //SqlDataReader dr = Fn_enc.ExecuteReader("sp_app_send_project_to_client @Param1, @Param2, @Param3, @Param4", new string[] { Session["firmid"].ToString(), "C" + txtHdnProject.Value, txtS2CEMail.Value, Session["userid"].ToString() });

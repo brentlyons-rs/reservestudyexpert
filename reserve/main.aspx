@@ -256,7 +256,7 @@
                 return false;
             }
             var blRevSelected = false;
-            for (var i = 0; i < parseInt(document.getElementById('txtHdnTotalRevs').value) - 1; i++) {
+            for (var i = 0; i < parseInt(document.getElementById('txtHdnTotalRevs').value); i++) {
                 if (document.getElementById('chkClientRev' + i).checked) {
                     blRevSelected = true;
                 }
@@ -313,7 +313,7 @@
                 <p class="panel-title-fd">Input page for Reserve Study:&nbsp;<label id="lblProject" runat="server" class="frm-text"></label></p>
             </div>
             <div id="divPnRevisions" runat="server" class="page-top-tab-revision col-lg-2 float-right">
-                <p class="panel-title-fd">
+                <p class="panel-title-fd" style="white-space: nowrap">
                     Revision:<br />
                     <select id="cboRevision" runat="server" onchange="changeRevision()"></select>
                     <button id="btnNewRevision" title="Create New Revision" runat="server" class="btn-revision showNewRevision" data-toggle="modal" data-target="#mdlNewRevision" data-cat="catg" data-comp="dcmp"><i class="fa fa-plus-circle" style="color: white"></i></button>
