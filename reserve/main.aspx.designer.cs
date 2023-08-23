@@ -105,6 +105,33 @@ namespace reserve
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnSelected;
 
         /// <summary>
+        /// cmdClone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor cmdClone;
+
+        /// <summary>
+        /// cmdSendToClient control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor cmdSendToClient;
+
+        /// <summary>
+        /// cmdDeleteProject control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor cmdDeleteProject;
+
+        /// <summary>
         /// divCloneStatus control.
         /// </summary>
         /// <remarks>
@@ -463,24 +490,6 @@ namespace reserve
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtPSD;
-
-        /// <summary>
-        /// lblSaveStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblSaveStatus;
-
-        /// <summary>
-        /// txtHdnSave control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtHdnSave;
 
         /// <summary>
         /// txtClonePID control.
