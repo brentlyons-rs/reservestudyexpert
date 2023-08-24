@@ -46,8 +46,8 @@
                     $.ajax({  
                         type: "POST",  
                         contentType: "application/json; charset=utf-8",  
-                        url: "main.aspx/GetEmp",  
-                        data: "{'empName':'" + s + "'}",  
+                        url: "api/main.asmx/GetProjects",  
+                        data: "{'projName':'" + s + "'}",  
                         dataType: "json",  
                         success: function (data) {
                             response($.map(data.d, function (item) {
@@ -482,16 +482,16 @@
                 </tr>
                 <tr>
                     <td class="form-inline text-right"><label class="frm-text">Source prefix:</label></td>
-                    <td class="form-inline"><select class="form-control" id="cboSP" runat="server" onchange="saveProjectInfo(30,'spr','source prefix',this.value)"><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></td>
+                    <td class="form-inline"><select class="form-control" id="cboSP" runat="server" onchange="saveProjectInfo(30,'spr','src prefix',this.value)"><option>Mr.</option><option>Ms.</option><option>Mrs.</option></select></td>
 
                     <td class="form-inline text-right"><label class="frm-text">Source name:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSN" maxlength="50" onblur="saveProjectInfo(31,'sna','source name',this.value)"></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtSN" maxlength="50" onblur="saveProjectInfo(31,'sna','src name',this.value)"></td>
 
                     <td class="form-inline text-right"><label class="frm-text">Source title:</label></td>
-                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtST" maxlength="50" onblur="saveProjectInfo(32,'sti','source title',this.value)"></td>
+                    <td class="form-inline"><input type="text" class="form-control" runat="server" id="txtST" maxlength="50" onblur="saveProjectInfo(32,'sti','src title',this.value)"></td>
 
                     <td class="form-inline text-right" id="tdSBB1"><label id="lblSBB" class="frm-text">Source begin bal:</label></td>
-                    <td class="form-inline" id="tdSBB2"><input type="text" class="form-control" runat="server" id="txtSBB" onblur="saveProjectInfo(33,'sbe','source beginning balance',this.value)"></td>
+                    <td class="form-inline" id="tdSBB2"><input type="text" class="form-control" runat="server" id="txtSBB" onblur="saveProjectInfo(33,'sbe','src beginning balance',this.value)"></td>
                 </tr>
                 <tr id="trUpdate">
                     <td class="form-inline text-right"><label class="frm-text">Previous preparer:</label></td>

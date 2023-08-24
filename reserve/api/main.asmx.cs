@@ -3,6 +3,7 @@ using System.Web.Services;
 using System.Data;
 using System.Text;
 using System.Collections.Generic;
+using System.Web.Script.Services;
 
 namespace reserve.api
 {
@@ -12,6 +13,7 @@ namespace reserve.api
     [WebService(Namespace = "http://tempuri.org/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
+    [ScriptService]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
     public class main : System.Web.Services.WebService
@@ -302,6 +304,23 @@ namespace reserve.api
             };
 
             return fm[fieldAbbr];
+        }
+
+        [WebMethod(enableSession: true)]
+        public List<string> GetProjects(string projName)
+        {
+            List<string> emp = new List<string>();
+            if (Session["firmid"] != null)
+            {
+                projName.Replace("'", "''");
+                var dr = Fn_enc.ExecuteReader("select project_id, '(' + project_id + ') ' + project_name as project_name from info_projects where firm_id=@Param1 and project_name like '%' + @Param2 + '%'", new string[] { Session["firmid"].ToString(), projName });
+                while (dr.Read())
+                {
+                    emp.Add(string.Format("{0}|{1}", dr["project_name"], dr["project_id"]));
+                }
+                dr.Close();
+            }
+            return emp;
         }
 
         [WebMethod(enableSession: true)]

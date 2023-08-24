@@ -608,7 +608,7 @@ namespace reserve
             txtSBB.Value = "";
         }
 
-        [WebMethod(enableSession:true)]   
+        [WebMethod(enableSession:true)]
         public static List<string> GetEmp(string empName)
         {
             List<string> emp = new List<string>();

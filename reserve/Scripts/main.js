@@ -21,6 +21,7 @@ function saveProjectInfo(elemId, fieldName, fieldDesc, fieldVal) {
         sOp = 'saveProjectInfo';
         var url = "api/main.asmx/SaveProjectInfo?fieldName=" + escape(fieldName) + "&fieldDesc=" + escape(fieldDesc) + "&fieldVal=" + escape(fieldVal) + "&elemId=" + elemId;
         gUrl = url;
+        console.log(url);
         request.open("GET", url, true);
         request.onreadystatechange = updateSend;
         request.send(null);
