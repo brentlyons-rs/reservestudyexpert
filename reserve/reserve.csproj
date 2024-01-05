@@ -430,6 +430,7 @@
     <Compile Include="notes.aspx.designer.cs">
       <DependentUpon>notes.aspx</DependentUpon>
     </Compile>
+    <None Include="Properties\App_LocalResources\0043-UnitCosts_scripts.md" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rvw_comp.aspx.cs">
       <DependentUpon>rvw_comp.aspx</DependentUpon>
