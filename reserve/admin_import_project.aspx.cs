@@ -44,6 +44,7 @@ namespace reserve
             var ds = new DataSet();
             var l = new List<string>();
             l.Add("info_projects");
+            l.Add("info_projects_revisions");
             l.Add("info_project_info");
             l.Add("info_component_categories");
             l.Add("info_components");
