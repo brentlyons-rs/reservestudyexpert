@@ -74,7 +74,7 @@
                 else
                 {
                     bool blPhotoReqd=false;
-                    SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select ipi.project_type_id, isnull(lpt.photo_required,0) as photo_required from info_project_info ipi left join lkup_project_types lpt on ipi.firm_id=lpt.firm_id and ipi.project_type_id=lpt.project_type_id where ipi.firm_id=@Param1 and ipi.project_id=@Param2", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString() });
+                    SqlDataReader dr = reserve.Fn_enc.ExecuteReader("select ipi.project_type_id, isnull(lpt.photo_required,0) as photo_required from info_project_info ipi left join lkup_project_types lpt on ipi.firm_id=lpt.firm_id and ipi.project_type_id=lpt.project_type_id where ipi.firm_id=@Param1 and ipi.project_id=@Param2 and ipi.revision_id=@Param3", new string[] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString() });
                     if (dr.Read() && dr["photo_required"].ToString() == "1") blPhotoReqd = true;
                     dr.Close();
                     %>
@@ -116,7 +116,7 @@
                         <div style="padding: 5px 5px 5px 5px">
                         <table style="border-top: 1px solid #cccccc; border-left: 1px solid #cccccc; border-right: 1px solid #cccccc; border-bottom: 1px solid #cccccc; padding: 3px 3px 3px 3px !important; width: 100%" cellpadding="3px">
                         <%
-                            dr = reserve.Fn_enc.ExecuteReader("select image_id, image_comments, isnull(len(image_bytes),0) as img_size from info_components_images where firm_id=@Param1 and project_id=@Param2 and category_id=@Param3 and component_id=@Param4", new string[4] { Session["firmid"].ToString(), Session["projectid"].ToString(), txtHdnCat.Value, txtHdnComp.Value });
+                            dr = reserve.Fn_enc.ExecuteReader("select image_id, image_comments, isnull(len(image_bytes),0) as img_size from info_components_images where firm_id=@Param1 and project_id=@Param2 and revision_id=@Param3 and category_id=@Param4 and component_id=@Param5", new string[5] { Session["firmid"].ToString(), Session["projectid"].ToString(), Session["revisionid"].ToString(), txtHdnCat.Value, txtHdnComp.Value });
                             while (dr.Read())
                             {
                             %>
