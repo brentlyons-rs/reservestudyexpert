@@ -118,7 +118,7 @@
         </td>
         <td class="tblUsers">
             <div id="divInfo" runat="server">
-                <table>
+                <table border="0">
                     <tr><td colspan="4" class="text-left frm-text-blue-bold" style="background-color: #dddddd; padding: 5px"><i class="fa fa-chevron-circle-right" style="font-size: 18px"></i> General Information</td></tr>
                     <tr><td colspan="4" style="height: 10px"></td></tr>
                     <tr>
@@ -133,6 +133,13 @@
                         <td class="frm-text">
                             <input type=checkbox runat="server" id="chkDis" name="chkDis" />
                             <label id="lblDis" for="MainContent_chkDis">Disabled</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="3" class="frm-text" style="text-align: left">
+                            <input type="checkbox" runat="server" id="chkAdmin" name="chkAdmin" />
+                            <label id="lblAdmin" for="MainContent_chkAdmin">Admin</label>
                         </td>
                     </tr>
                     <tr><td colspan="4" class="text-left frm-text-blue-bold" style="background-color: #dddddd; padding: 5px"><i class="fa fa-chevron-circle-right" style="font-size: 18px"></i> Password <label id="divNewPW" class="frm-text-bold" runat="server"></label></td></tr>

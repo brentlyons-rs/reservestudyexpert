@@ -56,6 +56,7 @@ namespace reserve
             txtLN.Value = "";
             txtEM.Value = "";
             chkDis.Checked = false;
+            chkAdmin.Checked = false;
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -75,16 +76,16 @@ namespace reserve
                     else
                     {
                         dr2.Close();
-                        Fn_enc.ExecuteNonQuery("insert into app_users (firm_id, user_id, email_addr, first_name, last_name, pwrd, disabled) select @Param1, isnull((select max(user_id) from app_users where firm_id=@Param1),0)+1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), txtEM.Value, txtFN.Value, txtLN.Value, txtNewPW.Value, chkDis.Checked ? "1" : "0" });
+                        Fn_enc.ExecuteNonQuery("insert into app_users (firm_id, user_id, email_addr, first_name, last_name, pwrd, disabled, admin) select @Param1, isnull((select max(user_id) from app_users where firm_id=@Param1),0)+1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7", new string[] { Session["firmid"].ToString(), txtEM.Value, txtFN.Value, txtLN.Value, txtNewPW.Value, chkDis.Checked ? "1" : "0", chkAdmin.Checked ? "1" : "0" });
                         lblStatus.InnerText = "Successfully added user account.";
                     }
                 }
                 else
                 {
                     if (txtNewPW.Value != "")
-                        Fn_enc.ExecuteNonQuery("update app_users set first_name=@Param1, last_name=@Param2, email_addr=@Param3, user_pwd=@Param4, disabled=@Param5 where firm_id=@Param6 and user_id=@Param7", new string[] { txtFN.Value, txtLN.Value, txtEM.Value, txtNewPW.Value, chkDis.Checked ? "1" : "0", Session["firmid"].ToString(), lstUsers.Items[lstUsers.SelectedIndex].Value });
+                        Fn_enc.ExecuteNonQuery("update app_users set first_name=@Param1, last_name=@Param2, email_addr=@Param3, user_pwd=@Param4, disabled=@Param5, admin=@Param6 where firm_id=@Param7 and user_id=@Param8", new string[] { txtFN.Value, txtLN.Value, txtEM.Value, txtNewPW.Value, chkDis.Checked ? "1" : "0", chkAdmin.Checked ? "1" : "0", Session["firmid"].ToString(), lstUsers.Items[lstUsers.SelectedIndex].Value });
                     else
-                        Fn_enc.ExecuteNonQuery("update app_users set first_name=@Param1, last_name=@Param2, email_addr=@Param3, disabled=@Param4 where firm_id=@Param5 and user_id=@Param6", new string[] { txtFN.Value, txtLN.Value, txtEM.Value, chkDis.Checked ? "1" : "0", Session["firmid"].ToString(), lstUsers.Items[lstUsers.SelectedIndex].Value });
+                        Fn_enc.ExecuteNonQuery("update app_users set first_name=@Param1, last_name=@Param2, email_addr=@Param3, disabled=@Param4, admin=@Param5 where firm_id=@Param6 and user_id=@Param7", new string[] { txtFN.Value, txtLN.Value, txtEM.Value, chkDis.Checked ? "1" : "0", chkAdmin.Checked ? "1" : "0", Session["firmid"].ToString(), lstUsers.Items[lstUsers.SelectedIndex].Value });
 
                     lblStatus.InnerText = "Successfully updated user account.";
                 }
@@ -114,6 +115,7 @@ namespace reserve
                     txtLN.Value = dr2["last_name"].ToString();
                     txtEM.Value = dr2["email_addr"].ToString();
                     if ((dr2["disabled"]!=null) && (dr2["disabled"].ToString().ToLower()=="true")) chkDis.Checked = true;
+                    if ((dr2["admin"] != null) && (dr2["admin"].ToString().ToLower() == "true")) chkAdmin.Checked = true;
                 }
                 dr2.Close();
                 cmdSave.CssClass = "btn btn-success";

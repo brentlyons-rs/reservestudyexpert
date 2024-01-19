@@ -1,4 +1,4 @@
-﻿ALTER procedure [dbo].[sp_app_create_project] @firm smallint, @projectId nvarchar(10), @projectName nvarchar(100), @user smallint as
+﻿CREATE procedure [dbo].[sp_app_create_project] @firm smallint, @projectId nvarchar(10), @projectName nvarchar(100), @user smallint as
 
 if exists (select * from info_projects where firm_id=@firm and project_id=@projectId)
 	select 'ValidationError' as result, 'ProjectAlreadyExists' as error
