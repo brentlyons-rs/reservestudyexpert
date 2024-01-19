@@ -131,6 +131,7 @@
     <Content Include="assets\bootstrap\js\bootstrap.min.js" />
     <Content Include="assets\bootstrap\js\npm.js" />
     <Content Include="assets\css\animate.css" />
+    <Content Include="assets\css\jquery-ui-1.8.10.css" />
     <Content Include="assets\css\style.css" />
     <Content Include="assets\font-awesome\css\font-awesome.css" />
     <Content Include="assets\font-awesome\css\font-awesome.min.css" />
@@ -148,6 +149,8 @@
     <Content Include="assets\img\logo.png" />
     <Content Include="assets\js\jquery-1.11.1.js" />
     <Content Include="assets\js\jquery-1.11.1.min.js" />
+    <Content Include="assets\js\jquery-1.8.0.js" />
+    <Content Include="assets\js\jquery-ui-1.8.22.js" />
     <Content Include="assets\js\jquery.backstretch.js" />
     <Content Include="assets\js\jquery.backstretch.min.js" />
     <Content Include="assets\js\jquery.mask.min.js" />
@@ -244,6 +247,7 @@
     <Content Include="notes.aspx" />
     <None Include="Properties\App_LocalResources\0018-revisions-scripts.md" />
     <None Include="Properties\App_LocalResources\0043_managerevisions.md" />
+    <None Include="Properties\App_LocalResources\0028_DeleteProjects_scripts.md" />
     <Content Include="rvw_comp.aspx" />
     <Content Include="rvw_exp.aspx" />
     <Content Include="rvw_future.aspx" />
