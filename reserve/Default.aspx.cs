@@ -59,6 +59,7 @@ namespace reserve
                                 Session["email"] = txtEM.Value;
                                 Session["client"] = "0";
                                 Session["superadmin"] = Convert.ToBoolean(p["super_admin"]) ? "1" : "0";
+                                Session["admin"] = Convert.ToBoolean(p["admin"]) ? "1" : "0";
                                 if (Convert.ToInt32(p["multi"].ToString()) > 1)
                                 {
                                     Session["multi"] = "1";

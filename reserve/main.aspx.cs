@@ -129,6 +129,10 @@ namespace reserve
                     Session["projectid"] = txtHdnProject.Value;
                     divCloneStatus.InnerHtml = "";
                 }
+                if (Session["admin"].ToString()!="1")
+                {
+                    cmdDeleteProject.Visible = false;
+                }
             }
             else if ((txtHdnProject.Value!="") && (txtHdnProject.Value!="-1"))
             {
