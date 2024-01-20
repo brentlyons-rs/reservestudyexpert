@@ -343,17 +343,23 @@ catch (trymicrosoft) {
     });  
 }
 
-        
+    var lastCharCode=-1;
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
+        // This is a special allowance for ctrl+c, ctrl+v, ctrl+z
+        if (lastCharCode==17 && (charCode==67 || charCode==86 || charCode==90)) {
+            lastCharCode=charCode;
+            return true;
+        }
+        lastCharCode=charCode;
         // 8: backspace
         // 9: tab
         // 37: left
         // 39: right
         // 46: period
         // 48-57: numbers
-        var allowableCodes = new Array(8, 9, 37, 39, 46, 190);
+        var allowableCodes = new Array(8, 9, 17, 37, 39, 46, 190);
         if (allowableCodes.includes(charCode) || (charCode > 47 && charCode < 58)) {
             return true;
         }
@@ -557,6 +563,7 @@ catch (trymicrosoft) {
             <td class="gridrow_wt"><a href="#" onclick="saveNew()"><img src="images/tm_save.jpg" border="0" align="absmiddle"></a></td>
         </tr>
     </table>
+        <input type="text" id="txtTest" />
     <div id="row" class="text-left">
         <label id="lblStatus" runat="server" class="frm-text-red text-left" style="margin-left: 5px; margin-top: 10px"></label>
     </div>
