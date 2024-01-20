@@ -343,10 +343,17 @@ catch (trymicrosoft) {
     });  
 }
 
-        
+    var lastCharCode=-1;
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
+        // This is a special allowance for ctrl+c, ctrl+v, ctrl+z. If last charcode was ctrl,
+        // and next is c, v, x, or z, allow it.
+        if (lastCharCode==17 && (charCode==67 || charCode==86 || charCode==89 || charCode==90)) {
+            lastCharCode=charCode;
+            return true;
+        }
+        lastCharCode=charCode;
         // 8: backspace
         // 9: tab
         // 37: left
