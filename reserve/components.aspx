@@ -347,8 +347,9 @@ catch (trymicrosoft) {
     function isNumber(evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
-        // This is a special allowance for ctrl+c, ctrl+v, ctrl+z
-        if (lastCharCode==17 && (charCode==67 || charCode==86 || charCode==90)) {
+        // This is a special allowance for ctrl+c, ctrl+v, ctrl+z. If last charcode was ctrl,
+        // and next is c, v, or z, allow it.
+        if (lastCharCode==17 && (charCode==67 || charCode==86 || charCode==89 || charCode==90)) {
             lastCharCode=charCode;
             return true;
         }
@@ -359,7 +360,7 @@ catch (trymicrosoft) {
         // 39: right
         // 46: period
         // 48-57: numbers
-        var allowableCodes = new Array(8, 9, 17, 37, 39, 46, 190);
+        var allowableCodes = new Array(8, 9, 37, 39, 46, 190);
         if (allowableCodes.includes(charCode) || (charCode > 47 && charCode < 58)) {
             return true;
         }
