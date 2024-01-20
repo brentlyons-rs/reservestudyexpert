@@ -563,7 +563,6 @@ catch (trymicrosoft) {
             <td class="gridrow_wt"><a href="#" onclick="saveNew()"><img src="images/tm_save.jpg" border="0" align="absmiddle"></a></td>
         </tr>
     </table>
-        <input type="text" id="txtTest" />
     <div id="row" class="text-left">
         <label id="lblStatus" runat="server" class="frm-text-red text-left" style="margin-left: 5px; margin-top: 10px"></label>
     </div>
