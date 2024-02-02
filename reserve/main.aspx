@@ -98,13 +98,18 @@
                 document.getElementById('txtNewReportEffective').focus();
                 return false;
             }
+            if (document.getElementById('MainContent_cboNewProjectType').value < 1) {
+                alert("Please select a project type.");
+                return false;
+            }
             document.getElementById('lblNewProjectResult').style.display = 'none';
             document.getElementById('lblNewProjectSave').style.display = 'block';
             document.getElementById('btnSaveNewProject').disabled = true;
             var projectId = document.getElementById('txtNewProjectID').value;
             var projectName = document.getElementById('txtNewProjectName').value;
+            var projectTypeId = document.getElementById('MainContent_cboNewProjectType').value;
             var reportEffective = document.getElementById('txtNewReportEffective').value;
-            createNewProject(projectId, projectName, reportEffective);
+            createNewProject(projectId, projectTypeId, projectName, reportEffective);
         }
 
         function SameAsSite(chkd) {
@@ -536,6 +541,10 @@
                         <tr>
                             <td style="white-space: nowrap"><h5 class="text-right">Report Effective:&nbsp;</h5></td>
                             <td><input type="text" class="form-control" id="txtNewReportEffective" placeholder="mm/dd/yyyy"></td>
+                        </tr>
+                        <tr>
+                            <td style="white-space: nowrap"><h5 class="text-right">Report Effective:&nbsp;</h5></td>
+                            <td><select class="form-control" id="cboNewProjectType" runat="server"></select></td>
                         </tr>
                         <tr>
                             <td></td>

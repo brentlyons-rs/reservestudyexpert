@@ -54,13 +54,13 @@ function sendAvailableRevs() {
     }
 }
 
-function createNewProject(projectId, projectName, reportEffective) {
+function createNewProject(projectId, projectTypeId, projectName, reportEffective) {
     if ((request.readyState != 4) && (request.readyState != 0)) {
-        setTimeout("createNewProject(" + projectId + ", '" + projectName + "')", 3000);
+        setTimeout("createNewProject(" + projectId + ", " + projectTypeId + ", '" + projectName + "')", 3000);
     }
     else {
         sOp = 'createProject';
-        var url = "api/main.asmx/CreateProject?projectId=" + projectId + "&projectName=" + escape(projectName) + "&reportEffective=" + escape(reportEffective);
+        var url = "api/main.asmx/CreateProject?projectId=" + projectId + "&projectTypeId=" + projectTypeId + "&projectName=" + escape(projectName) + "&reportEffective=" + escape(reportEffective);
         gUrl = url;
         request.open("GET", url, true);
         request.onreadystatechange = updateSend;
