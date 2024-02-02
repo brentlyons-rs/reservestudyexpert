@@ -272,6 +272,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
     </Content>
     <Content Include="Properties\App_LocalResources\0021_cloneproject_scripts.md" />
+    <Content Include="Properties\App_LocalResources\0044_RequiredField.md" />
     <None Include="Properties\PublishProfiles\crossovertechnology.org - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Production %28VPS%29.pubxml" />
     <None Include="Properties\PublishProfiles\Production.pubxml" />

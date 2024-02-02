@@ -59,10 +59,20 @@ namespace reserve
             //Project types dropdown
             if (cboPT.Items.Count<1)
             {
+                var blPopulateNewPT = false;
+                if (cboNewProjectType.Items.Count<1)
+                {
+                    blPopulateNewPT = true;
+                    cboNewProjectType.Items.Add(new ListItem("Select a project type", ""));
+                }
                 var dr = Fn_enc.ExecuteReader("select project_type_id, project_type_desc from lkup_project_types where firm_id=@Param1", new string[] { Session["firmid"].ToString() });
                 while (dr.Read())
                 {
                     cboPT.Items.Add(new ListItem(dr["project_type_desc"].ToString(), dr["project_type_id"].ToString()));
+                    if (blPopulateNewPT)
+                    {
+                        cboNewProjectType.Items.Add(new ListItem(dr["project_type_desc"].ToString(), dr["project_type_id"].ToString()));
+                    }
                 }
                 dr.Close();
             }

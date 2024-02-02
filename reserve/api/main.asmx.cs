@@ -324,7 +324,7 @@ namespace reserve.api
         }
 
         [WebMethod(enableSession: true)]
-        public DataSet CreateProject(string projectId, string projectName, string reportEffective)
+        public DataSet CreateProject(string projectId, string projectTypeId, string projectName, string reportEffective)
         {
             var conn = Fn_enc.getconn();
             DataSet ds = new DataSet();
@@ -342,7 +342,7 @@ namespace reserve.api
 
                 try
                 {
-                    var dr = Fn_enc.ExecuteReader("sp_app_create_project @Param1, @Param2, @Param3, @Param4, @Param5", new string[] { Session["firmid"].ToString(), projectId, projectName, reportEffective, Session["userid"].ToString() });
+                    var dr = Fn_enc.ExecuteReader("sp_app_create_project @Param1, @Param2, @Param3, @Param4, @Param5, @Param6", new string[] { Session["firmid"].ToString(), projectId, projectTypeId, projectName, reportEffective, Session["userid"].ToString() });
                     if (dr.Read())
                     {
                         if (dr["result"].ToString()=="ProjectValidationError")
@@ -351,6 +351,7 @@ namespace reserve.api
                             row["r_type"] = "Error";
                             row["r_desc"] = dr["error"];
                             ds.Tables["Results"].Rows.Add(row);
+                            conn.Close();
                             return ds;
                         }
                         else
@@ -359,6 +360,7 @@ namespace reserve.api
                             row["r_type"] = "Success";
                             row["r_desc"] = "";
                             ds.Tables["Results"].Rows.Add(row);
+                            conn.Close();
                             return ds;
                         }
                     }
@@ -368,6 +370,7 @@ namespace reserve.api
                         row["r_type"] = "Error";
                         row["r_desc"] = "The projection creation returned no results. Please try again, and if the problem persists, please notify an administrator.";
                         ds.Tables["Results"].Rows.Add(row);
+                        conn.Close();
                         return ds;
                     }
                 }
@@ -380,12 +383,6 @@ namespace reserve.api
                     ds.Tables["Results"].Rows.Add(row);
                     return ds;
                 }
-                conn.Close();
-
-                row = ds.Tables["Results"].NewRow();
-                row["r_type"] = "Success";
-                row["r_desc"] = "";
-                ds.Tables["Results"].Rows.Add(row);
             }
             catch (Exception ex)
             {
