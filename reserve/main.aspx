@@ -336,17 +336,19 @@
                 </p>
            </div>
         </div>
-        <div class="input-group text-left col-lg-5 text-nowrap rounded-lg shadow form-inline" id="divProjManip" runat="server" style="margin-bottom: 5px; padding: 0px; margin-top: 3px">
-            <input type="text" ID="txtProject" runat="server" class="form-control" placeholder="Search for an existing project" />  
-            <asp:HiddenField ID="txtHdnProject" runat="server" Value="-1" />
-            <input type="hidden" id="txtHdnSelected" runat="server" />
-            &nbsp;or&nbsp;
-            <a href="#" class="btn btn-primary showNewProject" id="cmdNewProject" data-toggle="modal" data-target="#mdlNewProject" data-cat="catg" data-comp="dcmp">Create new project</a>
-            <% if (txtHdnProject.Value != "-1") { %>
-            &nbsp;<a href="#" class="btn btn-primary showClone" id="cmdClone" runat="server" data-toggle="modal" data-target="#mdlNotes" data-cat="catg" data-comp="dcmp">Clone Project</a>
-            &nbsp;<a href="#" class="btn btn-primary showSendToClient" runat="server" id="cmdSendToClient" data-toggle="modal" data-target="#mdlClient" data-cat="catg" data-comp="dcmp">Client Invites</a>
-            &nbsp;<a href="#" class="btn btn-danger" id="cmdDeleteProject" runat="server" onclick="checkDelProject()">Delete Project</a>
-            <% } %>
+        <div class="input-group text-left col-lg-5 text-nowrap rounded-lg shadow form-inline" style="margin-bottom: 5px; padding: 0px; margin-top: 3px">
+            <div id="divProjManip" runat="server">
+                <input type="text" ID="txtProject" runat="server" class="form-control" placeholder="Search for an existing project" />  
+                <asp:HiddenField ID="txtHdnProject" runat="server" Value="-1" />
+                <input type="hidden" id="txtHdnSelected" runat="server" />
+                &nbsp;or&nbsp;
+                <a href="#" class="btn btn-primary showNewProject" id="cmdNewProject" data-toggle="modal" data-target="#mdlNewProject" data-cat="catg" data-comp="dcmp">Create new project</a>
+                <% if (txtHdnProject.Value != "-1") { %>
+                &nbsp;<a href="#" class="btn btn-primary showClone" id="cmdClone" runat="server" data-toggle="modal" data-target="#mdlNotes" data-cat="catg" data-comp="dcmp">Clone Project</a>
+                &nbsp;<a href="#" class="btn btn-primary showSendToClient" runat="server" id="cmdSendToClient" data-toggle="modal" data-target="#mdlClient" data-cat="catg" data-comp="dcmp">Client Invites</a>
+                &nbsp;<a href="#" class="btn btn-danger" id="cmdDeleteProject" runat="server" onclick="checkDelProject()">Delete Project</a>
+                <% } %>
+            </div>
             <div id="divCloneStatus" runat="server" class="frm-text-red"></div>
             <span id="divSaveProjectInfo" class="frm-text" style="display: none; font-weight: 500;"><i class="fa fa-spinner fa-pulse fa-fw"></i>&nbsp;Saving, please wait...</span>
             <span id="divLoadProject" class="frm-text" style="display: none; font-weight: 500;"><i class="fa fa-spinner fa-pulse fa-fw"></i>&nbsp;Loading, please wait...</span>
