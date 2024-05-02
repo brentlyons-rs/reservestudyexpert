@@ -59,6 +59,7 @@
                 document.getElementById('cmdEdit' + sID).value = 'Update Comment';
                 document.getElementById('divCommentsRO' + sID).style.display = 'none';
                 document.getElementById('divCommentsE' + sID).style.display = 'block';
+                document.getElementById('txtComments' + sID).setAttribute("style", "height:" + (document.getElementById('txtComments' + sID).scrollHeight) + "px;overflow-y:hidden;");
             }
         }
     </script>
@@ -171,6 +172,14 @@
                 $(':file').on('fileselect', function (event, numFiles, label) {
                     $("#lblFName").text(label);
                 });
+            });
+
+            $("textarea").each(function () {
+                this.setAttribute("style", "height:" + (this.scrollHeight) + "px;width:100%;overflow-y:hidden;");
+            }).on("input", function () {
+                this.style.height = 0;
+                this.style.height = (this.scrollHeight) + "px";
+                this.style.width = "100%";
             });
 
 
