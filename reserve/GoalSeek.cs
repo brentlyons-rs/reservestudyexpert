@@ -285,7 +285,8 @@ namespace reserve
 
             for (var i=0; i<ds.Tables[0].Rows.Count; i++)
             {
-                row = new GoalSeek(Convert.ToInt16(ds.Tables[0].Rows[i]["year_id"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["annual_exp"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["ffa_res_fund_bal"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["ffa_avg_req_annual_contr"].ToString()), interest);
+                //row = new GoalSeek(Convert.ToInt16(ds.Tables[0].Rows[i]["year_id"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["annual_exp"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["ffa_res_fund_bal"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["ffa_avg_req_annual_contr"].ToString()), interest);
+                row = new GoalSeek(Convert.ToInt16(ds.Tables[0].Rows[i]["year_id"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["annual_exp"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["cfa_reserve_fund_bal"].ToString()), Convert.ToDouble(ds.Tables[0].Rows[i]["cfa_annual_contrib"].ToString()), interest);
                 gs.Add(row);
             }
 
